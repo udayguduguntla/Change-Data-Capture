@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/assets/logo.svg" alt="Change Data Capture - Postgres to Neo4j" width="220">
-</p>
-
 # Change Data Capture - Postgres to Neo4j
 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-source-336791?logo=postgresql&logoColor=white)

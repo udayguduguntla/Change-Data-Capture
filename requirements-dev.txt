@@ -1,0 +1,5 @@
+# Tests only. `pip install -r requirements.txt -r requirements-dev.txt`
+pytest>=8
+# Embedded openCypher engine: tests/engine.py runs the generated Cypher for real.
+# Without it the engine tests are skipped (not failed).
+falkordblite>=0.10

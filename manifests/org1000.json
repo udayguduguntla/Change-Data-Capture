@@ -1,0 +1,5149 @@
+{"ts": "2026-10-03T19:46:29", "level": "INFO", "logger": "src.provision", "message": "neo4j edition=enterprise version=2026.05.0 instance=default"}
+CONTROL PLANE: {'organisations_table': 'accounts.organizations', 'organization_id_column': 'id', 'tenant_id_column': 'id', 'tenant_column': 'organization_id', 'status_column': 'lifecycle_status', 'industry_column': 'industry_type', 'active_status_values': ['active', 'prospect']}
+{"ts": "2026-10-03T19:46:31", "level": "INFO", "logger": "src.router", "message": "partition map loaded: 23 partition-to-parent mapping(s)"}
+{"ts": "2026-10-03T19:46:32", "level": "WARNING", "logger": "src.config_loader", "message": "org1000.yaml:extends.crm.product_addons: table was removed from the graph; extension ignored"}
+{
+  "org": "org1000",
+  "schema_fingerprint": "3211bbbd92eb29748d4102651288e2f52c144b12",
+  "data_watermark": "",
+  "generated_at": "2026-10-03T14:16:32.522805+00:00",
+  "labels": {
+    "Tenant": {
+      "product": "platform",
+      "key": "id",
+      "description": "One row per company. LLM JSON extracted from product / business PDFs.",
+      "state_labels": {},
+      "properties": {
+        "organization_id": {
+          "type": null,
+          "meaning": "Company (primary key)."
+        }
+      },
+      "embedded": false
+    },
+    "User": {
+      "product": "platform",
+      "key": "id",
+      "description": "Worktual account users used for Campaign login. Campaign reads this table only \u2014 it does not create or alter account users.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Primary key; JWT sub claim."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "employee_id": {
+          "type": null,
+          "meaning": "Staff id (unique per org)."
+        },
+        "first_name": {
+          "type": null,
+          "meaning": "Given name for display."
+        },
+        "last_name": {
+          "type": null,
+          "meaning": "Family name for display."
+        },
+        "work_email": {
+          "type": null,
+          "meaning": "Login / invite email (unique globally)."
+        },
+        "mobile_number": {
+          "type": null,
+          "meaning": "Phone (unique digits per org)."
+        },
+        "primary_language": {
+          "type": null,
+          "meaning": ""
+        },
+        "secondary_language": {
+          "type": null,
+          "meaning": ""
+        },
+        "skills": {
+          "type": null,
+          "meaning": "Skills list (JSON)."
+        },
+        "shift_types": {
+          "type": null,
+          "meaning": "Shifts they work (JSON)."
+        },
+        "city": {
+          "type": null,
+          "meaning": ""
+        },
+        "state": {
+          "type": null,
+          "meaning": ""
+        },
+        "country": {
+          "type": null,
+          "meaning": ""
+        },
+        "location_id": {
+          "type": null,
+          "meaning": "Branch / site code."
+        },
+        "status": {
+          "type": null,
+          "meaning": "active."
+        },
+        "team_id": {
+          "type": null,
+          "meaning": "Team."
+        },
+        "business_hours_id": {
+          "type": null,
+          "meaning": "Their hours."
+        },
+        "invite_status": {
+          "type": null,
+          "meaning": "Invite pending / accepted."
+        },
+        "password_set_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "invited_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Team": {
+      "product": "platform",
+      "key": "id",
+      "description": "A team of agents.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "name": {
+          "type": null,
+          "meaning": ""
+        },
+        "description": {
+          "type": null,
+          "meaning": ""
+        },
+        "business_hours_id": {
+          "type": null,
+          "meaning": "Hours this team follows."
+        },
+        "available_products": {
+          "type": null,
+          "meaning": "Products this team works on (JSON list)."
+        },
+        "status": {
+          "type": null,
+          "meaning": "active."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Role": {
+      "product": "platform",
+      "key": "id",
+      "description": "Named roles (admin, marketing, sales_manager, etc.) assigned to users via product access. Campaign uses role name in JWT and UI.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Role primary key."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "name": {
+          "type": null,
+          "meaning": "Role slug shown in session.role."
+        },
+        "description": {
+          "type": null,
+          "meaning": ""
+        },
+        "product_id": {
+          "type": null,
+          "meaning": "Which product this role is for."
+        },
+        "accessible_products": {
+          "type": null,
+          "meaning": "Extra product list (JSON)."
+        },
+        "module_permission": {
+          "type": null,
+          "meaning": ""
+        },
+        "module_permissions": {
+          "type": null,
+          "meaning": ""
+        },
+        "can_view": {
+          "type": null,
+          "meaning": ""
+        },
+        "can_create": {
+          "type": null,
+          "meaning": ""
+        },
+        "can_edit": {
+          "type": null,
+          "meaning": ""
+        },
+        "can_delete": {
+          "type": null,
+          "meaning": ""
+        },
+        "can_export": {
+          "type": null,
+          "meaning": ""
+        },
+        "can_approve": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "BusinessHours": {
+      "product": "platform",
+      "key": "id",
+      "description": "When the company / team is open.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "name": {
+          "type": null,
+          "meaning": ""
+        },
+        "description": {
+          "type": null,
+          "meaning": ""
+        },
+        "timezone": {
+          "type": null,
+          "meaning": "Time zone name."
+        },
+        "status": {
+          "type": null,
+          "meaning": "active or not."
+        },
+        "open_time": {
+          "type": null,
+          "meaning": ""
+        },
+        "close_time": {
+          "type": null,
+          "meaning": ""
+        },
+        "timing_mode": {
+          "type": null,
+          "meaning": "same vs different hours per day."
+        },
+        "working_days": {
+          "type": null,
+          "meaning": "Which weekdays (JSON)."
+        },
+        "day_timings": {
+          "type": null,
+          "meaning": "Per-day hours (JSON)."
+        },
+        "holiday_calendar_id": {
+          "type": null,
+          "meaning": "Which holidays apply."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Shift": {
+      "product": "platform",
+      "key": "id",
+      "description": "One shift row (start/end, optional breaks).",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "business_hours_id": {
+          "type": null,
+          "meaning": "Parent hours."
+        },
+        "shift_type": {
+          "type": null,
+          "meaning": "Regular / other."
+        },
+        "day_of_week": {
+          "type": null,
+          "meaning": ""
+        },
+        "end_day_of_week": {
+          "type": null,
+          "meaning": ""
+        },
+        "start_time": {
+          "type": null,
+          "meaning": ""
+        },
+        "end_time": {
+          "type": null,
+          "meaning": ""
+        },
+        "crosses_midnight": {
+          "type": null,
+          "meaning": "Overnight shift."
+        },
+        "break_start_time": {
+          "type": null,
+          "meaning": ""
+        },
+        "break_end_time": {
+          "type": null,
+          "meaning": ""
+        },
+        "break_start_time_2": {
+          "type": null,
+          "meaning": ""
+        },
+        "break_end_time_2": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "HolidayCalendar": {
+      "product": "platform",
+      "key": "id",
+      "description": "A named holiday list (e.g. \u201cIndia 2026\u201d).",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "name": {
+          "type": null,
+          "meaning": "Calendar name."
+        },
+        "country": {
+          "type": null,
+          "meaning": "Country this list is for."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Holiday": {
+      "product": "platform",
+      "key": "id",
+      "description": "One holiday date on a calendar.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "calendar_id": {
+          "type": null,
+          "meaning": "Parent calendar."
+        },
+        "name": {
+          "type": null,
+          "meaning": "Holiday name."
+        },
+        "holiday_date": {
+          "type": null,
+          "meaning": "The date."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Channel": {
+      "product": "platform",
+      "key": "id",
+      "description": "WhatsApp / Instagram / Facebook connection.",
+      "state_labels": {
+        "dynamic": [
+          "SocialChannel"
+        ]
+      },
+      "properties": {
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "channel_config_id": {
+          "type": null,
+          "meaning": "Parent channel."
+        },
+        "social_provider": {
+          "type": null,
+          "meaning": "whatsapp, instagram, facebook."
+        },
+        "social_bot_enabled": {
+          "type": null,
+          "meaning": "Bot on or off."
+        },
+        "social_usage_mode": {
+          "type": null,
+          "meaning": "inbox or templates."
+        },
+        "social_display_number": {
+          "type": null,
+          "meaning": "Number shown."
+        },
+        "social_waba_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "social_phone_number_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "social_page_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "social_ig_account_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "social_auth_type": {
+          "type": null,
+          "meaning": ""
+        },
+        "social_connection_status": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "PhoneNumber": {
+      "product": "ccaas",
+      "key": "id",
+      "description": "Phone numbers (DIDs) and where calls go.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "phone_number": {
+          "type": null,
+          "meaning": "The number."
+        },
+        "product_id": {
+          "type": null,
+          "meaning": "Usually contact-center or crm."
+        },
+        "routing_type": {
+          "type": null,
+          "meaning": "User vs queue."
+        },
+        "status": {
+          "type": null,
+          "meaning": "active."
+        },
+        "prompt_profile_id": {
+          "type": null,
+          "meaning": "Which voice prompts."
+        },
+        "routing_queue_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "routing_user_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "KnowledgeDocument": {
+      "product": "platform",
+      "key": "id",
+      "description": "Uploaded files (PDF, etc.).",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Company."
+        },
+        "category": {
+          "type": null,
+          "meaning": "business, product, or customer_support."
+        },
+        "file_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "file_type": {
+          "type": null,
+          "meaning": ""
+        },
+        "file_size_bytes": {
+          "type": null,
+          "meaning": ""
+        },
+        "storage_path": {
+          "type": null,
+          "meaning": "Disk path under {UPLOAD_BASE}/uploads/{organization_id}/{module}/."
+        },
+        "product_id": {
+          "type": null,
+          "meaning": "Which Worktual product the file is for (crm, contact-center, \u2026)."
+        },
+        "ccaas_audience": {
+          "type": null,
+          "meaning": "For Contact Center only: bot, agent_assist, or both."
+        },
+        "all_branches": {
+          "type": null,
+          "meaning": ""
+        },
+        "assigned_branch_ids": {
+          "type": null,
+          "meaning": ""
+        },
+        "uploaded_by": {
+          "type": null,
+          "meaning": "Who uploaded."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": true
+    },
+    "Contact": {
+      "product": "CDP",
+      "key": "cdp_id",
+      "description": "",
+      "state_labels": {},
+      "properties": {
+        "cdp_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "total_events": {
+          "type": null,
+          "meaning": ""
+        },
+        "total_orders": {
+          "type": null,
+          "meaning": ""
+        },
+        "total_spend": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "avg_order_value": {
+          "type": "float",
+          "meaning": ""
+        },
+        "last_event_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "last_purchase_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "engagement_score": {
+          "type": null,
+          "meaning": ""
+        },
+        "value_score": {
+          "type": null,
+          "meaning": ""
+        },
+        "loyalty_score": {
+          "type": null,
+          "meaning": ""
+        },
+        "churn_score": {
+          "type": null,
+          "meaning": ""
+        },
+        "purchase_probability": {
+          "type": null,
+          "meaning": ""
+        },
+        "predicted_ltv": {
+          "type": null,
+          "meaning": ""
+        },
+        "journey_stage": {
+          "type": null,
+          "meaning": ""
+        },
+        "segment_count": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "ContactIdentity": {
+      "product": "CDP",
+      "key": "uid",
+      "description": "",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "identity_type": {
+          "type": null,
+          "meaning": ""
+        },
+        "identity_value": {
+          "type": null,
+          "meaning": ""
+        },
+        "source_channel": {
+          "type": null,
+          "meaning": ""
+        },
+        "first_seen_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "last_seen_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Event": {
+      "product": "WebTracking",
+      "key": "event_id",
+      "description": "Time-series behavioral and commerce events for each customer.",
+      "state_labels": {
+        "dynamic": [
+          "OnlineEvent",
+          "PageViewEvent",
+          "FormEvent",
+          "InteractionEvent",
+          "ConversionEvent",
+          "ActivationEvent",
+          "FeatureUsageEvent",
+          "ExpansionSignalEvent",
+          "RiskSignalEvent"
+        ]
+      },
+      "properties": {
+        "event_id": {
+          "type": null,
+          "meaning": "Event identifier."
+        },
+        "cdp_id": {
+          "type": null,
+          "meaning": "Customer associated with the event."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Owning organization."
+        },
+        "site_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "event_name": {
+          "type": null,
+          "meaning": "Canonical event name."
+        },
+        "event_category": {
+          "type": null,
+          "meaning": "Event category."
+        },
+        "source_name": {
+          "type": null,
+          "meaning": "Originating source."
+        },
+        "source_event_id": {
+          "type": null,
+          "meaning": "Source-native event identifier."
+        },
+        "channel": {
+          "type": null,
+          "meaning": "Web, mobile, email, store, API, etc."
+        },
+        "visitor_id": {
+          "type": null,
+          "meaning": "Anonymous visitor identifier."
+        },
+        "session_id": {
+          "type": null,
+          "meaning": "Session identifier."
+        },
+        "page_view_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "page_path": {
+          "type": null,
+          "meaning": "Page or route where the event occurred."
+        },
+        "page_title": {
+          "type": null,
+          "meaning": "Page title."
+        },
+        "referrer": {
+          "type": null,
+          "meaning": "Event referrer."
+        },
+        "utm_source": {
+          "type": null,
+          "meaning": "UTM source."
+        },
+        "utm_medium": {
+          "type": null,
+          "meaning": "UTM medium."
+        },
+        "utm_campaign": {
+          "type": null,
+          "meaning": "UTM campaign."
+        },
+        "utm_term": {
+          "type": null,
+          "meaning": "UTM term."
+        },
+        "utm_content": {
+          "type": null,
+          "meaning": "UTM content."
+        },
+        "device_type": {
+          "type": null,
+          "meaning": "Device class."
+        },
+        "browser": {
+          "type": null,
+          "meaning": "Browser name/version."
+        },
+        "country": {
+          "type": null,
+          "meaning": "Event country."
+        },
+        "occurred_at": {
+          "type": null,
+          "meaning": "Business occurrence time and partition key."
+        },
+        "ingested_at": {
+          "type": null,
+          "meaning": "CDP ingestion time."
+        },
+        "amount": {
+          "type": null,
+          "meaning": "Monetary amount."
+        },
+        "currency": {
+          "type": null,
+          "meaning": "Currency code."
+        },
+        "quantity": {
+          "type": null,
+          "meaning": "Associated quantity."
+        },
+        "status": {
+          "type": null,
+          "meaning": "Event/business status."
+        },
+        "reference_id": {
+          "type": null,
+          "meaning": "Related order, product, campaign, or external ID."
+        }
+      },
+      "embedded": true
+    },
+    "Session": {
+      "product": "Marketing",
+      "key": "uid",
+      "description": "Persistent draft workspace for AI agent modules (create-campaign, contacts, monitoring). Large JSON payload holds chat, wizard stage, and in-progress campaign state.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Session id (often agent-supplied bigint)."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Org scope."
+        },
+        "branch_id": {
+          "type": null,
+          "meaning": "Branch scope."
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "User who opened the draft."
+        },
+        "module": {
+          "type": null,
+          "meaning": "Agent module key."
+        },
+        "stage": {
+          "type": null,
+          "meaning": "Wizard stage: intake, audience, templates, launch_plan."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Session opened."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last agent turn."
+        }
+      },
+      "embedded": false
+    },
+    "JourneyStatus": {
+      "product": "CDP",
+      "key": "uid",
+      "description": "",
+      "state_labels": {},
+      "properties": {
+        "cdp_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "journey_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "current_stage": {
+          "type": null,
+          "meaning": ""
+        },
+        "entered_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "ContactInsight": {
+      "product": "CDP",
+      "key": "insight_id",
+      "description": "Human-readable AI-generated or deterministic customer insights.",
+      "state_labels": {},
+      "properties": {
+        "insight_id": {
+          "type": null,
+          "meaning": "Insight identifier."
+        },
+        "cdp_id": {
+          "type": null,
+          "meaning": "Related customer."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Owning organization."
+        },
+        "insight_type": {
+          "type": null,
+          "meaning": "Insight category."
+        },
+        "score": {
+          "type": null,
+          "meaning": "Optional confidence/relevance score."
+        },
+        "summary": {
+          "type": null,
+          "meaning": "Short insight."
+        },
+        "explanation": {
+          "type": null,
+          "meaning": "Detailed explanation."
+        },
+        "generated_at": {
+          "type": null,
+          "meaning": "Generation time."
+        }
+      },
+      "embedded": false
+    },
+    "NextBestAction": {
+      "product": "CDP",
+      "key": "recommendation_id",
+      "description": "Customer-specific recommended actions, content, products, or timings.",
+      "state_labels": {},
+      "properties": {
+        "recommendation_id": {
+          "type": null,
+          "meaning": "Recommendation identifier."
+        },
+        "cdp_id": {
+          "type": null,
+          "meaning": "Target customer."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Owning organization."
+        },
+        "recommendation_type": {
+          "type": null,
+          "meaning": "Recommendation category."
+        },
+        "recommendation": {
+          "type": null,
+          "meaning": "Recommendation content."
+        },
+        "confidence": {
+          "type": null,
+          "meaning": "Confidence from 0 to 1."
+        },
+        "generated_at": {
+          "type": null,
+          "meaning": "Generation time."
+        }
+      },
+      "embedded": true
+    },
+    "Segment": {
+      "product": "CDP",
+      "key": "segment_id",
+      "description": "Reusable organization-scoped customer segment definitions.",
+      "state_labels": {},
+      "properties": {
+        "segment_id": {
+          "type": null,
+          "meaning": "Segment identifier."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Owning organization."
+        },
+        "segment_name": {
+          "type": null,
+          "meaning": "Segment name."
+        },
+        "description": {
+          "type": null,
+          "meaning": "Segment definition/description."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Creation time."
+        }
+      },
+      "embedded": false
+    },
+    "Persona": {
+      "product": "CDP",
+      "key": "persona_id",
+      "description": "Versioned organization-level buyer persona archetypes shared by customers.",
+      "state_labels": {},
+      "properties": {
+        "persona_id": {
+          "type": null,
+          "meaning": "Persona identifier."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Owning organization."
+        },
+        "persona_key": {
+          "type": null,
+          "meaning": "Stable persona slug."
+        },
+        "name": {
+          "type": null,
+          "meaning": "Display name."
+        },
+        "summary": {
+          "type": null,
+          "meaning": "Persona summary."
+        },
+        "industry": {
+          "type": null,
+          "meaning": "Industry context."
+        },
+        "persona_type": {
+          "type": null,
+          "meaning": "b2c, b2b, hybrid, or negative."
+        },
+        "status": {
+          "type": null,
+          "meaning": "draft, active, or archived."
+        },
+        "version": {
+          "type": null,
+          "meaning": "Persona definition version."
+        },
+        "confidence": {
+          "type": null,
+          "meaning": "Definition confidence."
+        },
+        "evidence_count": {
+          "type": null,
+          "meaning": "Supporting evidence count."
+        },
+        "decision_role": {
+          "type": null,
+          "meaning": "Buying decision role."
+        },
+        "model_version": {
+          "type": null,
+          "meaning": "Producing model version."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Creation time."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update."
+        }
+      },
+      "embedded": true
+    },
+    "Purchase": {
+      "product": "CDP",
+      "key": "order_id",
+      "description": "Customer orders and order-level commerce facts.",
+      "state_labels": {
+        "dynamic": [
+          "PaidPurchase",
+          "RefundedPurchase",
+          "CancelledPurchase",
+          "FulfilledPurchase",
+          "OpenPurchase"
+        ]
+      },
+      "properties": {
+        "order_id": {
+          "type": null,
+          "meaning": "Order identifier."
+        },
+        "cdp_id": {
+          "type": null,
+          "meaning": "Purchasing customer."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Owning organization."
+        },
+        "order_number": {
+          "type": null,
+          "meaning": "External/business order number."
+        },
+        "status": {
+          "type": null,
+          "meaning": "Order status."
+        },
+        "total_amount": {
+          "type": "decimal",
+          "meaning": "Order total."
+        },
+        "currency": {
+          "type": null,
+          "meaning": "Currency code."
+        },
+        "payment_status": {
+          "type": null,
+          "meaning": "Payment state."
+        },
+        "fulfillment_status": {
+          "type": null,
+          "meaning": "Fulfillment state."
+        },
+        "shipping_country": {
+          "type": null,
+          "meaning": "Destination country."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Order time and partition key."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update."
+        }
+      },
+      "embedded": false
+    },
+    "ContactCentreAgent": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "Description: Current presence state for each agent (ready, busy, offline, etc.) used by routing and supervisor views.",
+      "state_labels": {},
+      "properties": {
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "agent_id": {
+          "type": null,
+          "meaning": "Agent referenced in ccass.agents."
+        },
+        "status": {
+          "type": null,
+          "meaning": "Legacy simplified presence used by older routing paths."
+        },
+        "presence_state": {
+          "type": null,
+          "meaning": "Enterprise presence state (offline, ready, busy, not_ready, after_contact_work)."
+        },
+        "reason_code": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "heartbeat_at": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "lease_expires_at": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "version": {
+          "type": null,
+          "meaning": "Optimistic concurrency / change counter."
+        },
+        "source": {
+          "type": null,
+          "meaning": "Origin system or actor that created the record."
+        }
+      },
+      "embedded": false
+    },
+    "Skill": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "Description: Skill catalog used for skill-based routing and queue requirements.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Surrogate primary key (UUID)."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "key": {
+          "type": null,
+          "meaning": "no"
+        },
+        "name": {
+          "type": null,
+          "meaning": "Display name."
+        },
+        "description": {
+          "type": null,
+          "meaning": "Longer descriptive text."
+        },
+        "is_active": {
+          "type": null,
+          "meaning": "Soft-active flag; inactive rows are hidden from pickers."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Row creation timestamp (UTC)."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update timestamp (UTC)."
+        }
+      },
+      "embedded": false
+    },
+    "ContactCentreQueue": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "Description: NLP/routing metadata for a queue: intents, keywords, example phrases, and skill mapping.",
+      "state_labels": {
+        "dynamic": [
+          "LiveRoutingProfile"
+        ]
+      },
+      "properties": {
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "queue_id": {
+          "type": null,
+          "meaning": "Queue referenced in ccass.queues."
+        },
+        "description": {
+          "type": null,
+          "meaning": "Longer descriptive text."
+        },
+        "supported_intents": {
+          "type": null,
+          "meaning": "JSON array of intents this queue handles."
+        },
+        "example_phrases": {
+          "type": null,
+          "meaning": "JSON array of routing classifier example phrases."
+        },
+        "keywords": {
+          "type": null,
+          "meaning": "JSON array of routing keywords."
+        },
+        "language_codes": {
+          "type": null,
+          "meaning": "JSON array of supported ISO language codes."
+        },
+        "classifier_version": {
+          "type": null,
+          "meaning": "'v1'::character varying"
+        }
+      },
+      "embedded": false
+    },
+    "ContactCentreSLA": {
+      "product": "ContactCentre",
+      "key": "uid",
+      "description": "Description: SLA policy definitions (thresholds, warning percentages) referenced by queues.",
+      "state_labels": {
+        "dynamic": [
+          "ConversationSLA"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Surrogate primary key (UUID)."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "name": {
+          "type": null,
+          "meaning": "Display name."
+        },
+        "first_response_seconds": {
+          "type": null,
+          "meaning": "120"
+        },
+        "resolution_seconds": {
+          "type": null,
+          "meaning": "3600"
+        },
+        "warning_threshold_pct": {
+          "type": null,
+          "meaning": "80"
+        },
+        "business_hours_mode": {
+          "type": null,
+          "meaning": "'queue'::character varying"
+        },
+        "is_active": {
+          "type": null,
+          "meaning": "Soft-active flag; inactive rows are hidden from pickers."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Row creation timestamp (UTC)."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update timestamp (UTC)."
+        }
+      },
+      "embedded": false
+    },
+    "Conversation": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "Description: Persisted NLP/context memory snippets associated with a conversation.",
+      "state_labels": {},
+      "properties": {
+        "summary": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "facts": {
+          "type": null,
+          "meaning": "'[]'::jsonb"
+        },
+        "summary_updated_at": {
+          "type": null,
+          "meaning": "Last update timestamp (UTC)."
+        }
+      },
+      "embedded": true
+    },
+    "InternalNote": {
+      "product": "ContactCentre",
+      "key": "uid",
+      "description": "Description: Agent notes attached to a conversation (customer-visible or internal).",
+      "state_labels": {
+        "dynamic": [
+          "ConversationNote"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Surrogate primary key (UUID)."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "conversation_id": {
+          "type": null,
+          "meaning": "Parent conversation this row belongs to."
+        },
+        "author_user_id": {
+          "type": null,
+          "meaning": "no"
+        },
+        "body": {
+          "type": null,
+          "meaning": "Primary text content (message body, note text, etc.)."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Row creation timestamp (UTC)."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update timestamp (UTC)."
+        }
+      },
+      "embedded": true
+    },
+    "Transfer": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "Description: Warm/blind transfer requests between queues or agents with state tracking.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Surrogate primary key (UUID)."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "conversation_id": {
+          "type": null,
+          "meaning": "Parent conversation this row belongs to."
+        },
+        "from_queue_id": {
+          "type": null,
+          "meaning": "FK \u2192 ccass.queues.id."
+        },
+        "from_agent_id": {
+          "type": null,
+          "meaning": "FK \u2192 ccass.agents.id."
+        },
+        "to_queue_id": {
+          "type": null,
+          "meaning": "FK \u2192 ccass.queues.id."
+        },
+        "requested_agent_id": {
+          "type": null,
+          "meaning": "FK \u2192 ccass.agents.id."
+        },
+        "offered_agent_id": {
+          "type": null,
+          "meaning": "FK \u2192 ccass.agents.id."
+        },
+        "state": {
+          "type": null,
+          "meaning": "Workflow state for this entity."
+        },
+        "notes": {
+          "type": null,
+          "meaning": "Free-text notes."
+        },
+        "disposition_code": {
+          "type": null,
+          "meaning": "Applied wrap-up disposition code."
+        },
+        "resolution_code": {
+          "type": null,
+          "meaning": "Applied resolution code."
+        },
+        "requested_at": {
+          "type": null,
+          "meaning": "now()"
+        },
+        "offered_at": {
+          "type": null,
+          "meaning": "Timestamp when an offer was presented to an agent."
+        },
+        "accepted_at": {
+          "type": null,
+          "meaning": "Timestamp when an offer or transfer was accepted."
+        },
+        "completed_at": {
+          "type": null,
+          "meaning": "Timestamp when the task was completed."
+        },
+        "cancelled_at": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update timestamp (UTC)."
+        }
+      },
+      "embedded": false
+    },
+    "MissedContact": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "agent_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "assigned_user_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "conversation_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "assignment_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "queue_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "channel": {
+          "type": null,
+          "meaning": ""
+        },
+        "reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "customer_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "customer_email": {
+          "type": null,
+          "meaning": ""
+        },
+        "customer_phone": {
+          "type": null,
+          "meaning": ""
+        },
+        "offered_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "missed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "acknowledged_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Task": {
+      "product": "ContactCentre",
+      "key": "id",
+      "description": "Description: Agent task inbox items (callbacks, follow-ups, co-worker suggestions) linked to contacts/conversations.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Surrogate primary key (UUID)."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant scope; references accounts.organizations."
+        },
+        "assigned_user_id": {
+          "type": null,
+          "meaning": "Platform user id of the assigned agent."
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "assigned_by_user_id": {
+          "type": null,
+          "meaning": "yes"
+        },
+        "assigned_by_label": {
+          "type": null,
+          "meaning": "Display label for who assigned the task."
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "Canonical customer contact in cdp.contacts when linked."
+        },
+        "conversation_id": {
+          "type": null,
+          "meaning": "Parent conversation this row belongs to."
+        },
+        "task_type": {
+          "type": null,
+          "meaning": "Task category: follow_up, callback, escalation, suggestion."
+        },
+        "status": {
+          "type": null,
+          "meaning": "Domain-specific status enum for this entity."
+        },
+        "priority": {
+          "type": null,
+          "meaning": "Relative priority (higher = more urgent where applicable)."
+        },
+        "source": {
+          "type": null,
+          "meaning": "Origin: self, admin, coworker, system."
+        },
+        "title": {
+          "type": null,
+          "meaning": "Short display title."
+        },
+        "summary": {
+          "type": null,
+          "meaning": "Longer text summary or description."
+        },
+        "notes": {
+          "type": null,
+          "meaning": "Free-text notes."
+        },
+        "channel": {
+          "type": null,
+          "meaning": "Omnichannel identifier (webchat, email, whatsapp, instagram, facebook, voice)."
+        },
+        "due_at": {
+          "type": null,
+          "meaning": "Task due date/time for agent inbox sorting."
+        },
+        "completed_at": {
+          "type": null,
+          "meaning": "Timestamp when the task was completed."
+        },
+        "dismissed_at": {
+          "type": null,
+          "meaning": "Timestamp when the task was dismissed."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Row creation timestamp (UTC)."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Last update timestamp (UTC)."
+        }
+      },
+      "embedded": false
+    },
+    "Product": {
+      "product": "platform",
+      "key": "id",
+      "description": "Shared product catalog (all business types). CRM does DML only \u2014 no DDL on inventory.",
+      "state_labels": {
+        "dynamic": [
+          "ActiveProduct",
+          "ArchivedProduct",
+          "RecurringProduct",
+          "OneTimeProduct",
+          "ConfigurableProduct",
+          "StockedProduct",
+          "SeatBasedProduct",
+          "AgentBasedProduct",
+          "UsageBasedProduct",
+          "FlatRateProduct"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Referenced by lines, offers, addons"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "name": {
+          "type": null,
+          "meaning": ""
+        },
+        "tagline": {
+          "type": null,
+          "meaning": ""
+        },
+        "description": {
+          "type": null,
+          "meaning": ""
+        },
+        "specifications": {
+          "type": null,
+          "meaning": ""
+        },
+        "image_url": {
+          "type": null,
+          "meaning": ""
+        },
+        "product_url": {
+          "type": null,
+          "meaning": ""
+        },
+        "sku": {
+          "type": null,
+          "meaning": ""
+        },
+        "brand": {
+          "type": null,
+          "meaning": ""
+        },
+        "category": {
+          "type": null,
+          "meaning": ""
+        },
+        "subcategory": {
+          "type": null,
+          "meaning": ""
+        },
+        "tags": {
+          "type": null,
+          "meaning": ""
+        },
+        "stock_on_hand": {
+          "type": null,
+          "meaning": ""
+        },
+        "price": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "currency": {
+          "type": null,
+          "meaning": ""
+        },
+        "max_discount_percent": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": ""
+        },
+        "product_type": {
+          "type": null,
+          "meaning": ""
+        },
+        "billing_type": {
+          "type": null,
+          "meaning": ""
+        },
+        "billing_frequency": {
+          "type": null,
+          "meaning": ""
+        },
+        "unit_of_measure": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": true
+    },
+    "Account": {
+      "product": "Sales",
+      "key": "id",
+      "description": "B2B accounts / franchise entities within a tenant. Required for B2B deals; optional for B2B2C contacts.",
+      "state_labels": {
+        "dynamic": [
+          "Partner",
+          "SubsidiaryAccount",
+          "ExpansionCandidate"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Referenced by deals, contacts, orders, invoices, contracts"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "name": {
+          "type": null,
+          "meaning": ""
+        },
+        "domain": {
+          "type": null,
+          "meaning": ""
+        },
+        "industry": {
+          "type": null,
+          "meaning": ""
+        },
+        "employee_count": {
+          "type": null,
+          "meaning": ""
+        },
+        "linkedin_url": {
+          "type": null,
+          "meaning": ""
+        },
+        "logo_url": {
+          "type": null,
+          "meaning": ""
+        },
+        "owner_user_id": {
+          "type": null,
+          "meaning": "CRM owner (sales rep)"
+        },
+        "channel_role": {
+          "type": null,
+          "meaning": "standard, franchise, owned_store, brand_hq (B2B2C hierarchy)"
+        },
+        "parent_company_id": {
+          "type": null,
+          "meaning": "Optional franchise tree"
+        },
+        "expansion_signal": {
+          "type": null,
+          "meaning": ""
+        },
+        "expansion_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "expansion_draft": {
+          "type": null,
+          "meaning": ""
+        },
+        "expansion_last_run_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "SalesProfile": {
+      "product": "Sales",
+      "key": "id",
+      "description": "CRM overlay on a CDP person \u2014 lifecycle, ownership, BANT, nurture/lifecycle agent state. Not the person identity store.",
+      "state_labels": {
+        "dynamic": [
+          "MarketingOptedOut",
+          "QualifiedSalesProfile"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Internal CRM row id"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "account_contact_id": {
+          "type": null,
+          "meaning": "Person key across CRM"
+        },
+        "company_id": {
+          "type": null,
+          "meaning": "Linked account (required B2B)"
+        },
+        "location_id": {
+          "type": null,
+          "meaning": "Optional site"
+        },
+        "owner_user_id": {
+          "type": null,
+          "meaning": "Assigned sales owner"
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "Who created overlay"
+        },
+        "lifecycle_stage": {
+          "type": null,
+          "meaning": ""
+        },
+        "lead_source": {
+          "type": null,
+          "meaning": ""
+        },
+        "lead_status": {
+          "type": null,
+          "meaning": ""
+        },
+        "disqualify_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "crm_status": {
+          "type": null,
+          "meaning": "active / archived"
+        },
+        "notes": {
+          "type": null,
+          "meaning": ""
+        },
+        "tags": {
+          "type": null,
+          "meaning": ""
+        },
+        "is_pinned": {
+          "type": null,
+          "meaning": ""
+        },
+        "assignment_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "sla_deadline": {
+          "type": null,
+          "meaning": ""
+        },
+        "assigned_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "assignment_escalated": {
+          "type": null,
+          "meaning": ""
+        },
+        "nurture_status": {
+          "type": null,
+          "meaning": ""
+        },
+        "nurture_sequence_step": {
+          "type": null,
+          "meaning": ""
+        },
+        "nurture_started_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "nurture_last_touch_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "flagged_for_review": {
+          "type": null,
+          "meaning": ""
+        },
+        "flag_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "lifecycle_last_action": {
+          "type": null,
+          "meaning": ""
+        },
+        "lifecycle_last_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "lifecycle_last_run_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_budget": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_authority": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_need": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_timeline": {
+          "type": null,
+          "meaning": ""
+        },
+        "converted_deal_id": {
+          "type": null,
+          "meaning": "Set when lead converts"
+        },
+        "marketing_opt_out": {
+          "type": null,
+          "meaning": "Compliance \u2014 blocks nurture sends"
+        },
+        "marketing_opt_out_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": true
+    },
+    "Deal": {
+      "product": "Sales",
+      "key": "id",
+      "description": "B2B opportunity record. Stages: qualification \u2192 discover \u2192 propose \u2192 negotiate \u2192 closed_won / closed_lost.",
+      "state_labels": {
+        "dynamic": [
+          "OpenDeal",
+          "WonDeal",
+          "LostDeal",
+          "CommitDeal",
+          "BestCaseDeal"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "title": {
+          "type": null,
+          "meaning": ""
+        },
+        "stage": {
+          "type": null,
+          "meaning": ""
+        },
+        "amount": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "company_id": {
+          "type": null,
+          "meaning": "Required account"
+        },
+        "location_id": {
+          "type": null,
+          "meaning": "Required site"
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "Primary contact (optional)"
+        },
+        "contact_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "contact_email": {
+          "type": null,
+          "meaning": ""
+        },
+        "owner_user_id": {
+          "type": null,
+          "meaning": "Deal owner"
+        },
+        "notes": {
+          "type": null,
+          "meaning": ""
+        },
+        "lost_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "expected_close_date": {
+          "type": null,
+          "meaning": ""
+        },
+        "closed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "forecast_category": {
+          "type": null,
+          "meaning": ""
+        },
+        "forecast_confidence_percent": {
+          "type": null,
+          "meaning": ""
+        },
+        "forecast_flagged": {
+          "type": null,
+          "meaning": ""
+        },
+        "forecast_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "forecast_last_run_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": true
+    },
+    "DealActivity": {
+      "product": "Sales",
+      "key": "id",
+      "description": "Tasks/calls/meetings logged on a deal (not the contact timeline).",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": "Parent deal (CASCADE)"
+        },
+        "type": {
+          "type": null,
+          "meaning": "call, meeting, email, note, task, \u2026"
+        },
+        "subject": {
+          "type": null,
+          "meaning": ""
+        },
+        "body": {
+          "type": null,
+          "meaning": ""
+        },
+        "due_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "completed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "accounts.setup_users.id"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "ContactActivity": {
+      "product": "Sales",
+      "key": "id",
+      "description": "Unified contact timeline \u2014 emails, meetings, tasks, notes. Powers Inbox and activity feed.",
+      "state_labels": {
+        "dynamic": [
+          "EmailActivity",
+          "TaskActivity",
+          "MeetingActivity"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "Person (not contact_profiles.id)"
+        },
+        "type": {
+          "type": null,
+          "meaning": ""
+        },
+        "folder": {
+          "type": null,
+          "meaning": "inbox / sent / draft / trash"
+        },
+        "thread_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "provider_message_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "provider_thread_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "mail_provider": {
+          "type": null,
+          "meaning": "google / microsoft"
+        },
+        "rfc_message_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "email_direction": {
+          "type": null,
+          "meaning": "inbound / outbound"
+        },
+        "needs_manual_response": {
+          "type": null,
+          "meaning": "Auto-reply escalated to human"
+        },
+        "subject": {
+          "type": null,
+          "meaning": ""
+        },
+        "body": {
+          "type": null,
+          "meaning": ""
+        },
+        "due_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "assignee_user_id": {
+          "type": null,
+          "meaning": "Task assignee"
+        },
+        "task_status": {
+          "type": null,
+          "meaning": "open / in_progress / completed"
+        },
+        "reminder_sent_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "reminder_24h_sent_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "reminder_1h_sent_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "miss_escalated_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "mom_sent_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "transcript_text": {
+          "type": null,
+          "meaning": ""
+        },
+        "transcript_source": {
+          "type": null,
+          "meaning": ""
+        },
+        "transcript_analyzed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "completed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Meeting": {
+      "product": "Sales",
+      "key": "id",
+      "description": "",
+      "state_labels": {
+        "dynamic": [
+          "ScheduledMeeting",
+          "CompletedMeeting",
+          "MissedMeeting",
+          "CancelledMeeting",
+          "OnlineMeeting"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "host_user_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "activity_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "source": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": ""
+        },
+        "title": {
+          "type": null,
+          "meaning": ""
+        },
+        "starts_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "ends_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "timezone": {
+          "type": null,
+          "meaning": ""
+        },
+        "provider": {
+          "type": null,
+          "meaning": ""
+        },
+        "join_url": {
+          "type": null,
+          "meaning": ""
+        },
+        "calendar_event_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "assignment_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "guest_emails": {
+          "type": null,
+          "meaning": ""
+        },
+        "canceled_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "completed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Proposal": {
+      "product": "Sales",
+      "key": "id",
+      "description": "Customer-facing proposal on a deal.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": "Parent deal"
+        },
+        "template_id": {
+          "type": null,
+          "meaning": "Source template"
+        },
+        "number": {
+          "type": null,
+          "meaning": ""
+        },
+        "title": {
+          "type": null,
+          "meaning": ""
+        },
+        "summary": {
+          "type": null,
+          "meaning": ""
+        },
+        "customer_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "version": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": "draft / shared / accepted / declined"
+        },
+        "attachment_url": {
+          "type": null,
+          "meaning": ""
+        },
+        "shared_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "approval_status": {
+          "type": null,
+          "meaning": ""
+        },
+        "approved_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "approved_by_user_id": {
+          "type": null,
+          "meaning": "Human approval before send"
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "accounts.setup_users.id"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Quote": {
+      "product": "Sales",
+      "key": "id",
+      "description": "Formal quotation on a deal; may originate from a proposal.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": "Required"
+        },
+        "proposal_id": {
+          "type": null,
+          "meaning": "Optional lineage"
+        },
+        "template_id": {
+          "type": null,
+          "meaning": "Document template"
+        },
+        "number": {
+          "type": null,
+          "meaning": ""
+        },
+        "version": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": "draft \u2192 sent \u2192 accepted / rejected"
+        },
+        "currency": {
+          "type": null,
+          "meaning": ""
+        },
+        "renewal_contract_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "subtotal": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "discount_pct": {
+          "type": "float",
+          "meaning": ""
+        },
+        "total": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "valid_until": {
+          "type": null,
+          "meaning": ""
+        },
+        "notes": {
+          "type": null,
+          "meaning": ""
+        },
+        "customer_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "company_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "vendor_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "sent_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "accepted_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "approval_status": {
+          "type": null,
+          "meaning": ""
+        },
+        "approval_note": {
+          "type": null,
+          "meaning": ""
+        },
+        "approved_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "approved_by_user_id": {
+          "type": null,
+          "meaning": "Finance approval gate"
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "SalesOrder": {
+      "product": "Sales",
+      "key": "id",
+      "description": "Confirmed order \u2014 from accepted quote (B2B) or direct commerce (B2C: deal_id null, contact_id set).",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": "Optional (B2B path)"
+        },
+        "quote_id": {
+          "type": null,
+          "meaning": "Optional source"
+        },
+        "company_id": {
+          "type": null,
+          "meaning": "B2B account"
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "B2C / B2B2C buyer"
+        },
+        "number": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": ""
+        },
+        "currency": {
+          "type": null,
+          "meaning": ""
+        },
+        "total": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "confirmed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "accounts.setup_users.id"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Invoice": {
+      "product": "Sales",
+      "key": "id",
+      "description": "",
+      "state_labels": {
+        "dynamic": [
+          "UnpaidInvoice",
+          "OverdueInvoice",
+          "PaidInvoice",
+          "EscalatedInvoice"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "order_id": {
+          "type": null,
+          "meaning": "From commerce accept"
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": "Finance-created from deal"
+        },
+        "company_id": {
+          "type": null,
+          "meaning": "Bill-to account"
+        },
+        "template_id": {
+          "type": null,
+          "meaning": "crm.invoice_templates.id"
+        },
+        "number": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": ""
+        },
+        "currency": {
+          "type": null,
+          "meaning": ""
+        },
+        "contract_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "billing_schedule_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "voided_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "sent_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "total": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "discount_amount": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "tax_amount": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "issue_date": {
+          "type": null,
+          "meaning": ""
+        },
+        "payment_terms": {
+          "type": null,
+          "meaning": ""
+        },
+        "notes": {
+          "type": null,
+          "meaning": ""
+        },
+        "billing_address": {
+          "type": null,
+          "meaning": ""
+        },
+        "lead_email": {
+          "type": null,
+          "meaning": ""
+        },
+        "lead_phone": {
+          "type": null,
+          "meaning": ""
+        },
+        "tax_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "due_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "paid_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "approval_status": {
+          "type": null,
+          "meaning": ""
+        },
+        "approved_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "approved_by_user_id": {
+          "type": null,
+          "meaning": "Send gate"
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "escalation_severity": {
+          "type": null,
+          "meaning": ""
+        },
+        "escalation_reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "escalation_draft": {
+          "type": null,
+          "meaning": ""
+        },
+        "escalation_last_run_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "LineItem": {
+      "product": "Sales",
+      "key": "uid",
+      "description": "",
+      "state_labels": {
+        "dynamic": [
+          "InvoiceLine"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "invoice_id": {
+          "type": null,
+          "meaning": "Parent"
+        },
+        "kind": {
+          "type": null,
+          "meaning": "product / addon"
+        },
+        "product_id": {
+          "type": null,
+          "meaning": "Product line"
+        },
+        "addon_id": {
+          "type": null,
+          "meaning": "Addon line"
+        },
+        "name": {
+          "type": null,
+          "meaning": ""
+        },
+        "description": {
+          "type": null,
+          "meaning": ""
+        },
+        "quantity": {
+          "type": "float",
+          "meaning": ""
+        },
+        "unit_price": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "tax_percent": {
+          "type": "float",
+          "meaning": ""
+        },
+        "amount": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "sort_order": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Contract": {
+      "product": "Sales",
+      "key": "id",
+      "description": "Subscription/ARR record created on closed-won; drives renewal reminders.",
+      "state_labels": {
+        "dynamic": [
+          "ActiveContract",
+          "EndedContract",
+          "AutoRenewContract",
+          "MonthlyContract",
+          "QuarterlyContract",
+          "AnnualContract"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "company_id": {
+          "type": null,
+          "meaning": "Account"
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": "Originating deal (optional)"
+        },
+        "title": {
+          "type": null,
+          "meaning": ""
+        },
+        "starts_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "ends_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "arr": {
+          "type": "decimal",
+          "meaning": ""
+        },
+        "renew_deal_id": {
+          "type": null,
+          "meaning": "Linked renewal opportunity"
+        },
+        "renewal_reminded_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "auto_renew": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": ""
+        },
+        "source_order_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "billing_frequency": {
+          "type": null,
+          "meaning": ""
+        },
+        "cancelled_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "SalesRep": {
+      "product": "Sales",
+      "key": "user_id",
+      "description": "Per-rep capacity overlay for assignment agent.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "user_id": {
+          "type": null,
+          "meaning": "Sales rep"
+        },
+        "accepting_leads": {
+          "type": null,
+          "meaning": ""
+        },
+        "max_open_deals": {
+          "type": null,
+          "meaning": ""
+        },
+        "seniority_tier": {
+          "type": null,
+          "meaning": "junior / mid / senior"
+        },
+        "on_pto_until": {
+          "type": null,
+          "meaning": ""
+        },
+        "country": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "LeadSummary": {
+      "product": "Sales",
+      "key": "id",
+      "description": "",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "summary": {
+          "type": null,
+          "meaning": ""
+        },
+        "headline": {
+          "type": null,
+          "meaning": ""
+        },
+        "intent": {
+          "type": null,
+          "meaning": ""
+        },
+        "recommended_action": {
+          "type": null,
+          "meaning": ""
+        },
+        "flags": {
+          "type": null,
+          "meaning": ""
+        },
+        "signature": {
+          "type": null,
+          "meaning": ""
+        },
+        "source": {
+          "type": null,
+          "meaning": ""
+        },
+        "model": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "MeetingOutcome": {
+      "product": "Sales",
+      "key": "id",
+      "description": "",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "activity_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "deal_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "outcome": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_budget": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_authority": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_need": {
+          "type": null,
+          "meaning": ""
+        },
+        "bant_timeline_text": {
+          "type": null,
+          "meaning": ""
+        },
+        "next_step_agreed": {
+          "type": null,
+          "meaning": ""
+        },
+        "objections_raised": {
+          "type": null,
+          "meaning": ""
+        },
+        "confidence": {
+          "type": null,
+          "meaning": ""
+        },
+        "analyzed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "PrivacyRequest": {
+      "product": "Sales",
+      "key": "id",
+      "description": "GDPR-style deletion/access requests \u2014 human must execute.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": ""
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": ""
+        },
+        "activity_id": {
+          "type": null,
+          "meaning": "Triggering inbound email"
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "Subject"
+        },
+        "request_type": {
+          "type": null,
+          "meaning": ""
+        },
+        "confidence": {
+          "type": null,
+          "meaning": ""
+        },
+        "status": {
+          "type": null,
+          "meaning": ""
+        },
+        "reason": {
+          "type": null,
+          "meaning": ""
+        },
+        "draft_confirmation": {
+          "type": null,
+          "meaning": ""
+        },
+        "reviewed_by_user_id": {
+          "type": null,
+          "meaning": "Admin reviewer"
+        },
+        "reviewed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "executed_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "SupportAgent": {
+      "product": "Support",
+      "key": "id",
+      "description": "Thin staff bridge. Local id is used by tickets/sessions/notes. Identity (name, email, password, skills) lives in accounts.setup_users via setup_user_id. Never INSERT into MyAccount from Ticketing.",
+      "state_labels": {
+        "dynamic": [
+          "SupportStaff"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Local PK (assignee / session FK target)"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "FK \u2192 accounts.organizations.id"
+        },
+        "setup_user_id": {
+          "type": null,
+          "meaning": "FK \u2192 accounts.setup_users.id (required, unique)"
+        },
+        "support_email": {
+          "type": null,
+          "meaning": "Optional spoke email copy for mail"
+        },
+        "support_phone": {
+          "type": null,
+          "meaning": "Optional spoke phone"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Bridge active for assignment/login"
+        },
+        "role": {
+          "type": null,
+          "meaning": "Spoke RBAC role mirror"
+        },
+        "last_login_at": {
+          "type": null,
+          "meaning": "Last staff console login"
+        },
+        "two_factor_enabled": {
+          "type": null,
+          "meaning": "Account-settings 2FA flag"
+        },
+        "language": {
+          "type": null,
+          "meaning": "UI language preference"
+        },
+        "timezone": {
+          "type": null,
+          "meaning": "Personal timezone preference"
+        },
+        "date_format": {
+          "type": null,
+          "meaning": "Date display preference"
+        },
+        "notify_ticket_assignments": {
+          "type": null,
+          "meaning": "Pref: assignment notifications"
+        },
+        "notify_ticket_updates": {
+          "type": null,
+          "meaning": "Pref: update notifications"
+        },
+        "notify_security_alerts": {
+          "type": null,
+          "meaning": "Pref: security notifications"
+        },
+        "notify_sla_alerts": {
+          "type": null,
+          "meaning": "Pref: SLA notifications"
+        },
+        "notify_product_updates": {
+          "type": null,
+          "meaning": "Pref: product notifications"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at"
+        }
+      },
+      "embedded": false
+    },
+    "SupportCompany": {
+      "product": "Support",
+      "key": "id",
+      "description": "B2B client accounts inside Ticketing (companies your end-customers belong to). Not MyAccount accounts.*.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "B2B account PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant (support org)"
+        },
+        "name": {
+          "type": null,
+          "meaning": "Client company name"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Active for linking contacts"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at"
+        }
+      },
+      "embedded": false
+    },
+    "SupportQueue": {
+      "product": "Support",
+      "key": "id",
+      "description": "Support teams / queues used for routing and workload.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Queue PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "external_id": {
+          "type": null,
+          "meaning": "Optional external id"
+        },
+        "queue_name": {
+          "type": null,
+          "meaning": "Team/queue display name"
+        },
+        "description": {
+          "type": null,
+          "meaning": "Scope / purpose text"
+        },
+        "type": {
+          "type": null,
+          "meaning": "Queue visibility model"
+        },
+        "open_tickets": {
+          "type": null,
+          "meaning": "Cached open count"
+        },
+        "assigned": {
+          "type": null,
+          "meaning": "Cached assigned count"
+        },
+        "sla_status": {
+          "type": null,
+          "meaning": "Queue SLA health"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at"
+        }
+      },
+      "embedded": false
+    },
+    "Ticket": {
+      "product": "Support",
+      "key": "id",
+      "description": "Core support cases (the main work item).",
+      "state_labels": {
+        "dynamic": [
+          "OpenTicket",
+          "InProgressTicket",
+          "ReopenedTicket",
+          "OverdueTicket",
+          "ResolvedTicket",
+          "UrgentTicket",
+          "BillingQuery",
+          "Complaint",
+          "DocumentRequest",
+          "AccessRequest",
+          "BugReport",
+          "HowToRequest",
+          "BillingQuery",
+          "FeatureRequest",
+          "AccessRequest"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Ticket PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "ticket_number": {
+          "type": null,
+          "meaning": "Human number, e.g. #20"
+        },
+        "subject": {
+          "type": null,
+          "meaning": "Short title"
+        },
+        "description": {
+          "type": null,
+          "meaning": "Full issue / intake body"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Lifecycle status"
+        },
+        "priority": {
+          "type": null,
+          "meaning": "SLA priority key"
+        },
+        "customer_id": {
+          "type": null,
+          "meaning": "FK \u2192 contact_profile.id"
+        },
+        "customer_name": {
+          "type": null,
+          "meaning": "Display snapshot (CDP is SoR)"
+        },
+        "customer_email": {
+          "type": null,
+          "meaning": "Display snapshot"
+        },
+        "customer_phone": {
+          "type": null,
+          "meaning": "Display snapshot"
+        },
+        "channel": {
+          "type": null,
+          "meaning": "Intake channel"
+        },
+        "assignee_id": {
+          "type": null,
+          "meaning": "L1 FK \u2192 agents.id"
+        },
+        "assignee_name": {
+          "type": null,
+          "meaning": "Display assignee"
+        },
+        "resolver_id": {
+          "type": null,
+          "meaning": "L2 FK \u2192 agents.id"
+        },
+        "resolver_name": {
+          "type": null,
+          "meaning": "Display resolver"
+        },
+        "queue_id": {
+          "type": null,
+          "meaning": "FK \u2192 agent_queues.id"
+        },
+        "queue_name": {
+          "type": null,
+          "meaning": "Display queue name"
+        },
+        "attachments": {
+          "type": null,
+          "meaning": "Attachment refs"
+        },
+        "due_at": {
+          "type": null,
+          "meaning": "SLA resolution deadline"
+        },
+        "first_response_at": {
+          "type": null,
+          "meaning": "First staff public response"
+        },
+        "resolved_at": {
+          "type": null,
+          "meaning": "Entered terminal status"
+        },
+        "csat_score": {
+          "type": null,
+          "meaning": "CSAT rating"
+        },
+        "csat_rated_at": {
+          "type": null,
+          "meaning": "When CSAT submitted"
+        },
+        "category": {
+          "type": null,
+          "meaning": "Triage category"
+        },
+        "skill": {
+          "type": null,
+          "meaning": "Skill tag for auto-assign"
+        },
+        "ai_summary": {
+          "type": null,
+          "meaning": "LLM short summary"
+        },
+        "created_by_id": {
+          "type": null,
+          "meaning": "Creator agent or null"
+        },
+        "created_by_name": {
+          "type": null,
+          "meaning": "Creator label (API:\u2026 / name)"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at"
+        }
+      },
+      "embedded": true
+    },
+    "SupportSLA": {
+      "product": "Support",
+      "key": "uid",
+      "description": "Per-org SLA windows by priority (what actually drives tickets.due_at).",
+      "state_labels": {
+        "dynamic": [
+          "TicketSLA"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Row PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "priority": {
+          "type": null,
+          "meaning": "Priority key"
+        },
+        "resolution_hours": {
+          "type": null,
+          "meaning": "Hours create \u2192 due"
+        },
+        "first_response_hours": {
+          "type": null,
+          "meaning": "Hours to first response"
+        },
+        "display_name": {
+          "type": null,
+          "meaning": "UI label"
+        },
+        "is_system": {
+          "type": null,
+          "meaning": ""
+        },
+        "sort_order": {
+          "type": null,
+          "meaning": ""
+        },
+        "active": {
+          "type": null,
+          "meaning": "In use"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": ""
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": ""
+        }
+      },
+      "embedded": false
+    },
+    "Note": {
+      "product": "Support",
+      "key": "id",
+      "description": "Conversation thread on a ticket (public replies + internal notes).",
+      "state_labels": {
+        "dynamic": [
+          "PublicReply",
+          "PrivateNote"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Note PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "ticket_id": {
+          "type": null,
+          "meaning": "FK \u2192 tickets.id"
+        },
+        "author_id": {
+          "type": null,
+          "meaning": "FK \u2192 agents.id"
+        },
+        "author_name": {
+          "type": null,
+          "meaning": "Author display name"
+        },
+        "body": {
+          "type": null,
+          "meaning": "Note / reply text"
+        },
+        "visibility": {
+          "type": null,
+          "meaning": "Staff-only vs customer-visible"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        }
+      },
+      "embedded": false
+    },
+    "KnowledgeArticle": {
+      "product": "Support",
+      "key": "id",
+      "description": "Knowledge-base articles for help center / agent assist.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Article PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "external_id": {
+          "type": null,
+          "meaning": "Optional external id"
+        },
+        "title": {
+          "type": null,
+          "meaning": "Title"
+        },
+        "content": {
+          "type": null,
+          "meaning": "Body"
+        },
+        "category": {
+          "type": null,
+          "meaning": "Category"
+        },
+        "author_name": {
+          "type": null,
+          "meaning": "Author display name"
+        },
+        "author_id": {
+          "type": null,
+          "meaning": "FK \u2192 agents.id"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Publish state"
+        },
+        "views": {
+          "type": null,
+          "meaning": "View counter"
+        },
+        "attachments": {
+          "type": null,
+          "meaning": "Attachment refs"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at"
+        }
+      },
+      "embedded": true
+    },
+    "AuditEvent": {
+      "product": "Support",
+      "key": "id",
+      "description": "Append-only compliance audit trail of important mutations.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Event PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "actor_id": {
+          "type": null,
+          "meaning": "Agent who acted"
+        },
+        "actor_name": {
+          "type": null,
+          "meaning": "Actor display name"
+        },
+        "action": {
+          "type": null,
+          "meaning": "Action code"
+        },
+        "ticket_id": {
+          "type": null,
+          "meaning": "Related ticket"
+        },
+        "ticket_number": {
+          "type": null,
+          "meaning": "Ticket number snapshot"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "When audited"
+        }
+      },
+      "embedded": false
+    },
+    "InboundEmail": {
+      "product": "Support",
+      "key": "id",
+      "description": "Maps inbound email Message-ID \u2192 ticket for threading.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Row PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "message_id": {
+          "type": null,
+          "meaning": "Email Message-ID header"
+        },
+        "ticket_id": {
+          "type": null,
+          "meaning": "FK \u2192 tickets.id"
+        },
+        "ticket_number": {
+          "type": null,
+          "meaning": "Ticket number snapshot"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        }
+      },
+      "embedded": false
+    },
+    "OutboundEmail": {
+      "product": "Support",
+      "key": "id",
+      "description": "Log of outbound emails (customer, staff, SLA).",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Log PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "ticket_id": {
+          "type": null,
+          "meaning": "Related ticket"
+        },
+        "ticket_number": {
+          "type": null,
+          "meaning": "Ticket number"
+        },
+        "kind": {
+          "type": null,
+          "meaning": "Which mail flow"
+        },
+        "to_email": {
+          "type": null,
+          "meaning": "Recipient"
+        },
+        "subject": {
+          "type": null,
+          "meaning": "Subject"
+        },
+        "body_preview": {
+          "type": null,
+          "meaning": "Short body preview"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Delivery outcome"
+        },
+        "error": {
+          "type": null,
+          "meaning": "Failure reason"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "When logged"
+        }
+      },
+      "embedded": false
+    },
+    "Recommendation": {
+      "product": "Support",
+      "key": "id",
+      "description": "Proactive suggestions shown to agents.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Recommendation PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "agent_id": {
+          "type": null,
+          "meaning": "Proactive agent code (not agents.id)"
+        },
+        "ticket_id": {
+          "type": null,
+          "meaning": "Related ticket"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Agent decision"
+        },
+        "reason": {
+          "type": null,
+          "meaning": "Why recommended"
+        },
+        "dedupe_key": {
+          "type": null,
+          "meaning": "Dedup key"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        }
+      },
+      "embedded": true
+    },
+    "Approval": {
+      "product": "Support",
+      "key": "id",
+      "description": "Human-in-the-loop approvals for proactive tool actions.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Approval PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "agent_id": {
+          "type": null,
+          "meaning": "Which proactive agent"
+        },
+        "ticket_id": {
+          "type": null,
+          "meaning": "Related ticket"
+        },
+        "status": {
+          "type": null,
+          "meaning": "Human decision"
+        },
+        "tool_name": {
+          "type": null,
+          "meaning": "Tool awaiting approval"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        }
+      },
+      "embedded": false
+    },
+    "Campaign": {
+      "product": "Marketing",
+      "key": "id",
+      "description": "Central persisted campaign record after the create-campaign agent saves or launches. Holds name, goal, audience snapshot, schedule, and per-channel run metrics in JSON.",
+      "state_labels": {
+        "dynamic": [
+          "LiveCampaign",
+          "ScheduledCampaign"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Primary key."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant isolation key."
+        },
+        "branch_id": {
+          "type": null,
+          "meaning": "Workspace branch."
+        },
+        "branch_name": {
+          "type": null,
+          "meaning": ""
+        },
+        "name": {
+          "type": null,
+          "meaning": "Campaign display name."
+        },
+        "description": {
+          "type": null,
+          "meaning": "Longer description."
+        },
+        "status": {
+          "type": null,
+          "meaning": "Lifecycle: draft, scheduled, live, completed, cancelled."
+        },
+        "starts_at": {
+          "type": null,
+          "meaning": "UTC launch instant."
+        },
+        "ends_at": {
+          "type": null,
+          "meaning": "UTC end instant."
+        },
+        "source_channel": {
+          "type": null,
+          "meaning": "Origin: standalone_campaign or crm_marketing."
+        },
+        "created_by_user_id": {
+          "type": null,
+          "meaning": "Creator ref \u2192 setup_users.id."
+        },
+        "goal": {
+          "type": null,
+          "meaning": "Business goal from agent."
+        },
+        "objective": {
+          "type": null,
+          "meaning": "Measurable objective."
+        },
+        "session_id": {
+          "type": null,
+          "meaning": "Agent session this campaign was saved from (unique)."
+        },
+        "audience_summary": {
+          "type": null,
+          "meaning": "Human-readable audience."
+        },
+        "audience_filters": {
+          "type": null,
+          "meaning": "Filter snapshot at save."
+        },
+        "audience_count": {
+          "type": null,
+          "meaning": "Audience size at save/launch."
+        },
+        "launch_local_date": {
+          "type": null,
+          "meaning": "Local YYYY-MM-DD for launch."
+        },
+        "launch_local_time": {
+          "type": null,
+          "meaning": "Local HH:mm for launch."
+        },
+        "timezone": {
+          "type": null,
+          "meaning": "IANA timezone for scheduling."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at."
+        }
+      },
+      "embedded": true
+    },
+    "MessageTemplate": {
+      "product": "Marketing",
+      "key": "id",
+      "description": "Per-channel message template drafts within an agent session. fields JSON holds structured content (email blocks, push title/body, etc.) for the frontend editor.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Template id (= template_id in API)."
+        },
+        "session_id": {
+          "type": null,
+          "meaning": "Owning agent session."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Org scope."
+        },
+        "branch_id": {
+          "type": null,
+          "meaning": "Branch scope."
+        },
+        "channel": {
+          "type": null,
+          "meaning": "Channel this template is for."
+        },
+        "logo": {
+          "type": null,
+          "meaning": "Optional brand logo URL."
+        },
+        "launch_at": {
+          "type": null,
+          "meaning": "Planned channel launch string."
+        },
+        "how_it_works": {
+          "type": null,
+          "meaning": "Channel explanation."
+        },
+        "generation_batch_id": {
+          "type": null,
+          "meaning": "Groups AI generation batches."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at."
+        }
+      },
+      "embedded": true
+    },
+    "Delivery": {
+      "product": "Marketing",
+      "key": "id",
+      "description": "One row per recipient per send attempt. Tracks delivery status, ESP message id, A/B variant, and open/click engagement counters for reporting.",
+      "state_labels": {
+        "dynamic": [
+          "FailedMessage",
+          "SkippedMessage",
+          "BouncedMessage",
+          "PendingMessage",
+          "StubMessage",
+          "DeliveredMessage",
+          "OpenedMessage",
+          "ClickedMessage",
+          "EmailDelivery",
+          "PushDelivery",
+          "WebPushDelivery",
+          "WhatsAppDelivery",
+          "SmsDelivery",
+          "UnlinkedDelivery"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Primary key."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Org scope."
+        },
+        "batch_id": {
+          "type": null,
+          "meaning": "Parent send batch."
+        },
+        "campaign_id": {
+          "type": null,
+          "meaning": "Denormalized campaign id."
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "CDP contact ref."
+        },
+        "email": {
+          "type": null,
+          "meaning": "Email address when channel=email."
+        },
+        "destination": {
+          "type": null,
+          "meaning": "Push token or web-push URL."
+        },
+        "platform": {
+          "type": null,
+          "meaning": "Device platform: ios, android, web."
+        },
+        "status": {
+          "type": null,
+          "meaning": "Delivery status: pending, sent, failed, skipped."
+        },
+        "skip_fail_reason": {
+          "type": null,
+          "meaning": "Why skipped/failed e.g. suppressed."
+        },
+        "provider_message_id": {
+          "type": null,
+          "meaning": "ESP tracking id."
+        },
+        "attempt_count": {
+          "type": null,
+          "meaning": "Send retry count."
+        },
+        "ab_variant": {
+          "type": null,
+          "meaning": "A/B bucket: a, b, holdout, winner."
+        },
+        "opened_at": {
+          "type": null,
+          "meaning": "First open time."
+        },
+        "clicked_at": {
+          "type": null,
+          "meaning": "First click time."
+        },
+        "open_count": {
+          "type": null,
+          "meaning": "Total open events."
+        },
+        "click_count": {
+          "type": null,
+          "meaning": "Total click events."
+        },
+        "delivery_channel": {
+          "type": null,
+          "meaning": ""
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at."
+        }
+      },
+      "embedded": false
+    },
+    "EmailEngagement": {
+      "product": "Marketing",
+      "key": "id",
+      "description": "Campaign-scoped email engagement and unsubscribe state for a CDP contact. Aggregates opens/clicks at contact level across campaigns for consent checks.",
+      "state_labels": {
+        "dynamic": [
+          "Unsubscribed"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Primary key."
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Org scope."
+        },
+        "contact_id": {
+          "type": null,
+          "meaning": "CDP contact ref."
+        },
+        "email_unsubscribed": {
+          "type": null,
+          "meaning": "Tenant-level email opt-out."
+        },
+        "email_unsubscribed_at": {
+          "type": null,
+          "meaning": "When user unsubscribed."
+        },
+        "email_unsubscribe_reason": {
+          "type": null,
+          "meaning": "Reason: user_link, admin, import."
+        },
+        "last_email_opened_at": {
+          "type": null,
+          "meaning": "Most recent open."
+        },
+        "last_email_clicked_at": {
+          "type": null,
+          "meaning": "Most recent click."
+        },
+        "email_open_count": {
+          "type": null,
+          "meaning": "Lifetime open count."
+        },
+        "email_click_count": {
+          "type": null,
+          "meaning": "Lifetime click count."
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at."
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at."
+        }
+      },
+      "embedded": false
+    },
+    "Macro": {
+      "product": "Support",
+      "key": "id",
+      "description": "Saved reply templates for agents.",
+      "state_labels": {},
+      "properties": {
+        "id": {
+          "type": null,
+          "meaning": "Macro PK"
+        },
+        "organization_id": {
+          "type": null,
+          "meaning": "Tenant"
+        },
+        "title": {
+          "type": null,
+          "meaning": "Picker name"
+        },
+        "body": {
+          "type": null,
+          "meaning": "Template body"
+        },
+        "created_by_id": {
+          "type": null,
+          "meaning": "Creator agent"
+        },
+        "created_by_name": {
+          "type": null,
+          "meaning": "Creator name"
+        },
+        "created_at": {
+          "type": null,
+          "meaning": "Created at"
+        },
+        "updated_at": {
+          "type": null,
+          "meaning": "Updated at"
+        }
+      },
+      "embedded": true
+    }
+  },
+  "edges": [
+    {
+      "from": "User",
+      "type": "MEMBER_OF",
+      "to": "Team",
+      "fan_in": "high"
+    },
+    {
+      "from": "User",
+      "type": "FOLLOWS",
+      "to": "BusinessHours",
+      "fan_in": "high"
+    },
+    {
+      "from": "Team",
+      "type": "FOLLOWS",
+      "to": "BusinessHours",
+      "fan_in": "high"
+    },
+    {
+      "from": "BusinessHours",
+      "type": "FOLLOWS",
+      "to": "HolidayCalendar",
+      "fan_in": "high"
+    },
+    {
+      "from": "Shift",
+      "type": "HAS",
+      "to": "BusinessHours",
+      "fan_in": "high"
+    },
+    {
+      "from": "Holiday",
+      "type": "HAS",
+      "to": "HolidayCalendar",
+      "fan_in": "high"
+    },
+    {
+      "from": "Channel",
+      "type": "ROUTES_TO",
+      "to": "ContactCentreQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "PhoneNumber",
+      "type": "ROUTES_TO",
+      "to": "ContactCentreQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "PhoneNumber",
+      "type": "ROUTES_TO",
+      "to": "User",
+      "fan_in": "high"
+    },
+    {
+      "from": "KnowledgeDocument",
+      "type": "UPLOADED_BY",
+      "to": "User",
+      "fan_in": "high"
+    },
+    {
+      "from": "Contact",
+      "type": "SAME_PERSON_AS",
+      "to": "Contact",
+      "fan_in": "low"
+    },
+    {
+      "from": "Event",
+      "type": "HAS",
+      "to": "Session",
+      "fan_in": "high"
+    },
+    {
+      "from": "Session",
+      "type": "FROM_CAMPAIGN",
+      "to": "Campaign",
+      "fan_in": "high"
+    },
+    {
+      "from": "JourneyStatus",
+      "type": "HAS",
+      "to": "Contact",
+      "fan_in": "high"
+    },
+    {
+      "from": "Contact",
+      "type": "IN_SEGMENT",
+      "to": "Segment",
+      "fan_in": "low"
+    },
+    {
+      "from": "Contact",
+      "type": "MATCHES_PERSONA",
+      "to": "Persona",
+      "fan_in": "low"
+    },
+    {
+      "from": "ContactCentreAgent",
+      "type": "ACTS_AS",
+      "to": "User",
+      "fan_in": "high"
+    },
+    {
+      "from": "ContactCentreAgent",
+      "type": "SKILLED_IN",
+      "to": "Skill",
+      "fan_in": "low"
+    },
+    {
+      "from": "ContactCentreQueue",
+      "type": "OWNED_BY",
+      "to": "Team",
+      "fan_in": "high"
+    },
+    {
+      "from": "ContactCentreQueue",
+      "type": "FOLLOWS",
+      "to": "BusinessHours",
+      "fan_in": "high"
+    },
+    {
+      "from": "ContactCentreAgent",
+      "type": "MEMBER_OF",
+      "to": "ContactCentreQueue",
+      "fan_in": "low"
+    },
+    {
+      "from": "ContactCentreQueue",
+      "type": "REQUIRES_SKILL",
+      "to": "Skill",
+      "fan_in": "low"
+    },
+    {
+      "from": "Conversation",
+      "type": "ROUTED_TO",
+      "to": "ContactCentreQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "Conversation",
+      "type": "HANDLED_BY",
+      "to": "ContactCentreAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Conversation",
+      "type": "VIA_CHANNEL",
+      "to": "Channel",
+      "fan_in": "high"
+    },
+    {
+      "from": "Conversation",
+      "type": "CONTINUES",
+      "to": "Conversation",
+      "fan_in": "high"
+    },
+    {
+      "from": "Conversation",
+      "type": "VIA_CHANNEL",
+      "to": "Channel",
+      "fan_in": "high"
+    },
+    {
+      "from": "Conversation",
+      "type": "VIA_CHANNEL",
+      "to": "Channel",
+      "fan_in": "high"
+    },
+    {
+      "from": "InternalNote",
+      "type": "HAS",
+      "to": "Conversation",
+      "fan_in": "high"
+    },
+    {
+      "from": "InternalNote",
+      "type": "WRITTEN_BY",
+      "to": "ContactCentreAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Transfer",
+      "type": "HAS",
+      "to": "Conversation",
+      "fan_in": "high"
+    },
+    {
+      "from": "Transfer",
+      "type": "FROM_QUEUE",
+      "to": "ContactCentreQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "Transfer",
+      "type": "TO_QUEUE",
+      "to": "ContactCentreQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "Transfer",
+      "type": "FROM_AGENT",
+      "to": "ContactCentreAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Transfer",
+      "type": "OFFERED_TO",
+      "to": "ContactCentreAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "MissedContact",
+      "type": "HAS",
+      "to": "Conversation",
+      "fan_in": "high"
+    },
+    {
+      "from": "MissedContact",
+      "type": "MISSED_BY",
+      "to": "ContactCentreAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "MissedContact",
+      "type": "IN_QUEUE",
+      "to": "ContactCentreQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "Task",
+      "type": "HAS",
+      "to": "Conversation",
+      "fan_in": "high"
+    },
+    {
+      "from": "Task",
+      "type": "ASSIGNED_TO",
+      "to": "ContactCentreAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Task",
+      "type": "CREATED_BY",
+      "to": "User",
+      "fan_in": "high"
+    },
+    {
+      "from": "Account",
+      "type": "OWNED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "Account",
+      "type": "PART_OF",
+      "to": "Account",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesProfile",
+      "type": "HAS",
+      "to": "Contact",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesProfile",
+      "type": "WORKS_AT",
+      "to": "Account",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesProfile",
+      "type": "OWNED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesProfile",
+      "type": "CONVERTED_TO",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "Deal",
+      "type": "OWNED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "DealActivity",
+      "type": "HAS",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "DealActivity",
+      "type": "CREATED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "ContactActivity",
+      "type": "ASSIGNED_TO",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "Meeting",
+      "type": "HAS",
+      "to": "ContactActivity",
+      "fan_in": "high"
+    },
+    {
+      "from": "Meeting",
+      "type": "HOSTED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "Proposal",
+      "type": "HAS",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "Proposal",
+      "type": "APPROVED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "Quote",
+      "type": "HAS",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "Quote",
+      "type": "FROM_PROPOSAL",
+      "to": "Proposal",
+      "fan_in": "high"
+    },
+    {
+      "from": "Quote",
+      "type": "RENEWS",
+      "to": "Contract",
+      "fan_in": "high"
+    },
+    {
+      "from": "Quote",
+      "type": "APPROVED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesOrder",
+      "type": "HAS",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesOrder",
+      "type": "FROM_QUOTE",
+      "to": "Quote",
+      "fan_in": "high"
+    },
+    {
+      "from": "Invoice",
+      "type": "FOR_ORDER",
+      "to": "SalesOrder",
+      "fan_in": "high"
+    },
+    {
+      "from": "Invoice",
+      "type": "UNDER_CONTRACT",
+      "to": "Contract",
+      "fan_in": "high"
+    },
+    {
+      "from": "Invoice",
+      "type": "APPROVED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "LineItem",
+      "type": "HAS",
+      "to": "Quote",
+      "fan_in": "high"
+    },
+    {
+      "from": "LineItem",
+      "type": "FOR_PRODUCT",
+      "to": "Product",
+      "fan_in": "high"
+    },
+    {
+      "from": "LineItem",
+      "type": "HAS",
+      "to": "SalesOrder",
+      "fan_in": "high"
+    },
+    {
+      "from": "LineItem",
+      "type": "FOR_PRODUCT",
+      "to": "Product",
+      "fan_in": "high"
+    },
+    {
+      "from": "LineItem",
+      "type": "HAS",
+      "to": "Invoice",
+      "fan_in": "high"
+    },
+    {
+      "from": "LineItem",
+      "type": "FOR_PRODUCT",
+      "to": "Product",
+      "fan_in": "high"
+    },
+    {
+      "from": "Contract",
+      "type": "FROM_DEAL",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "Contract",
+      "type": "RENEWED_BY",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "SalesRep",
+      "type": "ACTS_AS",
+      "to": "User",
+      "fan_in": "high"
+    },
+    {
+      "from": "LeadSummary",
+      "type": "HAS",
+      "to": "Contact",
+      "fan_in": "high"
+    },
+    {
+      "from": "Session",
+      "type": "HAS",
+      "to": "ContactActivity",
+      "fan_in": "high"
+    },
+    {
+      "from": "Session",
+      "type": "HOSTED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "MeetingOutcome",
+      "type": "HAS",
+      "to": "ContactActivity",
+      "fan_in": "high"
+    },
+    {
+      "from": "MeetingOutcome",
+      "type": "FOR_DEAL",
+      "to": "Deal",
+      "fan_in": "high"
+    },
+    {
+      "from": "PrivacyRequest",
+      "type": "HAS",
+      "to": "Contact",
+      "fan_in": "high"
+    },
+    {
+      "from": "PrivacyRequest",
+      "type": "RAISED_IN",
+      "to": "ContactActivity",
+      "fan_in": "high"
+    },
+    {
+      "from": "PrivacyRequest",
+      "type": "REVIEWED_BY",
+      "to": "SalesRep",
+      "fan_in": "high"
+    },
+    {
+      "from": "SupportAgent",
+      "type": "ACTS_AS",
+      "to": "User",
+      "fan_in": "high"
+    },
+    {
+      "from": "SupportAgent",
+      "type": "MEMBER_OF",
+      "to": "SupportQueue",
+      "fan_in": "low"
+    },
+    {
+      "from": "Ticket",
+      "type": "ROUTED_TO",
+      "to": "SupportQueue",
+      "fan_in": "high"
+    },
+    {
+      "from": "Ticket",
+      "type": "ASSIGNED_TO",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Ticket",
+      "type": "RESOLVED_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Ticket",
+      "type": "GOVERNED_BY",
+      "to": "SupportSLA",
+      "fan_in": "high"
+    },
+    {
+      "from": "Ticket",
+      "type": "FOR_COMPANY",
+      "to": "SupportCompany",
+      "fan_in": "high"
+    },
+    {
+      "from": "Note",
+      "type": "HAS",
+      "to": "Ticket",
+      "fan_in": "high"
+    },
+    {
+      "from": "Note",
+      "type": "WRITTEN_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "KnowledgeArticle",
+      "type": "WRITTEN_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "AuditEvent",
+      "type": "PERFORMED_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "InboundEmail",
+      "type": "HAS",
+      "to": "Ticket",
+      "fan_in": "high"
+    },
+    {
+      "from": "Session",
+      "type": "USED_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Recommendation",
+      "type": "SHOWN_TO",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Approval",
+      "type": "DECIDED_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Campaign",
+      "type": "CREATED_BY",
+      "to": "MarketingAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Campaign",
+      "type": "FROM_SESSION",
+      "to": "Session",
+      "fan_in": "high"
+    },
+    {
+      "from": "Contact",
+      "type": "TARGETED_BY",
+      "to": "Campaign",
+      "fan_in": "low"
+    },
+    {
+      "from": "Session",
+      "type": "CREATED_BY",
+      "to": "MarketingAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "MessageTemplate",
+      "type": "HAS",
+      "to": "Session",
+      "fan_in": "high"
+    },
+    {
+      "from": "Delivery",
+      "type": "FOR_CAMPAIGN",
+      "to": "Campaign",
+      "fan_in": "high"
+    },
+    {
+      "from": "EmailEngagement",
+      "type": "HAS",
+      "to": "Contact",
+      "fan_in": "high"
+    },
+    {
+      "from": "Macro",
+      "type": "CREATED_BY",
+      "to": "SupportAgent",
+      "fan_in": "high"
+    },
+    {
+      "from": "Product",
+      "type": "HAS",
+      "to": "Purchase",
+      "fan_in": "low"
+    }
+  ],
+  "collections": [
+    {
+      "owner": "Tenant",
+      "collection": "UserDirectory",
+      "bucketed": false,
+      "item": "User"
+    },
+    {
+      "owner": "Tenant",
+      "collection": "TeamDirectory",
+      "bucketed": false,
+      "item": "Team"
+    },
+    {
+      "owner": "Tenant",
+      "collection": "ChannelDirectory",
+      "bucketed": false,
+      "item": "Channel"
+    },
+    {
+      "owner": "Tenant",
+      "collection": "KnowledgeLibrary",
+      "bucketed": false,
+      "item": "KnowledgeDocument"
+    },
+    {
+      "owner": "Contact",
+      "collection": "ContactProfile",
+      "bucketed": false,
+      "item": "ContactIdentity"
+    },
+    {
+      "owner": "Contact",
+      "collection": "ContactProfile",
+      "bucketed": false,
+      "item": "ContactIdentity"
+    },
+    {
+      "owner": "Contact",
+      "collection": "EventHistory",
+      "bucketed": true,
+      "item": "Event"
+    },
+    {
+      "owner": "Contact",
+      "collection": "SessionHistory",
+      "bucketed": true,
+      "item": "Session"
+    },
+    {
+      "owner": "Contact",
+      "collection": "InsightHistory",
+      "bucketed": false,
+      "item": "ContactInsight"
+    },
+    {
+      "owner": "Contact",
+      "collection": "NextBestActionHistory",
+      "bucketed": false,
+      "item": "NextBestAction"
+    },
+    {
+      "owner": "Contact",
+      "collection": "PurchaseHistory",
+      "bucketed": true,
+      "item": "Purchase"
+    },
+    {
+      "owner": "Contact",
+      "collection": "ConversationHistory",
+      "bucketed": false,
+      "item": "Conversation"
+    },
+    {
+      "owner": "Tenant",
+      "collection": "ProductCatalog",
+      "bucketed": false,
+      "item": "Product"
+    },
+    {
+      "owner": "Contact",
+      "collection": "DealHistory",
+      "bucketed": false,
+      "item": "Deal"
+    },
+    {
+      "owner": "Account",
+      "collection": "AccountDealHistory",
+      "bucketed": false,
+      "item": "Deal"
+    },
+    {
+      "owner": "Contact",
+      "collection": "ActivityHistory",
+      "bucketed": false,
+      "item": "ContactActivity"
+    },
+    {
+      "owner": "Contact",
+      "collection": "OrderHistory",
+      "bucketed": false,
+      "item": "SalesOrder"
+    },
+    {
+      "owner": "Account",
+      "collection": "AccountOrderHistory",
+      "bucketed": false,
+      "item": "SalesOrder"
+    },
+    {
+      "owner": "Account",
+      "collection": "AccountInvoiceHistory",
+      "bucketed": false,
+      "item": "Invoice"
+    },
+    {
+      "owner": "Account",
+      "collection": "AccountContractHistory",
+      "bucketed": false,
+      "item": "Contract"
+    },
+    {
+      "owner": "Contact",
+      "collection": "TicketHistory",
+      "bucketed": false,
+      "item": "Ticket"
+    },
+    {
+      "owner": "Ticket",
+      "collection": "TicketAuditTrail",
+      "bucketed": false,
+      "item": "AuditEvent"
+    },
+    {
+      "owner": "Ticket",
+      "collection": "TicketAuditTrail",
+      "bucketed": false,
+      "item": "OutboundEmail"
+    },
+    {
+      "owner": "Ticket",
+      "collection": "ProactiveHistory",
+      "bucketed": false,
+      "item": "Recommendation"
+    },
+    {
+      "owner": "Ticket",
+      "collection": "ProactiveHistory",
+      "bucketed": false,
+      "item": "Approval"
+    },
+    {
+      "owner": "Contact",
+      "collection": "DeliveryHistory",
+      "bucketed": true,
+      "item": "Delivery"
+    },
+    {
+      "owner": "Tenant",
+      "collection": "MacroLibrary",
+      "bucketed": false,
+      "item": "Macro"
+    }
+  ],
+  "money": {
+    "Contact.total_spend": {
+      "scale": 2
+    },
+    "Purchase.total_amount": {
+      "scale": 2
+    },
+    "Product.price": {
+      "scale": 2
+    },
+    "Deal.amount": {
+      "scale": 2
+    },
+    "Quote.subtotal": {
+      "scale": 2
+    },
+    "Quote.total": {
+      "scale": 2
+    },
+    "SalesOrder.total": {
+      "scale": 2
+    },
+    "Invoice.total": {
+      "scale": 2
+    },
+    "Invoice.discount_amount": {
+      "scale": 2
+    },
+    "Invoice.tax_amount": {
+      "scale": 2
+    },
+    "LineItem.unit_price": {
+      "scale": 4
+    },
+    "LineItem.amount": {
+      "scale": 2
+    },
+    "Contract.arr": {
+      "scale": 2
+    }
+  },
+  "notes": {}
+}

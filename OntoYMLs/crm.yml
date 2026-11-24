@@ -1,0 +1,255 @@
+ontology:
+  name: crm_complete_ontology
+  purpose: >
+    Give the CRM super agent a complete and simple understanding of the
+    Worktual AI CRM product so it can guide specialist agents and answer
+    B2B sales, finance, and admin questions accurately.
+
+  entities:
+    Tenant:
+      definition: The company that uses Worktual AI CRM to sell to its customers.
+      identifier: accounts.organizations.id
+
+    Staff:
+      definition: A person from the tenant who creates leads, deals, and other CRM records.
+      identifier: accounts.setup_users.id
+
+    Contact:
+      definition: A person the tenant sells to or may sell to.
+      identifier: cdp.customer_profile.cdp_id
+
+    ContactIdentity:
+      definition: An email address or phone number that tells us which contact this is.
+      identifier: cdp.identity_keys.identity_id
+
+    Lead:
+      definition: The CRM sales record of a contact, holding its lead status, lead source, and BANT.
+      identifier: crm.contact_profiles.id
+
+    ContactCompany:
+      definition: A contact's company that the tenant sells the offering to.
+      identifier: crm.companies.id
+
+    Deal:
+      definition: A sales opportunity where the tenant is trying to sell something to a contact company.
+      identifier: crm.deals.id
+
+    Proposal:
+      definition: A document prepared for a customer that explains a proposed solution for a deal.
+      identifier: crm.proposals.id
+
+    Quote:
+      definition: A priced offer sent to a customer for a deal.
+      identifier: crm.quotes.id
+
+    Order:
+      definition: A confirmed customer purchase created from an accepted quote.
+      identifier: crm.sales_orders.id
+
+    Invoice:
+      definition: A bill issued to a customer for products or services.
+      identifier: crm.invoices.id
+
+    LineItem:
+      definition: One product or add-on row on a quote, order, or invoice, with its quantity, unit price, and amount.
+      identifier: [crm.quote_lines.id, crm.order_lines.id, crm.invoice_lines.id]
+
+    Payment:
+      definition: Money received from a customer for an invoice.
+      identifier: [crm.invoices.paid_at, crm.payment_gateway_events.id]
+
+    Contract:
+      definition: An agreement with a customer for an ongoing or fixed-term service or subscription.
+      identifier: crm.contracts.id
+
+    BillingSchedule:
+      definition: One planned billing date under a contract, such as a monthly charge.
+      identifier: crm.contract_billing_schedules.id
+
+    Product:
+      definition: A offering or service supplied by the tenant that can be sold.
+      identifier: inventory.products.id
+
+    ProductOffer: (flag)
+      definition: A named sales package of one product with CRM-specific commercial terms, such as Starter.
+      identifier: crm.product_offers.id
+
+    AddOn:
+      definition: An optional extra that can be sold together with a product.
+      identifier: [crm.product_addons.id, crm.product_addon_tiers.id]
+
+    PriceBook:
+      definition: A named price list in one currency that holds the list price of each product, product offer, and add-on.
+      identifier: [crm.price_books.id, crm.price_book_entries.id]
+
+    Activity:
+      definition: A piece of sales work logged on a contact or a deal, such as a call, meeting, email, SMS, note, or task.
+      identifier: [crm.contact_activities.id, crm.deal_activities.id]
+
+    Appointment:
+      definition: A scheduled meeting or call between staff and a contact.
+      identifier: crm.appointments.id
+
+    AgentJob:
+      definition: One run of a CRM AI agent on a lead, such as enrichment, scoring, summary, nurture, or lifecycle.
+      identifier: [crm.lead_enrichment_jobs.id, crm.lead_scoring_jobs.id, crm.lead_summaries.id, crm.lead_nurture_jobs.id, crm.lead_lifecycle_jobs.id]
+
+    Connection:
+      definition: A staff member's connected mailbox or calendar used to send mail and book meetings.
+      identifier: [crm.user_integration_connections.id, accounts.mail_oauth_connections.id]
+
+  relations:
+    - Tenant - has_staff -> Staff
+    - Tenant - has_contact -> Contact
+    - Tenant - has_company -> ContactCompany
+    - Tenant - has_product -> Product
+    - Tenant - has_price_book -> PriceBook
+
+    - Staff - owns -> Lead
+    - Staff - owns -> ContactCompany
+    - Staff - owns -> Deal
+    - Staff - logs -> Activity
+    - Staff - hosts -> Appointment
+    - Staff - has_connection -> Connection
+
+    - Contact - identified_by -> ContactIdentity
+    - Contact - has_lead -> Lead
+    - Lead - belongs_to -> ContactCompany
+    - Lead - converted_to -> Deal
+    - Lead - has_job -> AgentJob
+
+    - ContactCompany - parent_of -> ContactCompany
+    - ContactCompany - has_deal -> Deal
+    - ContactCompany - has_contract -> Contract
+
+    - Contact - has_activity -> Activity
+    - Deal - has_activity -> Activity
+    - Appointment - with -> Contact
+    - Appointment - logged_as -> Activity
+
+    - Deal - with -> ContactCompany
+    - Deal - with -> Contact
+    - Deal - has_proposal -> Proposal
+    - Deal - has_quote -> Quote
+
+    - Product - has_offer -> ProductOffer
+    - Product - has_addon -> AddOn
+    - PriceBook - prices -> Product
+    - PriceBook - prices -> ProductOffer
+    - PriceBook - prices -> AddOn
+
+    - Proposal - may_lead_to -> Quote
+    - Quote - has_line -> LineItem
+    - Quote - becomes -> Order
+    - Order - has_line -> LineItem
+    - Order - billed_by -> Invoice
+    - Invoice - has_line -> LineItem
+    - Invoice - for -> ContactCompany
+    - Invoice - paid_by -> Payment
+    - LineItem - sells -> Product
+    - LineItem - sells -> AddOn
+
+    - Deal - creates -> Contract
+    - Contract - has_schedule -> BillingSchedule
+    - BillingSchedule - generates -> Invoice
+    - Contract - renewed_by -> Deal
+
+  synonyms:
+    Tenant: [organization, company, business]
+    Staff: [user, employee, rep, sales rep, manager, owner]
+    Contact: [customer, person, buyer, client]
+    ContactIdentity: [email, phone, phone_number]
+    Lead: [lead_record, sales_lead]
+    ContactCompany: [account, customer_account, client_account, business_account]
+    Deal: [opportunity, opp, pipeline_item]
+    Proposal: [solution_document]
+    Quote: [quotation, estimate]
+    Order: [sales_order, SO]
+    Invoice: [bill, INV]
+    LineItem: [line, quote_line, order_line, invoice_line]
+    Payment: [collection, receipt, money_received]
+    Contract: [subscription, agreement]
+    BillingSchedule: [billing_plan, next_bill]
+    Product: [service, offering, item, sku]
+    ProductOffer: [offer, plan, package, edition]
+    AddOn: [add-on, extra, upsell, overage]
+    PriceBook: [price_list, rate_card, list_price]
+    Activity: [touch, touchpoint, call, email, note, task, to_do, follow_up, timeline]
+    Appointment: [meeting, demo, calendar_event, booking]
+    AgentJob: [agent, agent_run, ai_job]
+    Connection: [mailbox, calendar_connection, integration]
+
+  taxonomy:
+    tenant.business_type: [b2b, b2c, b2b2c]
+    staff.status: [active]
+    staff.role: [admin, sales_manager, sales_rep, presales, marketing, finance, viewer]
+    contact.type: [contact, lead, prospect, customer, churned]
+    contact_identity.key_type: [email, phone, email_secondary, phone_secondary]
+    lead.status: [new, contacted, qualifying, qualified, disqualified, converted]
+    lead.crm_status: [active, inactive, archived]
+    contact_company.channel_role: [standard, franchise, owned_store, brand_hq]
+    deal.stage: [qualification, discover, propose, negotiate, closed_won, closed_lost]
+    proposal.status: [draft, shared, accepted, declined]
+    quote.status: [draft, sent, accepted, rejected, void]
+    quote.approval_status: [drafting, pending_approval, pending_finance_approval, finance_rejected, sent]
+    order.status: [draft, confirmed, fulfilled, cancelled]
+    invoice.status: [draft, sent, paid, void, overdue]
+    invoice.approval_status: [drafting, pending_approval, approved, finance_rejected]
+    invoice.billing_kind: [standard, setup, subscription_start, renewal, amendment, adjustment, credit]
+    line_item.kind: [product, addon]
+    payment.method: [offline, manual, stripe, razorpay]
+    contract.status: [active, expired, cancelled]
+    billing_schedule.status: [scheduled, generated, cancelled]
+    product.status: [draft, active, archived]
+    product.billing_type: [one_time, recurring]
+    product.billing_frequency: [monthly, quarterly, annual]
+    product.unit_of_measure: [per_seat, per_agent, per_ticket, flat]
+    addon.pricing_model: [flat, per_unit, stepped, tiered]
+    activity.type: [call, meeting, email, sms, note, task]
+    activity.task_status: [open, in_progress, completed]
+    activity.folder: [inbox, sent, draft, trash]
+    activity.email_direction: [outbound, inbound]
+    appointment.status: [scheduled, canceled, completed, no_show]
+    agent_job.type: [enrichment, scoring, summary, nurture, lifecycle]
+    agent_job.enrichment_status: [pending, running, enriched, skipped, failed]
+    agent_job.scoring_status: [pending, scoring, scored, failed]
+    agent_job.nurture_status: [pending, analyzing, sent, waited, skipped, failed]
+    agent_job.lifecycle_status: [pending, analyzing, applied, waited, skipped, failed]
+    connection.provider: [google, microsoft, zoom, yahoo]
+
+  business_rules:
+    - Every answer is for the signed-in tenant only. Never show one tenant's data to another.
+    - B2C tenants have no Finance module and must never be given finance metrics.
+    - Admin, sales manager, and finance see every record in the tenant. Sales rep, presales, marketing, and viewer see only records they own.
+    - A staff member who owns a franchise, owned store, or brand HQ company also sees its direct child companies. Standard companies do not expand this way.
+    - If the signed-in staff member is unknown, show nothing. Never widen to the whole tenant.
+    - Pipeline and activity questions follow Sales access. Invoice, payment, and contract questions follow Finance access. Agent job questions are for admin and sales manager only.
+    - Marketing staff never receive tenant-wide deal amounts.
+    - Campaigns are not pipeline and support tickets are not stored in CRM. Never add them into CRM numbers.
+    - Contacts and staff are different people and must never be swapped.
+    - A lead is the CRM sales record of a contact, not a second person. Never count them twice.
+    - A contact's name, email, and phone come from the contact. Owner, lead status, and BANT come from the lead.
+    - Count only leads whose crm_status is active unless removed leads are asked for.
+    - A contact belongs to a company only when that link is recorded. Never guess it from an email domain.
+    - The tenant is the seller. It is never a contact company.
+    - Only a deal counts as a sales opportunity. Leads, proposals, and quotes are not deals.
+    - Open pipeline is deals in qualification, discover, propose, and negotiate. Won revenue is closed_won deals and lost revenue is closed_lost deals.
+    - Stage weights are qualification 0.10, discover 0.25, propose 0.50, negotiate 0.75, closed_won 1, and closed_lost 0. No probability is stored on the deal.
+    - A missing deal amount counts as 0.
+    - Only the current deal stage is stored. There is no stage history, so never describe how a deal moved between stages.
+    - Forecast category and confidence are an auditor note. They never change stage or amount.
+    - Money moves in this order. Proposal (optional), quote, order, invoice, payment.
+    - Only a sent quote can be accepted, and accepting it creates the order.
+    - A draft invoice is created only when the order has a company. The customer receives it only after finance approval.
+    - Sent does not mean paid. An invoice is paid only when its status is paid.
+    - Never add quote, order, or invoice totals to their line items, and never add amounts in different currencies.
+    - A recurring product does not prove recurring revenue. Recurring revenue comes from contracts.
+    - Overdue tasks are worked out from the due date. Overdue is not a stored task status.
+    - A meeting can be both an appointment and an activity. Count it once.
+    - Agent job results such as scores, summaries, and enrichment are suggestions. Never use them as the source of a sales number.
+    - Never send nurture to a lead who has opted out of marketing.
+    - Say an action is done only when there is a recorded result showing it happened.
+    - Use only the values listed in this ontology. Lost reason, disqualify reason, and lead source are free codes, so group them as stored.
+    - If something is not recorded, say it is unknown.
+    - Never share passwords, keys, or tokens.
+    - All dates and times are given in the tenant timezone.

@@ -1,0 +1,164 @@
+
+industry: healthcare
+pack_version: "2026.09.02"
+requires_core: ">=3"
+layer: domain
+
+applies_when:
+  accounts.organizations.industry_type:
+    [healthcare, health care, hospital, clinic, medical, diagnostics, pathology,
+     pharma, pharmaceutical, dental, telehealth, telemedicine, wellness,
+     home care, hospice, nursing, labs, imaging, ivf, eye care, physiotherapy]
+
+variant_key: accounts.organizations.business_type
+variants:
+  b2c:
+    anchor_entities: [Contact, Meeting, Ticket, Conversation, Invoice, Product]
+    de_emphasise: [Deal, Quote, Proposal, SalesOrder]
+  b2b:
+    # device / pharma / lab selling to hospitals & payers; payer-provider contracting
+    anchor_entities: [Account, Contact, Deal, Quote, Contract, Invoice, Ticket]
+    de_emphasise: [LoyaltyTier]
+  b2b2c:
+    # health plan / employer wellness / hospital group with franchise clinics
+    anchor_entities: [Account, Contact, Meeting, Contract, Ticket]
+    de_emphasise: []
+
+# NAMING — meta-graph only
+extends:
+  ticketing.tickets:
+    extra_labels:
+    - label: AppointmentRequest
+      when: {category: [appointment, scheduling, rescheduling]}
+    - label: BillingQuery
+      when: {category: [billing, insurance, claim_query, payment]}
+    - label: DocumentRequest
+      when: {category: [records_request, reports, documentation]}
+    - label: PrescriptionRequest
+      when: {category: [prescription_refill, medication_query]}
+    - label: ReferralRequest
+      when: {category: [referral]}
+    - label: Complaint
+      when: {category: [complaint, grievance, feedback]}
+  cdp.customer_profile:
+    custom_fields:
+      whitelist: [mrn, member_id, payer, plan_id, primary_facility_code, registration_date, preferred_contact_time,
+        care_coordinator]
+      identity: [mrn, member_id]
+      promote_to_node:
+        payer: {label: Payer, key: name, edge: COVERED_BY}
+        plan_id: {label: CoveragePlan, key: id, edge: ENROLLED_IN}
+      blocklist: [diagnosis, condition, icd_code, icd10, snomed, medications, medication, prescription, allergy,
+        allergies, lab_result, test_result, pathology, treatment, procedure_code, cpt, disability, pregnancy, mental_health,
+        hiv_status, genetic, immunisation, vitals, bmi, blood_group, substance_use, smoking_status]
+      blocklist_action: drop_silently_and_log
+
+vocabularies:
+  ticket.category:  # [core: ticketing.tickets.category]
+    canonical: [appointment, scheduling, billing, insurance, records_request,
+                prescription_refill, referral, test_reports, complaint,
+                feedback, technical, general]
+    labels: {records_request: "Medical records request", prescription_refill: "Prescription refill"}
+  ticket.skill:  # [core: ticketing.tickets.skill]
+    canonical: [scheduling, billing, clinical_admin, records, insurance_desk]
+  conversation.intent:  # [core: queue_routing_profiles.supported_intents]
+    canonical: [book_appointment, reschedule, cancel_appointment, appointment_status,
+                billing_query, insurance_coverage, report_status, prescription_refill,
+                referral_request, directions_timings, complaint]
+  campaign.goal:  # [core: campaign.campaigns.goal]
+    canonical: [appointment_recall, preventive_screening, vaccination_drive,
+                health_checkup_package, follow_up_reminder, no_show_recovery,
+                plan_renewal, patient_education, feedback_request]
+  journey_state.current_stage:  # [core: cdp.journey_states.current_stage]
+    canonical: [enquiry, registered, first_visit, under_care, follow_up,
+                dormant, discharged, reactivated]
+  contact.lead_source:  # [core: crm.contact_profiles.lead_source]
+    canonical: [walk_in, referral_doctor, referral_patient, insurance_network,
+                web_search, paid_ads, camp_event, tie_up, call_centre]
+  deal.stage:  # b2b  [core: crm.deals.stage]
+    labels: {qualification: "Empanelment enquiry", propose: "Proposal / tender submitted",
+             negotiate: "Rate negotiation", closed_won: "Empanelled / contracted"}
+
+# DERIVED LABELS — batch lane, recompute-only
+derived_labels:
+  lane: batch
+  Customer:
+    source: cdp.gold_customer_metrics  # [core: DailyEngagementMetric]
+    rules:
+      - {label: NewPatient,      when: "total_orders == 1"}
+      - {label: ReturningPatient,when: "total_orders >= 2"}
+      - {label: DormantPatient,  when: "last_event_at < now() - 365d"}
+      - {label: AtRiskPatient,   when: "churn_score >= 0.7"}  # attrition, NOT clinical risk
+    exclusive_groups: [[NewPatient, ReturningPatient]]
+    note: >-
+      AtRiskPatient means at risk of leaving the practice. It must never be
+      rendered or described as clinical risk. Meta-graph carries this caveat.
+
+# METRICS — synonyms plus three computable from core-mapped labels only
+metrics:
+  add:
+    - metric_id: appointment_no_show_rate
+      canonical_name: Meeting No-Show Rate
+      unit: ratio
+      route: graph
+      computed_from: [Meeting]
+      direction: lower_is_better
+    - metric_id: records_request_share
+      canonical_name: Records Request Share
+      unit: ratio
+      route: graph
+      computed_from: [Ticket]
+      direction: neutral
+    - metric_id: recall_campaign_response_rate
+      canonical_name: Recall Response Rate
+      unit: ratio
+      route: graph
+      computed_from: [CampaignDelivery, Meeting]
+      direction: higher_is_better
+      caveat: proxy
+
+# ACCESS — tighten only (R6). Free text in this vertical may carry PHI.
+access:
+  Payer:        {domain: common, module: core, sensitivity: L1}
+  CoveragePlan: {domain: common, module: core, sensitivity: L1}
+  ServiceLine:  {domain: common, module: core, sensitivity: L1}
+  ServiceCategory: {domain: common, module: core, sensitivity: L1}
+  tighten:
+    Ticket:              {sensitivity: L3, deny_properties: [description, ai_summary]}
+    CaseNote:          {sensitivity: L3, deny_properties: [body]}
+    ConversationSummary: {sensitivity: L3, deny_properties: [rolling_summary, extracted_facts]}
+    EngagementActivity:     {sensitivity: L3, deny_properties: [body, transcript_text]}
+    Insight:             {sensitivity: L3, deny_properties: [summary, explanation]}
+    Recommendation:      {sensitivity: L3, deny_properties: [recommendation]}
+    ExperienceMemory:    {sensitivity: L3, deny_properties: [summary]}
+    KnownFact:           {sensitivity: L3, deny_properties: [fact]}
+  never_grant: [Patient, HealthService, PatientRequest]
+
+compliance:
+  regimes: [HIPAA, GDPR, DPDP, ISO27001]
+  principle: minimum_necessary
+  notes:
+    - Free-text fields are the PHI risk surface, not the schema. Hence §6 tighten.
+    - custom_fields.blocklist is a control, not a suggestion — validator enforces it.
+    - Marketing suppression must respect MarketingSuppressed before any send.
+
+# NOT MODELLED — emits nothing
+not_modelled:
+  blocked_on_core:
+    - {concept: Facility / Location, blocker: "accounts.organization_locations mapping is commented out in core; the Location stub is declared but unused. Healthcare needs a real facility node."}
+    - {concept: Consent, blocker: "cdp.customer_profile.consent_json not in core properties. Consent-to-contact gates every outreach campaign."}
+    - {concept: Preference, blocker: "cdp.customer_profile.preferences_json / traits_json not in core properties."}
+    - {concept: "Ticket -> commercial object", blocker: "ticketing.tickets has no reference to an appointment, bill or coverage. Same universal gap as every other vertical."}
+  no_source:
+    - {concept: Encounter / Visit record, severity: critical, note: "clinical record of what happened; crm.appointments covers only the booking."}
+    - {concept: Practitioner / Provider directory, severity: critical, note: "host_user_id is a platform user, not a credentialed clinician with specialty, registration number and privileges."}
+    - {concept: Diagnosis / Problem list, severity: high, note: "deliberately out of scope — belongs in the EHR."}
+    - {concept: Medication / Prescription, severity: high, note: "out of scope by design."}
+    - {concept: Claim / Prior authorisation, severity: high, note: "payer adjudication has no table."}
+    - {concept: Referral, severity: medium, note: "referral is a ticket category only; no referral record with source, target and outcome."}
+    - {concept: Care team / Care pathway, severity: medium}
+    - {concept: Consent to treat, severity: medium, note: "distinct from marketing consent; no source."}
+    - {concept: Lab order / Result, severity: medium, note: "out of scope by design."}
+    - {concept: Resource / Bed / Slot inventory, severity: medium, note: "business hours and shifts exist; bookable resource capacity does not."}
+
+# ASSUMES — shared with every pack

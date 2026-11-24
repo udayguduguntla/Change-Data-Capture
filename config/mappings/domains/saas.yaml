@@ -1,0 +1,455 @@
+industry: saas
+pack_version: "2026.09.05"
+requires_core: ">=3"  # updated core: catalog hubs + conversation join cols
+layer: domain
+
+applies_when:
+  accounts.organizations.industry_type:
+    [saas, software, b2b saas, software as a service, technology, tech,
+     it services, cloud, platform, devtools, martech, adtech, hrtech,
+     fintech saas, api, plg, enterprise software, isv]
+
+routing_precedence:
+  defer_to:
+    - {segment: ecommerce_platform_tooling, pack: ecommerce,
+       reason: "a tool that helps merchants sell physical goods (storefront
+                builders, inventory apps, POS software) is commerce
+                infrastructure — inventory.products / cdp.orders carry the
+                real business. Route here only if the VENDOR's own revenue is
+                subscription access to the tool, not a cut of merchant GMV."}
+    - {segment: vertical_clinical_saas, pack: healthcare,
+       reason: "practice management / EHR software needs a clinical
+                blocklist this pack does not define. Defer."}
+    - {segment: vertical_property_saas, pack: real-estate,
+       reason: "leasing / tenancy software is anchored on crm.contracts +
+                crm.appointments the same way this pack is, but the real-
+                estate pack's naming and compliance notes are correct for
+                landlords/tenants; this pack's are not."}
+    - {segment: vertical_education_saas, pack: education,
+       reason: "LMS / course-delivery software with seats-per-cohort belongs
+                to education.yaml, which understands enrollment and
+                academic-term semantics this pack does not attempt."}
+  resolution_rule: >-
+    A tenant matches at most ONE pack. If industry_type matches both this
+    pack and a deferred pack, the deferred pack wins. org<id>.yaml is the
+    only override and must state a reason.
+  unclaimed:
+    - {segment: dev_infra_api_platforms, note: "no infra/devtools pack
+       exists. Routes here on usage_based_infra_saas. Metering is the
+       differentiator and this pack's metering support is partial — see
+       not_modelled.usage_metering."}
+
+# SEGMENTS — third axis, below industry and business_type.
+segment_key: accounts.organizations.industry_type
+segment_scale_key: accounts.organizations.company_size
+
+crm_fit_profiles:
+  high:
+    emphasise: [Account, AccountContact, Opportunity, Quote, Contract, BillingSchedule,
+                EngagementActivity, Meeting, Ticket, CoachingNote]
+    agent_defaults: {volunteer_relationship_context: true, surface_next_best_action: true}
+    note: sales-led motion — pipeline, negotiated contracts, dedicated CS
+  moderate:
+    emphasise: [Customer, Contract, DailyEngagementMetric, Ticket, Campaign]
+    agent_defaults: {volunteer_relationship_context: true, surface_next_best_action: false}
+    note: hybrid motion — some sales assist, but usage and lifecycle drive most outcomes
+  situational:
+    emphasise: [Customer, Contract, Campaign, BehaviourEvent]
+    agent_defaults: {volunteer_relationship_context: false, surface_next_best_action: false}
+    note: self-serve; CRM value is expansion/retention campaigns, not pipeline
+  low:
+    emphasise: [Contract, BehaviourEvent, Campaign]
+    de_emphasise: [Deal, Quote, Meeting, EngagementActivity]
+    agent_defaults: {volunteer_relationship_context: false, surface_next_best_action: false}
+    note: near-zero human touch. De-emphasised, never disabled.
+
+segments:
+  enterprise_saas:
+    crm_fit: high
+    matches: [enterprise software, named-account software]
+    default_variant: b2b
+    anchor_entities: [Account, Contact, Deal, Quote, Contract, BillingSchedule, Ticket]
+    core_strengths: [crm.deals, crm.quotes, crm.contracts, crm.contract_billing_schedules,
+                     crm.contact_profiles.bant_*]
+    note: ARR and renewal pipeline are native — Contract.renew_deal_id, not simulated.
+
+  mid_market_plg_hybrid_saas:
+    crm_fit: high
+    matches: [mid-market saas, b2b saas, workflow software, plg with sales assist]
+    default_variant: b2b
+    anchor_entities: [Account, Contact, Deal, Contract, Ticket, DailyEngagementMetric]
+    core_strengths: [crm.companies.expansion_signal]
+    note: expansion_signal is real, AI-populated, not invented by this pack.
+
+  usage_based_infra_saas:
+    crm_fit: moderate
+    matches: [usage-based, consumption pricing, api platform, devtools, pay-as-you-go]
+    default_variant: b2b
+    anchor_entities: [Account, Contract, DailyEngagementMetric, Ticket]
+    core_strengths: [crm.product_addons.meter_key, inventory.products.unit_of_measure]
+    gaps: [usage_metering]
+    note: the meter's PRICE is fully modelled; the meter's READING is not.
+
+  smb_plg_self_serve_saas:
+    crm_fit: moderate
+    matches: [smb saas, self-serve saas, product-led growth, plg]
+    default_variant: b2b
+    anchor_entities: [Contact, Contract, DailyEngagementMetric, Campaign, Ticket]
+    gaps: [usage_metering, seat_licence_assignment]
+
+  b2c_subscription_apps:
+    crm_fit: moderate
+    matches: [consumer subscription app, b2c saas, prosumer software]
+    default_variant: b2c
+    anchor_entities: [Contact, Contract, Purchase, DailyEngagementMetric, Campaign, Ticket]
+    note: dual anchor (Purchase + Contract) — the checkout moment and the ongoing subscription are two different nodes, not one.
+
+  embedded_platform_saas:
+    crm_fit: high
+    matches: [embedded saas, white-label platform, reseller/oem/msp-sold platform]
+    default_variant: b2b2c
+    anchor_entities: [Account, Contact, Contract, Deal, Ticket]
+    core_strengths: [crm.companies.channel_role, crm.companies.parent_company_id]
+    gaps: [partner_commercial_objects, sub_tenant_provisioning]
+    note: hierarchy is expressible; commission/settlement and sub-tenant provisioning are not — same class of gap as ecommerce's b2b2c segment.
+
+  freemium_saas:
+    crm_fit: low
+    matches: [freemium, free tier saas, viral saas]
+    default_variant: b2b
+    anchor_entities: [Contract, BehaviourEvent, Campaign]
+    de_emphasise: [Deal, Quote, Meeting, EngagementActivity]
+    note: honest recommendation is conversion campaigns off usage triggers, not pipeline — de-emphasised, never disabled.
+
+variant_key: accounts.organizations.business_type
+variants:
+  b2b:
+    # Primary motion. Named accounts, seats, renewals, expansion.
+    anchor_entities: [Account, Contact, Deal, Contract, ProductPlan, Invoice, Ticket]
+    de_emphasise: [Purchase, LoyaltyTier]
+  b2c:
+    # Self-serve / prosumer. Individual subscribes directly, no Account.
+    anchor_entities: [Contact, Contract, ProductPlan, Purchase, Ticket]
+    de_emphasise: [Account, Deal, Quote, Proposal, SalesOrder]
+  b2b2c:
+    # Reseller / OEM / marketplace partner sells the product onward.
+    anchor_entities: [Account, Contact, Deal, Contract, ProductEntitlement]
+    partner_hierarchy:
+      role_column: channel_role  # standard | franchise | owned_store | brand_hq
+      parent_column: parent_company_id  # (Account)-[:PARENT_COMPANY]->(Account)
+    de_emphasise: []
+
+# NAMING - meta-graph only
+extends:
+  crm.product_addons:
+    extra_labels:
+    - label: OverageItem
+      when: {is_overage: [true]}
+    - label: MeteredAddOn
+      when: {meter_key: not_null}
+    - label: TieredAddOn
+      when: {pricing_model: [tiered, volume, graduated]}
+    - label: FlatAddOn
+      when: {pricing_model: [flat]}
+  cdp.customer_events:
+    extra_labels:
+    - label: ActivationEvent
+      when: {event_name: [signup_completed, first_login, workspace_created, invite_sent, integration_connected,
+          onboarding_completed]}
+    - label: FeatureUsageEvent
+      when: {event_name: [feature_used, report_run, api_call, export_created, automation_triggered]}
+    - label: ExpansionSignalEvent
+      when: {event_name: [seat_limit_reached, usage_limit_reached, upgrade_viewed, pricing_viewed]}
+    - label: RiskSignalEvent
+      when: {event_name: [seat_removed, integration_disconnected, export_all_data, cancel_viewed, downgrade_requested]}
+  cdp.customer_profile:
+    custom_fields:
+      whitelist: [workspace_id, external_user_id, seat_role, plan_code, signup_source, trial_ends_at, onboarding_stage,
+        last_active_at]
+      identity: [external_user_id, workspace_id]
+      promote_to_node:
+        plan_code: {label: Plan, key: code, edge: ON_PLAN}
+        seat_role: {label: SeatRole, key: name, edge: HAS_SEAT_ROLE}
+      conditional_labels:
+      - label: TrialUser
+        when: {trial_ends_at: not_null}
+      blocklist: [card_number, cvv, bank_account, income, credit_score, religion, caste, ethnicity, health, pregnancy_status,
+        password, api_key, api_token, secret, access_token, refresh_token, ssn, tax_id, ip_address_history, session_token]
+      blocklist_action: drop_silently_and_log
+  ticketing.tickets:
+    extra_labels:
+    - label: BugReport
+      when: {category: [bug, defect, incident, outage]}
+    - label: HowToRequest
+      when: {category: [how_to, question, documentation]}
+    - label: BillingQuery
+      when: {category: [billing, invoice, subscription, payment]}
+    - label: FeatureRequest
+      when: {category: [feature_request, enhancement]}
+    - label: AccessRequest
+      when: {category: [access, permissions, sso, provisioning]}
+
+vocabularies:
+  product.unit_of_measure:  # [core: inventory.products.unit_of_measure]
+    labels: {per_seat: "Per seat / per user", per_agent: "Per agent",
+             per_ticket: "Per ticket (usage)", flat: "Flat platform fee"}
+
+  customer_event.event_name:  # [core: cdp.customer_events.event_name]
+    canonical: [signup_completed, first_login, workspace_created, invite_sent,
+                integration_connected, onboarding_completed, feature_used,
+                report_run, api_call, export_created, automation_triggered,
+                seat_limit_reached, usage_limit_reached, upgrade_viewed,
+                pricing_viewed, seat_removed, integration_disconnected,
+                cancel_viewed, downgrade_requested, trial_started, trial_expired,
+                subscription_started, subscription_cancelled]
+
+  ticket.category:  # [core: ticketing.tickets.category]
+    canonical: [bug, defect, incident, outage, how_to, question, documentation,
+                billing, invoice, subscription, payment, feature_request,
+                enhancement, access, permissions, sso, provisioning,
+                integration, performance, data_export, other]
+
+  ticket.skill:  # [core: ticketing.tickets.skill]
+    canonical: [tier1, tier2, billing_ops, integrations, security, data]
+
+  conversation.intent:  # [core: queue_routing_profiles.supported_intents]
+    canonical: [how_do_i, bug_report, billing_question, upgrade_plan,
+                add_seats, cancel_subscription, sso_setup, api_help,
+                integration_issue, data_export, security_question]
+
+  deal.stage:  # [core: crm.deals.stage]
+    labels: {qualification: "Discovery / qualification",
+             discover: "Technical evaluation / POC",
+             propose: "Proposal & order form",
+             negotiate: "Procurement, security review & redlines",
+             closed_won: "Closed won", closed_lost: "Closed lost"}
+
+  deal.forecast_category:  # [core: crm.deals.forecast_category]
+    canonical: [pipeline, best_case, upside, commit, closed]
+
+  journey_state.current_stage:  # [core: journey_states.current_stage]
+    canonical: [visitor, signup, trial, activated, paying, expanded,
+                at_risk, churned, winback]
+
+  journey_state.journey_name:
+    canonical: [plg_funnel, onboarding, adoption, renewal, expansion, winback]
+
+  campaign.goal:  # [core: campaign.campaigns.goal]
+    canonical: [trial_activation, onboarding_nurture, feature_adoption,
+                upgrade_prompt, seat_expansion, renewal_reminder,
+                winback, product_announcement, webinar, usage_milestone,
+                dormant_reactivation]
+
+  contact.lead_source:  # [core: crm.contact_profiles.lead_source]
+    canonical: [organic_search, paid_search, content, webinar, product_led_signup,
+                partner_referral, marketplace, outbound, referral, event,
+                review_site, community]
+
+  contract.billing_frequency:  # [core: crm.contracts.billing_frequency]
+    labels: {monthly: "Monthly subscription", quarterly: "Quarterly",
+             annual: "Annual contract"}
+
+# DERIVED LABELS - batch lane, recompute-only
+derived_labels:
+  lane: batch
+  Customer:
+    source: cdp.gold_customer_metrics  # [core: DailyEngagementMetric]
+    rules:
+      - {label: ActiveUser,    when: "last_event_at >= now() - 30d"}  # [core: last_event_at]
+      - {label: DormantUser,   when: "last_event_at < now() - 60d"}
+      - {label: PowerUser,     when: "total_events >= p90(total_events)"}  # [core: total_events]
+      - {label: AtRiskUser,    when: "churn_score >= 0.7"}  # [core: churn_score]
+    exclusive_groups: [[ActiveUser, DormantUser]]
+    note: >-
+      These are ACCOUNT-ENGAGEMENT labels derived from product telemetry. They
+      are not a commercial health score and must never be presented as one -
+      account-level health needs the usage ledger that does not exist.
+  Opportunity:
+    source: crm.deals + crm.contracts  # requires a semi-join, not a row-level filter
+    rules:
+      - {label: RenewalDeal, when: "Opportunity.id appears as crm.contracts.renew_deal_id for any Contract"}
+    note: >-
+      Not a single-table predicate — needs a batch job that joins against
+      crm.contracts, same constraint as ecommerce.yaml's engine op E8.
+      ExpansionDeal is intentionally NOT derived here: Account.expansion_
+      signal marks the ACCOUNT as expansion-ready, but nothing links that
+      signal to a specific Opportunity row, so an ExpansionDeal label would be a
+      guess dressed as a derivation. Leave it to the agent to join
+      ExpansionCandidate (Account) and OpenPipeline (Opportunity) at query time
+      instead of pretending the label is certain.
+
+metrics:
+  add:
+    - metric_id: renewal_book_next_90d
+      canonical_name: Renewal Book (next 90 days)
+      unit: currency
+      route: graph
+      computed_from: [Contract]
+      direction: neutral
+      note: sums Contract.arr where ends_at falls in the window
+    - metric_id: logo_churn_count
+      canonical_name: Logo Churn
+      unit: count
+      route: graph
+      computed_from: [Contract, Account]
+      direction: lower_is_better
+      note: counts Contract.cancelled_at in the period
+    - metric_id: expansion_candidate_count
+      canonical_name: Expansion Candidates
+      unit: count
+      route: graph
+      computed_from: [Account]
+      direction: higher_is_better
+      note: Account.expansion_signal is set by the existing expansion agent
+    - metric_id: trial_conversion_rate
+      canonical_name: Trial-to-Paid Rate
+      unit: ratio
+      route: graph
+      computed_from: [Customer, Contract]
+      direction: higher_is_better
+      caveat: >-
+        proxy - core has no Trial object; derived from JourneyState transitions
+        and trial_ends_at in custom_fields, so it only works for tenants that
+        populate that key.
+    - metric_id: support_tickets_per_account
+      canonical_name: Tickets per Account
+      unit: ratio
+      route: graph
+      computed_from: [Ticket, ClientAccount]
+      direction: lower_is_better
+  cannot_compute:
+    - {metric: net_revenue_retention, reason: "contracts.arr is a current snapshot with no history; NRR needs beginning-of-period ARR per cohort"}
+    - {metric: gross_revenue_retention, reason: "same - no ARR history table"}
+    - {metric: arr_waterfall, reason: "new / expansion / contraction / churn split needs ARR movement records; core stores only the latest value"}
+    - {metric: seat_utilisation, reason: "OfferingPlan.included_qty gives entitlement; there is no record of seats actually consumed"}
+    - {metric: usage_vs_entitlement, reason: "meter_key names a meter with no readings - see not_modelled.usage_metering"}
+    - {metric: feature_adoption_rate, reason: "no per-end-customer entitlement record exists at all - see not_modelled.feature_entitlement; do not substitute campaign.organization_products, which is Worktual's own licensing to the tenant, not the tenant's to its customers"}
+    # Note: These are the metrics a SaaS exec asks for first.
+
+# ACCESS - tighten only; sensitivity uses core's L1/L2/L3 scale
+access:
+  ProductLine:     {domain: common,   module: core,      sensitivity: L1}
+  ProductModule:   {domain: common,   module: core,      sensitivity: L1}
+  AccountIndustry: {domain: crm,      module: sales,     sensitivity: L1}
+  Plan:            {domain: crm,      module: sales,     sensitivity: L1}
+  SeatRole:        {domain: common,   module: analytics, sensitivity: L1}
+  tighten:
+    EngagementActivity: {sensitivity: L3, deny_properties: [transcript_text, body]}
+    TranscriptSegment: {sensitivity: L3, deny_properties: [text]}
+    Invoice:         {sensitivity: L3, deny_properties: [tax_id, billing_address]}
+  never_grant: [SoftwareProduct, Subscription, ProductUser, SupportTicket]
+  never_grant_enforcement: query_layer_only
+  never_grant_note: >-
+    ENFORCEABLE in the Cypher guard, which parses every label in a query and
+    denies any outside the session allowlist. NOT enforceable at Neo4j FGAC:
+    a node carrying both :Contract and :Subscription is visible to anyone
+    granted :Contract, because FGAC grants are per-label and a node has many.
+    Treat this list as a query-layer convention. Grant concrete core labels,
+    never these.
+
+compliance:
+  regimes: [SOC2, GDPR, DPDP, ISO27001]
+  notes:
+    - Credentials and tokens are blocklisted at ingest, not masked downstream.
+    - Contract and pricing terms are commercially sensitive; §6 restricts
+      invoice identifiers by default.
+
+governance:
+  data_owner: RevOps
+  data_steward: Platform Engineering
+  retention:
+    Contract: contractual + 7 years
+    Invoice: 7 years (statutory)
+    BehaviourEvent: 24 months rolling
+    Ticket: 3 years
+  pii_flag: [Customer, ContactPoint, ContactProfile, EngagementActivity]
+
+# NOT MODELLED - emits nothing
+not_modelled:
+  blocked_on_core:
+    - {concept: Consent, blocker: "cdp.customer_profile.consent_json not in core `properties:`. Gates every lifecycle campaign send."}
+    - {concept: Preference, blocker: "cdp.customer_profile.preferences_json / traits_json not in core `properties:`."}
+    - {concept: Business unit / Office, blocker: "accounts.organization_locations mapping is still commented out in core."}
+  no_source:
+    - concept: "Ticket -> Subscription link (Ticket -> Contract, Conversation -> Contract)"
+      severity: critical
+      rank: 1
+      note: >-
+        Re-filed from blocked_on_core in v2 — same correction ecommerce v4
+        made to Ticket -> Purchase. ticketing.tickets and ccass.conversations
+        have NO contract reference at all, so this is no_source, not a
+        one-line core fix. Ranked first: "what plan is this account on,"
+        "is this billing issue tied to an active or past-due subscription"
+        is the bulk of SaaS support CX. SupportProfile -> ClientAccount
+        gives the ACCOUNT; it does not give the SUBSCRIPTION.
+        Fix: add contract_ref to ticketing.tickets AND ccass.conversations.
+    - concept: Usage metering ledger
+      severity: critical
+      rank: 2
+      note: >-
+        meter_key exists on BOTH crm.product_offers and crm.product_addons, and
+        crm.product_addon_tiers prices volume bands - but no table anywhere in
+        core records a meter reading. Usage-based billing is fully priced and
+        never counted.
+    - concept: ARR history / revenue movement
+      severity: critical
+      rank: 3
+      note: >-
+        crm.contracts.arr is one current number. Without a period-over-period
+        ARR record there is no NRR, no GRR, no expansion/contraction split.
+    - concept: Feature / entitlement flag per end customer
+      severity: critical
+      rank: 4
+      note: >-
+        No table anywhere records which FEATURES a specific tenant's specific
+        end customer is entitled to. campaign.organization_products was
+        mapped to this in v1 and has been removed — it grants WORKTUAL's own
+        platform modules to the tenant org, a completely different
+        relationship (Worktual -> tenant, not tenant -> tenant's customer).
+        Do not re-introduce that mapping without re-reading this note.
+    - concept: Trial
+      severity: high
+      note: >-
+        No trial object, no trial start/end, no conversion event. Only a
+        custom_fields key. For a PLG business this is a first-class entity.
+    - concept: Seat / Licence assignment
+      severity: high
+      note: >-
+        included_qty is the allowance. Which named users hold a seat, and how
+        many are active, has no source. "Are they using what they pay for" is
+        the most common CSM question and it is unanswerable.
+    - concept: Opportunity type (new / expansion / renewal)
+      severity: medium
+      note: >-
+        Renewals are inferable from Contract.renew_deal_id (a real FK,
+        recovered via derived_labels.Opportunity.RenewalDeal above). Expansion is
+        only inferable at the ACCOUNT level via Account.expansion_signal,
+        with no link back to a specific Opportunity — so ExpansionDeal is
+        deliberately NOT derived (see derived_labels.Opportunity note). New-business
+        vs upsell cannot be separated at the Opportunity level. One deal_type column
+        would fix all three at once.
+    - concept: Account health score
+      severity: medium
+      note: >-
+        CustomerScorecard.churn_score is per CONTACT, not per ACCOUNT. A SaaS
+        health score is account-level and needs usage + support + billing
+        rolled up to Account. No such rollup exists.
+    - concept: Plan -> SLA linkage
+      severity: medium
+      note: "no link from a Contract or OfferingPlan to which SLA tier (ticketing.sla_policies / ccass.sla_policies) that plan is entitled to."
+    - concept: Offering roadmap / release
+      severity: low
+      note: feature requests land as tickets; there is no release or roadmap object.
+    - concept: Partner commission / MDF / deal registration
+      severity: medium
+      note: >-
+        b2b2c partner hierarchy is expressible via channel_role and
+        parent_company_id, but the commercial partner objects the BA B2B2C
+        workbook lists (deal registration, MDF, commission, settlement) have
+        no source. Same class of gap as ecommerce's b2b2c segment.
+    - concept: Sub-tenant / customer-of-customer provisioning
+      severity: medium
+      note: "Tenant is Worktual's own multi-tenancy boundary, not reusable for a b2b2c partner's own end customers."
+    - concept: NPS / product survey
+      severity: low
+      note: Ticket.csat_score is the only satisfaction signal and it is support-only.

@@ -1,0 +1,162 @@
+# domains/bfsi.yaml   (banking, financial services & insurance)
+
+industry: bfsi
+pack_version: "2026.09.02"
+requires_core: ">=3"
+layer: domain
+
+applies_when:
+  accounts.organizations.industry_type:
+    [bfsi, banking, bank, financial services, finance, insurance, insurer,
+     nbfc, fintech, lending, loans, mortgage, wealth management, asset management,
+     mutual fund, broking, stockbroking, capital markets, payments, microfinance,
+     credit union, cooperative bank, reinsurance]
+
+variant_key: accounts.organizations.business_type
+variants:
+  b2c:
+    # retail banking, personal lines insurance, direct-to-consumer lending
+    anchor_entities: [Contact, Contract, Product, Ticket, Conversation, Invoice]
+    de_emphasise: [Account, Quote, Proposal]
+  b2b:
+    # corporate banking, commercial lines, institutional / broker channel
+    anchor_entities: [Account, Contact, Deal, Quote, Contract, Invoice]
+    de_emphasise: [LoyaltyTier]
+  b2b2c:
+    # bancassurance, agency / DSA networks, embedded finance partners
+    anchor_entities: [Account, Contact, Contract, Product, Ticket]
+    de_emphasise: []
+
+extends:
+  ticketing.tickets:
+    extra_labels:
+    - label: Complaint
+      when: {category: [grievance, complaint, escalation]}
+    - label: TransactionDispute
+      when: {category: [transaction_dispute, chargeback, unauthorised]}
+    - label: ClaimQuery
+      when: {category: [claim, claim_status, claim_intimation]}
+    - label: KycRequest
+      when: {category: [kyc, re_kyc, documentation]}
+    - label: ServicingRequest
+      when: {category: [policy_servicing, loan_servicing, statement, card]}
+  cdp.customer_profile:
+    custom_fields:
+      whitelist: [cif, customer_segment, relationship_manager_code, kyc_status, risk_appetite, preferred_branch_code,
+        occupation_category, onboarding_channel]
+      identity: [cif]
+      promote_to_node:
+        customer_segment: {label: CustomerSegment, key: name, edge: IN_SEGMENT_TIER}
+        risk_appetite: {label: RiskProfile, key: name, edge: HAS_RISK_PROFILE}
+      blocklist: [account_number, account_no, card_number, card_no, cvv, pin, iban, ifsc, swift, upi_id, pan, aadhaar,
+        ssn, nino, tax_id, passport_number, credit_score, cibil, bureau_score, income, salary, annual_income, net_worth,
+        balance, outstanding_balance, loan_amount, sanction_amount, collateral_value, nominee_details, beneficiary_details]
+      blocklist_action: drop_silently_and_log
+
+vocabularies:
+  ticket.category:  # [core: ticketing.tickets.category]
+    canonical: [transaction_dispute, chargeback, claim, claim_status, kyc, re_kyc,
+                documentation, statement, card, policy_servicing, loan_servicing,
+                premium_payment, grievance, complaint, fraud_report, general]
+    labels: {re_kyc: "Periodic KYC update", grievance: "Regulatory grievance"}
+  ticket.priority:  # [core: ticketing.tickets.priority]
+    labels: {urgent: "Regulatory / fraud — clock running"}
+  conversation.intent:  # [core: supported_intents]
+    canonical: [balance_enquiry_redirect, premium_due, renewal_status, claim_status,
+                emi_status, statement_request, card_block, dispute_transaction,
+                kyc_help, product_enquiry, branch_locator, grievance_escalation]
+    note: >-
+      balance_enquiry_redirect exists because balances are NOT in this graph;
+      the intent must route to the system of record, not attempt an answer.
+  campaign.goal:  # [core: campaign.campaigns.goal]
+    canonical: [renewal_drive, cross_sell, up_sell, top_up, lapse_recovery,
+                onboarding_activation, kyc_completion, premium_reminder,
+                dormant_reactivation, financial_literacy]
+  journey_state.current_stage:  # [core: journey_states.current_stage]
+    canonical: [prospect, applied, kyc_pending, underwriting, issued, active,
+                renewal_due, lapsed, claimed, closed, surrendered]
+  contact.lead_source:  # [core: crm.contact_profiles.lead_source]
+    canonical: [branch_walk_in, relationship_manager, agency, dsa, bancassurance,
+                aggregator, website, paid_ads, referral, call_centre, existing_customer]
+  deal.stage:  # [core: crm.deals.stage]
+    labels: {qualification: "Lead / need analysis", discover: "Documentation & KYC",
+             propose: "Illustration / sanction offer", negotiate: "Underwriting & terms",
+             closed_won: "Issued / disbursed", closed_lost: "Declined / withdrawn"}
+
+# DERIVED LABELS — batch lane
+derived_labels:
+  lane: batch
+  Customer:
+    source: cdp.gold_customer_metrics  # [core: DailyEngagementMetric]
+    rules:
+      - {label: SingleProductCustomer, when: "total_orders == 1"}
+      - {label: MultiProductCustomer,  when: "total_orders >= 2"}
+      - {label: HighValueCustomer,     when: "total_spend >= p90(total_spend)"}
+      - {label: AttritionRisk,         when: "churn_score >= 0.7"}
+      - {label: DormantCustomer,       when: "last_event_at < now() - 270d"}
+    exclusive_groups: [[SingleProductCustomer, MultiProductCustomer]]
+    note: >-
+      AttritionRisk is a relationship-churn signal from engagement data. It is
+      NOT a credit, underwriting or fraud score and must never be used or
+      described as one. The meta-graph carries this caveat.
+
+metrics:
+  add:
+    - metric_id: grievance_share
+      canonical_name: Grievance Share
+      unit: ratio
+      route: graph
+      computed_from: [Ticket]
+      direction: lower_is_better
+    - metric_id: lapse_rate
+      canonical_name: Lapse Rate
+      unit: ratio
+      route: graph
+      computed_from: [Contract]
+      direction: lower_is_better
+    - metric_id: cross_sell_ratio
+      canonical_name: Products per Customer
+      unit: ratio
+      route: graph
+      computed_from: [Customer, Contract]
+      direction: higher_is_better
+
+# ACCESS — tighten only
+access:
+  ProductFamily:   {domain: common, module: core, sensitivity: L1}
+  ProductCategory: {domain: common, module: core, sensitivity: L1}
+  CustomerSegment: {domain: common, module: core, sensitivity: L1}
+  RiskProfile:     {domain: crm, module: sales, sensitivity: L1}
+  tighten:
+    EngagementActivity:     {sensitivity: L3, deny_properties: [transcript_text, body]}
+    ConversationSummary: {sensitivity: L3, deny_properties: [rolling_summary, extracted_facts]}
+    Invoice:             {sensitivity: L3, deny_properties: [tax_id, billing_address, lead_email, lead_phone]}
+    Insight:             {sensitivity: L3, deny_properties: [summary, explanation]}
+  never_grant: [FinancialProduct, PolicyOrAccount, FinancialCustomer]
+
+compliance:
+  regimes: [PCI-DSS, RBI, IRDAI, SEBI, AML/KYC, GDPR, DPDP]
+  notes:
+    - Card and account numbers are blocklisted at ingest, not masked downstream.
+    - Call transcripts are mis-selling evidence; §6 restricts them by default.
+    - Grievance tickets carry regulatory clocks — TicketSLA governs, see core.
+
+# NOT MODELLED
+not_modelled:
+  blocked_on_core:
+    - {concept: BusinessUnit, blocker: "accounts.organization_locations mapping commented out in core."}
+    - {concept: Consent, blocker: "cdp.customer_profile.consent_json not in core properties; consent gates outbound under most regimes here."}
+    - {concept: "Ticket -> Policy / Account", blocker: "ticketing.tickets has no contract reference; a claim query cannot be traced to the policy it concerns. Highest-value fix in this vertical."}
+  no_source:
+    - {concept: Account ledger / Balance, severity: critical, note: "deliberately out of scope — core banking / policy admin is the system of record. Intent routing must redirect, never guess."}
+    - {concept: Transaction, severity: critical, note: "no transaction table; disputes reference nothing."}
+    - {concept: Claim, severity: critical, note: "claim intimation, assessment, settlement — an entire lifecycle with no table."}
+    - {concept: Repayment / Premium actually paid, severity: high, note: "BillingSchedule gives what is DUE; realised collection does not exist."}
+    - {concept: Underwriting decision, severity: high, note: "deal stage shows the outcome; the decision, rules and rating do not exist."}
+    - {concept: Nominee / Beneficiary, severity: medium, note: "blocklisted as PII; also has no table."}
+    - {concept: Collateral / Security, severity: medium}
+    - {concept: Rider / Endorsement history, severity: medium, note: "crm.product_addons models the rider as a catalog item, not as attached cover on a policy."}
+    - {concept: AML / Fraud alert, severity: medium, note: "cdp.anomaly_alerts is generic metric anomaly, not transaction monitoring."}
+    - {concept: StaffRole / Advisor licensing, severity: low}
+
+# ASSUMES — same C1-C4 / E1-E7 / R1-R6 as domains/healthcare.yaml §8

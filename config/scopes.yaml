@@ -1,0 +1,30 @@
+# Product labels.
+#
+# Every node written from a product's tables carries exactly ONE product label:
+#
+#   Support (ticketing)  Sales (crm)  Marketing (campaign)  ContactCentre (ccaas)
+#   CDP (cdp)            WebTracking (webtracking)
+#
+# Tables of the domains listed under `unscoped` (the tenant's own setup and its product
+# catalogue) carry NO product label: Tenant, User, Team, Channel, Product, ... Every
+# product may read them. An agent may read a node when it has no product label, or when
+# its product label is one of the agent's products; a product node it may not read stops
+# the traversal there, even when reached through an unlabelled node.
+
+products:
+  ticketing:   Support
+  crm:         Sales
+  campaign:    Marketing
+  ccaas:       ContactCentre
+  cdp:         CDP
+  webtracking: WebTracking
+
+# access.domain values whose tables write nodes without a product label.
+unscoped: [common]
+
+# Exceptions to the domain rule (rarely needed). Value: a product label, or "none".
+label_overrides: {}
+table_overrides:
+  # Collected by web tracking and stored in cdp: they are web-tracking data.
+  cdp.customer_events: WebTracking
+  cdp.customer_sessions: WebTracking

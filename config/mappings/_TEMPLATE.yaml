@@ -1,0 +1,35 @@
+# Per-organisation mapping overlay -- FORMAT REFERENCE. Ship unmodified.
+
+version: 1
+layer: tenant
+database: orgREPLACEME
+organization_id: "REPLACE-ME"  # MUST be quoted -- see validation check 10
+industry: bfsi
+
+products: [ccaas, crm, ticketing]
+
+extends:
+
+  crm.contacts:
+    extra_labels: [Customer, Policyholder]
+    custom_properties:
+      - {name: policy_number, type: string}
+      - {name: risk_score,    type: integer}
+      - {name: kyc_status,    type: string}
+      # Money read out of the JSONB blob needs a scale, same as a column would.
+      - {name: premium_paid,  type: decimal, scale: 2}
+    relationships:
+      - type: HOLDS
+        direction: out
+        target_label: Policy  # declared under core.yaml stub_labels
+        target_key: policy_id
+        from_column: policy_id
+
+  ticketing.tickets:
+    extra_labels: [ServiceRequest]
+    custom_properties:
+      - {name: sla_tier, type: string}
+
+# Escape hatch for the rare table the declarative format cannot express.
+raw:
+  # crm.odd_table: mappings/raw/crm.odd_table.cypher

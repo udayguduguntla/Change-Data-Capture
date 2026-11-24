@@ -1,0 +1,56 @@
+# ==============================================================================
+# Git Ignore Rules - CDC Knowledge Graph Pipeline
+# ==============================================================================
+
+# ---- Environment & Secrets ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# ---- Python & Caching ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---- Logs & Runtime State ----
+*.log
+logs/*
+!logs/.gitkeep
+pipeline.log
+dummy.log
+kafka_debug.log
+
+# ---- Pipelines, Data & Embeddings ----
+data/
+quarantine/
+qwen_onnx*/
+*.onnx
+*.onnx_data
+models/
+
+# ---- Ad-hoc Sandbox & Backups ----
+scripts/sandbox_tools/
+*.bak
+*.bak*
+*.swp
+*~
+backups/
+
+# ---- IDE & OS Metadata ----
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/

@@ -1,0 +1,3200 @@
+{
+ "accounts.active_products": {
+  "description": "Products that became “live” on a lead after pay (fulfillment snapshot).",
+  "columns": {
+   "key": "Unique string for this product+branch.",
+   "implementation_purchased": "Paid for implementation help.",
+   "quotation_id": "Source quote."
+  }
+ },
+ "accounts.additional_addresses": {
+  "description": "Extra addresses on a lead (not the main HQ).",
+  "columns": {
+   "lead_id": "Parent lead.",
+   "label": "Name of this address."
+  }
+ },
+ "accounts.agent_did_usage_monthly": {
+  "description": "Monthly usage entered for a mapped number (year_month, usage_value, usage_unit).",
+  "columns": {}
+ },
+ "accounts.available_numbers": {
+  "description": "Pool of numbers not yet given to a customer.",
+  "columns": {}
+ },
+ "accounts.branch_add_requests": {
+  "description": "Ask to add a new branch (payload is JSON).",
+  "columns": {}
+ },
+ "accounts.branch_cancellation_alerts": {
+  "description": "Reminders that a cancel grace period is ending.",
+  "columns": {}
+ },
+ "accounts.branch_cancellation_requests": {
+  "description": "Ask to drop a branch or a product on a branch.",
+  "columns": {
+   "request_number": "Human number.",
+   "request_kind": "Branch vs product cancel.",
+   "status": "Workflow state.",
+   "trigger_source": "Customer vs admin.",
+   "grace_deadline_at": "Last day to keep it.",
+   "related_quotation_id": "Linked quote."
+  }
+ },
+ "accounts.branches": {
+  "description": "Quote-time branch list on the lead (before org locations).",
+  "columns": {
+   "id": "Branch code on this lead.",
+   "lead_id": "Parent lead.",
+   "is_primary": "HQ / first branch."
+  }
+ },
+ "accounts.customer_auth_sessions": {
+  "description": "Logged-in customer sessions.",
+  "columns": {
+   "token": "Session cookie/token.",
+   "expires_at": "When it dies."
+  }
+ },
+ "accounts.customer_product_requests": {
+  "description": "“Please sell us another product” from the customer portal.",
+  "columns": {
+   "request_number": "Human number.",
+   "customer_note": "Free text."
+  }
+ },
+ "accounts.customer_users": {
+  "description": "People who log into the customer portal (not Setup Workspace agents).",
+  "columns": {
+   "organization_id": "Their company.",
+   "display_name": "Name shown in UI.",
+   "role": "Usually org_admin.",
+   "branch_id": "Optional branch scope.",
+   "is_active": "Can they log in.",
+   "must_change_password": "Force password change."
+  }
+ },
+ "accounts.lead_assignments": {
+  "description": "History of “this lead moved from salesperson A to B”.",
+  "columns": {
+   "lead_id": "Which lead.",
+   "assigned_by_user_id": "Who did the assign.",
+   "reason": "Why it moved."
+  }
+ },
+ "accounts.leads": {
+  "description": "A sales opportunity before / while quoting.",
+  "columns": {
+   "id": "Lead id.",
+   "tenant_id": "Short code for this deal.",
+   "company_name": "Company they typed in.",
+   "status": "Sales stage (New, In Progress, Paid, Rejected, …).",
+   "is_active": "Soft on/off.",
+   "product_draft": "Draft product config (JSON).",
+   "assigned_user_id": "Sales person currently owning it.",
+   "created_by_user_id": "Who created the lead.",
+   "assigned_at": "When it was last assigned.",
+   "lead_kind": "standard or special kinds.",
+   "organization_id": "Org id when already linked."
+  }
+ },
+ "accounts.mail_oauth_connections": {
+  "description": "Encrypted OAuth tokens for connected mailboxes (Google/Microsoft). Used when sending a one-off test email from the user inbox — separate from Worktual ESP bulk sends.",
+  "columns": {
+   "id": "Connection id.",
+   "organization_id": "Org scope.",
+   "provider": "OAuth provider: google or microsoft.",
+   "email": "Connected mailbox.",
+   "refresh_token_encrypted": "Encrypted token — server only.",
+   "status": "Connection status."
+  }
+ },
+ "accounts.number_mappings": {
+  "description": "A phone / DID assigned to a customer.",
+  "columns": {
+   "tenant_id": "Short tenant code.",
+   "product_id": "Usually contact-center.",
+   "number": "The phone number (unique).",
+   "number_type": "DID type.",
+   "agent_label": "Label.",
+   "status": "active.",
+   "notes": "Free text.",
+   "mapped_at": "When assigned."
+  }
+ },
+ "accounts.organization_locations": {
+  "description": "Offices / branches of the company (after conversion).",
+  "columns": {
+   "id": "Location code inside the org (with organization_id is the key).",
+   "organization_id": "Parent company.",
+   "label": "Name of the branch (HQ, Chennai, …).",
+   "address": "Street address.",
+   "country": "Country.",
+   "tax_number": "Tax id for this site.",
+   "industry_type": "Industry at this site.",
+   "is_primary": "Main / HQ location.",
+   "status": "active or dropped."
+  }
+ },
+ "accounts.organizations": {
+  "description": "Tenant organization profile shared across Worktual products. Campaign uses business_type for B2B/B2C mode and industry_type to seed industry packs.",
+  "columns": {
+   "id": "Company id (UUID). Use this everywhere.",
+   "source_lead_id": "The sales lead this company came from.",
+   "tenant_id": "Short company code.",
+   "company_name": "Legal / display name.",
+   "industry_type": "Industry (IT, bank, …).",
+   "business_type": "B2B / B2C style (copied from the lead).",
+   "contact_name": "Main person name.",
+   "designation": "Their job title.",
+   "work_email": "Work email.",
+   "admin_email": "Admin / portal email.",
+   "tax_number": "GST / tax id.",
+   "billing_address": "Billing street address.",
+   "website_url": "Website.",
+   "country": "Country.",
+   "company_size": "How big the company is.",
+   "mobile_country_code": "Phone country code (+91).",
+   "mobile_number": "Phone number.",
+   "lifecycle_status": "Usually active.",
+   "converted_at": "When the lead became this company.",
+   "reseller_id": "If a reseller owns this customer."
+  }
+ },
+ "accounts.payment_webhook_events": {
+  "description": "Raw Stripe / Razorpay events (so we do not process the same event twice).",
+  "columns": {
+   "event_type": "What happened.",
+   "quotation_id": "Quote we matched.",
+   "payload": "Full webhook JSON.",
+   "processed_at": "When we handled it."
+  }
+ },
+ "accounts.payments": {
+  "description": "One payment record for a whole quote (single checkout).",
+  "columns": {
+   "quotation_id": "Which quote (one payment row per quote).",
+   "provider": "stripe or razorpay.",
+   "status": "pending, reported, paid, failed, …",
+   "paid_at": "When money landed.",
+   "last_provider_event_id": "Last webhook we saw.",
+   "failure_reason": "Why it failed.",
+   "dry_run": "Test payment, not real money."
+  }
+ },
+ "accounts.product_access_grants": {
+  "description": "Which customer user may open which subscription.",
+  "columns": {
+   "customer_user_id": "Portal user.",
+   "subscription_id": "Product they can see.",
+   "role": "Access role."
+  }
+ },
+ "accounts.product_assignments": {
+  "description": "Which product is sold on which branch on a quote.",
+  "columns": {
+   "product_id": "Product key (contact-center, crm, …).",
+   "branch_id": "Using location.",
+   "billing_branch_id": "Who pays.",
+   "change_type": "New, add-on, etc.",
+   "config": "Seats, add-ons, prices (JSON)."
+  }
+ },
+ "accounts.product_go_live": {
+  "description": "Implementation / UAT / go-live tracker per product + branch.",
+  "columns": {
+   "lifecycle_status": "Stage (awaiting_implementation, UAT, live, …).",
+   "otc_quotation_id": "One-time implementation quote.",
+   "go_live_quotation_id": "Recurring / go-live quote.",
+   "subscription_id": "Live subscription when ready.",
+   "uat_credentials": "Test login JSON (sensitive).",
+   "change_request_note": "Customer change note."
+  }
+ },
+ "accounts.product_summary_items": {
+  "description": "Human-readable lines shown on the quote summary.",
+  "columns": {
+   "quotation_id": "Parent quote.",
+   "price_label": "Price text.",
+   "change_type_label": "New / change text."
+  }
+ },
+ "accounts.purchase_orders": {
+  "description": "One paid quote → one purchase order.",
+  "columns": {
+   "status": "Usually paid.",
+   "paid_at": "Pay time."
+  }
+ },
+ "accounts.quotation_branch_payments": {
+  "description": "Payment per billing branch when the quote is split.",
+  "columns": {}
+ },
+ "accounts.quotation_invoices": {
+  "description": "PDF invoice files attached to a quote (one per billing branch if split).",
+  "columns": {
+   "quotation_id": "Parent quote."
+  }
+ },
+ "accounts.quotations": {
+  "description": "A submitted quote (finance can approve / reject).",
+  "columns": {
+   "lead_id": "Which deal.",
+   "lead_snapshot": "Frozen lead details.",
+   "status": "Pending Finance Review → Approved → Paid or Rejected.",
+   "finance_note": "Finance comment.",
+   "version": "Quote version number.",
+   "submission_batch_id": "Group of quotes sent together.",
+   "source_product_request_id": "If this quote came from “request new product”.",
+   "billing_phase": "Normal vs implementation / go-live billing.",
+   "invoice_number": "Printed invoice number.",
+   "organization_id": "Org when known."
+  }
+ },
+ "accounts.quote_sessions": {
+  "description": "Unsaved / in-progress quote while sales is still editing.",
+  "columns": {
+   "lead_id": "One draft per lead.",
+   "lead_snapshot": "Copy of lead fields at draft time.",
+   "invoice_mode": "How invoices are split."
+  }
+ },
+ "accounts.renewal_events": {
+  "description": "A reminder that a subscription must renew.",
+  "columns": {
+   "subscription_id": "Which subscription.",
+   "due_at": "When renewal is due.",
+   "status": "scheduled, done, …",
+   "renewal_quotation_id": "Renewal quote if created."
+  }
+ },
+ "accounts.setup_app_connections": {
+  "description": "Connected Apps OAuth (Google, etc.).",
+  "columns": {
+   "organization_id": "Company.",
+   "app_key": "Which app (unique per org).",
+   "provider": "Vendor.",
+   "status": "disconnected / connected / needs_reauth.",
+   "scopes": "Permissions granted.",
+   "metadata": "Extra JSON.",
+   "connected_at": "When connected."
+  }
+ },
+ "accounts.setup_business_hour_shifts": {
+  "description": "One shift row (start/end, optional breaks).",
+  "columns": {
+   "business_hours_id": "Parent hours.",
+   "shift_type": "Regular / other.",
+   "crosses_midnight": "Overnight shift."
+  }
+ },
+ "accounts.setup_business_hours": {
+  "description": "When the company / team is open.",
+  "columns": {
+   "organization_id": "Company.",
+   "timezone": "Time zone name.",
+   "holiday_calendar_id": "Which holidays apply.",
+   "status": "active or not.",
+   "working_days": "Which weekdays (JSON).",
+   "timing_mode": "same vs different hours per day.",
+   "day_timings": "Per-day hours (JSON)."
+  }
+ },
+ "accounts.setup_ccaas_queue_agents": {
+  "description": "Which setup user sits in a queue, and what they handle.",
+  "columns": {
+   "call_type": "Inbound / outbound / both."
+  }
+ },
+ "accounts.setup_ccaas_queues": {
+  "description": "A Contact Center queue.",
+  "columns": {
+   "organization_id": "Company.",
+   "team_id": "Team that owns it.",
+   "status": "active."
+  }
+ },
+ "accounts.setup_channel_configs": {
+  "description": "Cross-product channel integrations (WhatsApp Meta connection, email channel rows) managed in Accounts. Campaign Configuration UI reads these for regulated sends.",
+  "columns": {
+   "organization_id": "Company.",
+   "channel_type": "email, webchat, social, voice, …",
+   "name": "Display name.",
+   "status": "pending / connected / …",
+   "product_ids": "Which purchased products use it (JSON).",
+   "id": "Channel config id."
+  }
+ },
+ "accounts.setup_crm_channel_agents": {
+  "description": "Which setup users are attached to a CRM channel (email/social), not a CCaaS queue.",
+  "columns": {
+   "channel_config_id": "Channel.",
+   "user_id": "Setup user."
+  }
+ },
+ "accounts.setup_email_configs": {
+  "description": "My Accounts mailbox configuration for test sends from the user connected inbox. Campaign reads From address metadata — not used for bulk campaign ESP sends.",
+  "columns": {
+   "channel_config_id": "Parent channel (one email config each).",
+   "provider_type": "Hosted, SMTP, OAuth, …",
+   "third_party_mode": "Extra mode.",
+   "ccaas_handler": "How Contact Center handles mail.",
+   "is_bot": "Bot mailbox vs human.",
+   "id": "Config row id.",
+   "organization_id": "Org scope.",
+   "from_address": "Mailbox From address.",
+   "display_name": "Sender display name.",
+   "status": "Mailbox connection status."
+  }
+ },
+ "accounts.setup_holiday_calendars": {
+  "description": "A named holiday list (e.g. “India 2026”).",
+  "columns": {
+   "organization_id": "Company.",
+   "name": "Calendar name.",
+   "country": "Country this list is for."
+  }
+ },
+ "accounts.setup_holidays": {
+  "description": "One holiday date on a calendar.",
+  "columns": {
+   "calendar_id": "Parent calendar.",
+   "name": "Holiday name.",
+   "holiday_date": "The date."
+  }
+ },
+ "accounts.setup_knowledge_documents": {
+  "description": "Uploaded files (PDF, etc.).",
+  "columns": {
+   "organization_id": "Company.",
+   "category": "business, product, or customer_support.",
+   "product_id": "Which Worktual product the file is for (crm, contact-center, …).",
+   "ccaas_audience": "For Contact Center only: bot, agent_assist, or both.",
+   "storage_path": "Disk path under {UPLOAD_BASE}/uploads/{organization_id}/{module}/.",
+   "uploaded_by": "Who uploaded."
+  }
+ },
+ "accounts.setup_knowledge_org_profiles": {
+  "description": "One row per company. LLM JSON extracted from product / business PDFs.",
+  "columns": {
+   "organization_id": "Company (primary key).",
+   "product": "Product entities JSON (from product uploads).",
+   "business": "Company contact JSON (from business uploads).",
+   "updated_at": "Last extract time."
+  }
+ },
+ "accounts.setup_roles": {
+  "description": "Named roles (admin, marketing, sales_manager, etc.) assigned to users via product access. Campaign uses role name in JWT and UI.",
+  "columns": {
+   "organization_id": "Company.",
+   "product_id": "Which product this role is for.",
+   "accessible_products": "Extra product list (JSON).",
+   "id": "Role primary key.",
+   "name": "Role slug shown in session.role."
+  }
+ },
+ "accounts.setup_social_configs": {
+  "description": "WhatsApp / Instagram / Facebook connection.",
+  "columns": {
+   "channel_config_id": "Parent channel.",
+   "provider": "whatsapp, instagram, facebook.",
+   "bot_enabled": "Bot on or off.",
+   "usage_mode": "inbox or templates.",
+   "display_number": "Number shown."
+  }
+ },
+ "accounts.setup_teams": {
+  "description": "A team of agents.",
+  "columns": {
+   "organization_id": "Company.",
+   "business_hours_id": "Hours this team follows.",
+   "available_products": "Products this team works on (JSON list).",
+   "status": "active.",
+   "member_ids": "Member user ids (JSON)."
+  }
+ },
+ "accounts.setup_user_invite_tokens": {
+  "description": "One-time link to set a password.",
+  "columns": {
+   "token_hash": "Hashed token (not the raw link).",
+   "created_by": "Who sent the invite."
+  }
+ },
+ "accounts.setup_user_product_access": {
+  "description": "Maps users to roles within an organization for each product. Campaign reads this join to resolve the user role name shown in session.",
+  "columns": {
+   "user_id": "Setup user.",
+   "product_id": "Product key.",
+   "role_id": "Role they get on that product.",
+   "organization_id": "Org ref."
+  }
+ },
+ "accounts.setup_users": {
+  "description": "Worktual account users used for Campaign login. Campaign reads this table only — it does not create or alter account users.",
+  "columns": {
+   "organization_id": "Company.",
+   "employee_id": "Staff id (unique per org).",
+   "work_email": "Login / invite email (unique globally).",
+   "mobile_number": "Phone (unique digits per org).",
+   "skills": "Skills list (JSON).",
+   "location_id": "Branch / site code.",
+   "status": "active.",
+   "team_id": "Team.",
+   "business_hours_id": "Their hours.",
+   "shift_types": "Shifts they work (JSON).",
+   "password_hash": "Password after invite.",
+   "invite_status": "Invite pending / accepted.",
+   "id": "Primary key; JWT sub claim.",
+   "first_name": "Given name for display.",
+   "last_name": "Family name for display."
+  }
+ },
+ "accounts.setup_voice_dids": {
+  "description": "Phone numbers (DIDs) and where calls go.",
+  "columns": {
+   "organization_id": "Company.",
+   "phone_number": "The number.",
+   "product_id": "Usually contact-center or crm.",
+   "routing_type": "User vs queue.",
+   "prompt_profile_id": "Which voice prompts.",
+   "status": "active."
+  }
+ },
+ "accounts.setup_voice_prompt_profiles": {
+  "description": "Voice IVR / prompt pack.",
+  "columns": {
+   "organization_id": "Company.",
+   "status": "active.",
+   "slots": "Prompt slots (JSON)."
+  }
+ },
+ "accounts.setup_webchat_configs": {
+  "description": "Web chat widget for Contact Center.",
+  "columns": {
+   "channel_config_id": "Parent channel.",
+   "webchat_id": "Public widget id.",
+   "personalisation": "Colors / extras (JSON)."
+  }
+ },
+ "accounts.subscription_entitlements": {
+  "description": "History of entitlement JSON (what seats/modules they have).",
+  "columns": {
+   "subscription_id": "Parent subscription.",
+   "schema_version": "Shape version of config.",
+   "config": "Entitlement JSON.",
+   "change_type": "Why this version exists.",
+   "effective_from": "When it starts.",
+   "purchase_order_id": "Which paid order created it."
+  }
+ },
+ "accounts.subscription_invoices": {
+  "description": "Split invoices for a subscription period (sequence 1 or 2).",
+  "columns": {
+   "subscription_id": "Parent.",
+   "sequence": "1 or 2.",
+   "invoice_type": "Kind of invoice.",
+   "remaining_days": "Days left in period."
+  }
+ },
+ "accounts.subscription_items": {
+  "description": "Lines on a purchase order (each product/branch).",
+  "columns": {
+   "purchase_order_id": "Parent order.",
+   "subscription_id": "Live subscription created from this line.",
+   "config_snapshot": "Config at purchase time."
+  }
+ },
+ "accounts.subscriptions": {
+  "description": "A live product for an org + location after payment.",
+  "columns": {
+   "key": "Unique subscription key.",
+   "status": "active, cancelled, …",
+   "change_type": "New vs change.",
+   "entitlement_config": "What they are allowed to use (JSON).",
+   "implementation_purchased": "Implementation sold.",
+   "scheduled_cancellation_request_id": "Linked cancel request."
+  }
+ },
+ "accounts.support_tickets": {
+  "description": "Customer support tickets and replies.",
+  "columns": {
+   "ticket_number": "Human number.",
+   "status": "open, resolved, …",
+   "resolved_at": "When closed.",
+   "ticket_id": "Parent ticket.",
+   "body": "Message text."
+  }
+ },
+ "accounts.usage_metrics": {
+  "description": "Current period usage (minutes, seats used, …).",
+  "columns": {
+   "subscription_id": "Which subscription.",
+   "metric_key": "What we measure.",
+   "unit": "Unit name."
+  }
+ },
+ "accounts.usage_metrics_monthly": {
+  "description": "Closed month snapshot of usage.",
+  "columns": {
+   "year_month": "YYYY-MM.",
+   "snapshot": "Extra JSON.",
+   "closed_at": "When we froze the month."
+  }
+ },
+ "campaign.accounts": {
+  "description": "Campaign reads only — does not migrate or own these tables.",
+  "columns": {}
+ },
+ "campaign.app_notifications": {
+  "description": "In-app bell notifications for campaign events (template approvals stuck, send failures, etc.). Deduped by source_key so the same alert is not inserted twice.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "user_id": "Target user; null = tenant-wide.",
+   "kind": "Notification category.",
+   "title": "Short title.",
+   "body": "Notification body.",
+   "href": "Deep link in SPA.",
+   "source_key": "Dedup key.",
+   "created_at": "Created at.",
+   "read_at": "When user read notification."
+  }
+ },
+ "campaign.branches": {
+  "description": "Stores workspace branches under an organization. Campaign data is scoped to both organization and branch so multi-branch tenants can isolate campaigns.",
+  "columns": {
+   "id": "Primary key; autoincrement; API returns as string.",
+   "organization_id": "Owning organization; matches accounts org id.",
+   "name": "Display label shown in branch-scoped UI.",
+   "is_default": "Marks the fallback branch for the org.",
+   "created_at": "Row creation time.",
+   "updated_at": "Last update (Prisma @updatedAt)."
+  }
+ },
+ "campaign.campaign_agent_sessions": {
+  "description": "Persistent draft workspace for AI agent modules (create-campaign, contacts, monitoring). Large JSON payload holds chat, wizard stage, and in-progress campaign state.",
+  "columns": {
+   "id": "Session id (often agent-supplied bigint).",
+   "organization_id": "Org scope.",
+   "branch_id": "Branch scope.",
+   "created_by_user_id": "User who opened the draft.",
+   "module": "Agent module key.",
+   "stage": "Wizard stage: intake, audience, templates, launch_plan.",
+   "payload": "Full agent state JSON.",
+   "created_at": "Session opened.",
+   "updated_at": "Last agent turn."
+  }
+ },
+ "campaign.campaign_audience": {
+  "description": "Frozen set of CDP contact references included in a saved campaign at launch time. Stores only contact_id refs — not full contact rows.",
+  "columns": {
+   "campaign_id": "Campaign this contact belongs to.",
+   "contact_id": "CDP profile id at save time.",
+   "created_at": "When contact was added to audience."
+  }
+ },
+ "campaign.campaign_audience_refs": {
+  "description": "Draft audience contact list while a campaign is still in agent session — before the campaign row is persisted. Mirrors campaign_audience but keyed by session.",
+  "columns": {
+   "session_id": "Draft session id.",
+   "contact_id": "CDP contact ref in draft audience."
+  }
+ },
+ "campaign.campaign_channel_templates": {
+  "description": "Per-channel message template drafts within an agent session. fields JSON holds structured content (email blocks, push title/body, etc.) for the frontend editor.",
+  "columns": {
+   "id": "Template id (= template_id in API).",
+   "session_id": "Owning agent session.",
+   "organization_id": "Org scope.",
+   "branch_id": "Branch scope.",
+   "channel": "Channel this template is for.",
+   "logo": "Optional brand logo URL.",
+   "launch_at": "Planned channel launch string.",
+   "how_it_works": "Channel explanation.",
+   "fields": "Structured template content.",
+   "generation_batch_id": "Groups AI generation batches.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.campaign_channels": {
+  "description": "One row per marketing channel attached to a saved campaign (email, SMS, WhatsApp, push, web, PPC). Stores channel-specific plan text and readiness status.",
+  "columns": {
+   "id": "Primary key.",
+   "campaign_id": "Parent campaign.",
+   "organization_id": "Denormalized org id.",
+   "channel": "Channel slug: email, sms, whatsapp, push, web, ppc.",
+   "template_id": "Optional link to channel template draft.",
+   "how_it_works": "Channel plan notes.",
+   "planned_launch_at": "Planned launch string.",
+   "status": "Channel readiness within campaign.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.campaign_contact_engagement": {
+  "description": "Campaign-scoped email engagement and unsubscribe state for a CDP contact. Aggregates opens/clicks at contact level across campaigns for consent checks.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "contact_id": "CDP contact ref.",
+   "email_unsubscribed": "Tenant-level email opt-out.",
+   "email_unsubscribed_at": "When user unsubscribed.",
+   "email_unsubscribe_reason": "Reason: user_link, admin, import.",
+   "last_email_opened_at": "Most recent open.",
+   "last_email_clicked_at": "Most recent click.",
+   "email_open_count": "Lifetime open count.",
+   "email_click_count": "Lifetime click count.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.campaign_recommendations": {
+  "description": "Tenant-shared AI recommendation cards shown on dashboard and CRM embed. Full card JSON in payload; public_id is the frontend id (rec-…).",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "branch_id": "Branch scope.",
+   "created_by_user_id": "Creator user ref.",
+   "public_id": "Frontend-visible id.",
+   "status": "Card status: creating, active, dismissed, used, expired.",
+   "title": "Card title.",
+   "payload": "Full recommendation JSON.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.campaign_send_batches": {
+  "description": "Queued send slices for a campaign channel run. Workers pick batches where scheduled_for <= now and status=queued, then process recipients in size chunks.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "campaign_id": "Campaign being sent.",
+   "channel": "Send channel: email, push, web, sms, whatsapp.",
+   "seq": "Batch sequence within channel.",
+   "scheduled_for": "When worker may process batch.",
+   "status": "Batch status: queued, processing, done, failed.",
+   "size": "Number of recipients in batch.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.campaign_send_recipients": {
+  "description": "One row per recipient per send attempt. Tracks delivery status, ESP message id, A/B variant, and open/click engagement counters for reporting.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "batch_id": "Parent send batch.",
+   "campaign_id": "Denormalized campaign id.",
+   "contact_id": "CDP contact ref.",
+   "email": "Email address when channel=email.",
+   "destination": "Push token or web-push URL.",
+   "platform": "Device platform: ios, android, web.",
+   "status": "Delivery status: pending, sent, failed, skipped.",
+   "skip_fail_reason": "Why skipped/failed e.g. suppressed.",
+   "provider_message_id": "ESP tracking id.",
+   "attempt_count": "Send retry count.",
+   "ab_variant": "A/B bucket: a, b, holdout, winner.",
+   "opened_at": "First open time.",
+   "clicked_at": "First click time.",
+   "open_count": "Total open events.",
+   "click_count": "Total click events.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.campaign_template_messages": {
+  "description": "Ordered chat history inside a channel template edit space. Each row is one user or assistant turn when refining template copy via the co-pilot.",
+  "columns": {
+   "id": "Primary key.",
+   "template_id": "Parent channel template.",
+   "role": "Message author: user, assistant, or system.",
+   "seq": "Zero-based order within template.",
+   "kind": "Content type: text or template.",
+   "payload": "Message body JSON.",
+   "created_at": "Message timestamp."
+  }
+ },
+ "campaign.campaigns": {
+  "description": "Central persisted campaign record after the create-campaign agent saves or launches. Holds name, goal, audience snapshot, schedule, and per-channel run metrics in JSON.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Tenant isolation key.",
+   "branch_id": "Workspace branch.",
+   "name": "Campaign display name.",
+   "description": "Longer description.",
+   "status": "Lifecycle: draft, scheduled, live, completed, cancelled.",
+   "starts_at": "UTC launch instant.",
+   "ends_at": "UTC end instant.",
+   "source_channel": "Origin: standalone_campaign or crm_marketing.",
+   "created_by_user_id": "Creator ref → setup_users.id.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at.",
+   "goal": "Business goal from agent.",
+   "objective": "Measurable objective.",
+   "session_id": "Agent session this campaign was saved from (unique).",
+   "audience_summary": "Human-readable audience.",
+   "audience_filters": "Filter snapshot at save.",
+   "audience_count": "Audience size at save/launch.",
+   "launch_plan": "Schedule, A/B, channel_run metrics.",
+   "launch_local_date": "Local YYYY-MM-DD for launch.",
+   "launch_local_time": "Local HH:mm for launch.",
+   "timezone": "IANA timezone for scheduling."
+  }
+ },
+ "campaign.cdp": {
+  "description": "Campaign may CRUD existing columns only — no ALTER on CDP from Campaign.",
+  "columns": {}
+ },
+ "campaign.channel_sending_profiles": {
+  "description": "Per-organization channel readiness checklist (especially email). Gates whether a channel can send — Configuration UI marks items complete until status is ready.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "channel": "Channel being configured.",
+   "status": "Readiness: not_started, in_progress, ready, blocked.",
+   "checklist": "Completion flags.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.email_domains": {
+  "description": "Sending domain authentication records (SPF, DKIM, DMARC) and ESP sync state. Supports both shared Worktual domain (Mode A) and customer DKIM (Mode B).",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "domain": "Domain being authenticated.",
+   "spf_ok": "SPF check passed.",
+   "dkim_ok": "DKIM check passed.",
+   "dmarc_ok": "DMARC check passed.",
+   "status": "Setup status string.",
+   "provider_domain_id": "ESP domain id (Worktual shared).",
+   "dns_records": "DNS records for operator paste.",
+   "dkim_selector": "DKIM selector name.",
+   "dkim_public_key": "Public key for DNS.",
+   "dkim_private_key_encrypted": "Encrypted PEM — server only.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.email_org_profiles": {
+  "description": "CAN-SPAM / compliance postal address for email sending — one row per organization. Required before email channel can reach ready status.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "One profile per org.",
+   "legal_name": "Legal entity name in footer.",
+   "street": "Street address.",
+   "city": "City.",
+   "country": "Country.",
+   "phone": "Optional support phone.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.email_return_paths": {
+  "description": "Bounce / return-path domain configuration for email deliverability. One row per organization defines where bounces are routed.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "One return path per org.",
+   "domain": "Return-path domain.",
+   "status": "Return-path status: not_started or verified.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.email_senders": {
+  "description": "Verified From addresses for campaign email. Exactly one sender per org should have is_active=true — that address is used by the email send worker.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "display_name": "From display name.",
+   "from_email": "From email address.",
+   "reply_to": "Optional Reply-To.",
+   "status": "Sender status: pending_verification or verified.",
+   "verify_token": "Email verification token when pending.",
+   "verify_expires_at": "Token expiry.",
+   "verified_at": "When verified.",
+   "is_active": "Active From for worker.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.email_sending_caps": {
+  "description": "Rate limits, batch sizes, warmup stage, and send health for email. Workers consult caps before enqueueing batches; unhealthy stats can block sending.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "One caps row per org.",
+   "batch_size": "Recipients per worker batch.",
+   "hourly_cap": "Max sends per hour.",
+   "daily_cap": "Max sends per day.",
+   "warmup_stage": "Warmup progression stage.",
+   "health_status": "Send health: healthy or blocked_sending.",
+   "health_stats": "Rolling health counters.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.email_suppressions": {
+  "description": "Durable suppression list for email addresses that must never receive campaign mail (unsubscribe, hard bounce, spam complaint). Checked before each send.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "email": "Suppressed address (lowercase).",
+   "reason": "Suppression reason: unsub, hard_bounce, complaint.",
+   "created_at": "When suppressed."
+  }
+ },
+ "campaign.organization_products": {
+  "description": "Records which Worktual products (Campaign, CRM) are entitled for each org branch. Login checks for an active Campaign row before allowing access.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Organization that owns the entitlement.",
+   "branch_id": "Branch this entitlement applies to.",
+   "product_code": "Product: campaign or crm.",
+   "status": "active or inactive.",
+   "starts_at": "Optional entitlement start.",
+   "ends_at": "Optional expiry; null = no end.",
+   "created_at": "Created timestamp.",
+   "updated_at": "Updated timestamp."
+  }
+ },
+ "campaign.push_channel_settings": {
+  "description": "Stores web-push (VAPID) and app-push (FCM/APNs) provider credentials collected in Configuration. Secrets live in settings JSON server-side.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "channel": "Push config type: web_push or app_push.",
+   "settings": "Provider keys and config.",
+   "status": "Configuration readiness.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.push_endpoints": {
+  "description": "Registered device tokens (app push) and browser push subscriptions (web push) linked to contacts. Launch workers send to active endpoints for audience members.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "contact_id": "Linked CDP contact.",
+   "channel": "Endpoint channel: push (app) or web (browser).",
+   "platform": "Browser or OS platform.",
+   "endpoint": "Subscription URL or device token.",
+   "auth_keys": "Web push encryption keys.",
+   "label": "Human label.",
+   "active": "Whether endpoint receives sends.",
+   "created_at": "Registered at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.regulated_channel_templates": {
+  "description": "SMS (DLT) and WhatsApp (Meta) templates that require external approval before sending. Tracks submission status, provider ids, and rejection reasons.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "channel": "Regulated channel: sms or whatsapp.",
+   "name": "Template name / external key.",
+   "external_id": "DLT id or Meta template name.",
+   "provider_template_id": "Meta Graph template id.",
+   "language": "Template language code.",
+   "category": "WhatsApp category.",
+   "header": "Template header text.",
+   "body": "Message body with placeholders.",
+   "footer": "Footer line.",
+   "buttons": "Newline-separated button labels.",
+   "status": "Approval flow: draft, pending, approved, rejected, etc.",
+   "rejected_reason": "Provider rejection reason.",
+   "channel_config_id": "Internal accounts channel config ref.",
+   "submitted_at": "When submitted to provider.",
+   "last_status_checked_at": "Last Meta/DLT poll.",
+   "created_by_user_id": "Submitter user ref.",
+   "campaign_name": "Campaign context when created.",
+   "goal": "Goal context.",
+   "objective": "Objective context.",
+   "source_campaign_id": "Optional link to saved campaign.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.sms_channel_settings": {
+  "description": "Per-organization SMS provider configuration including DLT entity id, sender id, and API credentials. One JSON settings bag per org.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "One SMS config per org.",
+   "settings": "Provider credentials and ids.",
+   "status": "Configuration readiness.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.tenant_industry_packs": {
+  "description": "Per-organization industry pack defining recommended contact fields and editable company rules. Seeded from org industry_type on first use; grows via agent and admin edits.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "One pack row per org.",
+   "pack_id": "Pack identifier.",
+   "seed_industry_type": "From accounts.organizations.industry_type.",
+   "payload": "Field hints and company rules.",
+   "created_at": "Created at.",
+   "updated_at": "Updated at."
+  }
+ },
+ "campaign.website_contacts": {
+  "description": "Visitor-site people who opt in on the marketing website — separate from CDP Audience until explicitly promoted. Stores visit metadata and web-push subscription.",
+  "columns": {
+   "id": "Primary key.",
+   "organization_id": "Org scope.",
+   "visitor_id": "Browser visitor uuid.",
+   "contact_id": "CDP id after promotion.",
+   "email": "Opt-in email.",
+   "phone": "Opt-in phone.",
+   "first_name": "Visitor first name.",
+   "last_name": "Visitor last name.",
+   "origin": "Site origin URL.",
+   "path": "Page path visited.",
+   "user_agent": "Browser user agent.",
+   "subscribed": "Notification permission granted.",
+   "endpoint": "Push subscription endpoint.",
+   "auth_keys": "Web push keys.",
+   "platform": "Platform label.",
+   "visit_count": "Number of site visits.",
+   "first_seen_at": "First visit.",
+   "last_seen_at": "Most recent visit.",
+   "subscribed_at": "When notifications allowed.",
+   "created_at": "Row created.",
+   "updated_at": "Row updated."
+  }
+ },
+ "ccass.agent_capacity": {
+  "description": "Description: Per-agent, per-channel active and reserved conversation counts against max concurrency.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "channel": "Omnichannel identifier (webchat, email, whatsapp, instagram, facebook, voice).",
+   "max_concurrency": "1",
+   "reserved_count": "0",
+   "active_count": "0",
+   "version": "Optimistic concurrency / change counter.",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.agent_presence": {
+  "description": "Description: Current presence state for each agent (ready, busy, offline, etc.) used by routing and supervisor views.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "status": "Legacy simplified presence used by older routing paths.",
+   "updated_at": "Last update timestamp (UTC).",
+   "presence_state": "Enterprise presence state (offline, ready, busy, not_ready, after_contact_work).",
+   "reason_code": "yes",
+   "heartbeat_at": "yes",
+   "lease_expires_at": "yes",
+   "version": "Optimistic concurrency / change counter.",
+   "source": "Origin system or actor that created the record."
+  }
+ },
+ "ccass.agent_presence_history": {
+  "description": "Description: Append-only history of agent presence transitions for auditing and reporting.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "previous_state": "yes",
+   "new_state": "no",
+   "reason_code": "yes",
+   "source": "Origin system or actor that created the record.",
+   "started_at": "Timestamp when the session or interval started.",
+   "ended_at": "Timestamp when the session/assignment/history ended."
+  }
+ },
+ "ccass.agent_skills": {
+  "description": "Description: Skills assigned to agents with proficiency, priority, and optional expiry.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "skill_id": "Skill referenced in ccass.skills.",
+   "proficiency": "Skill proficiency level (integer scale).",
+   "priority": "Relative priority (higher = more urgent where applicable).",
+   "verified_at": "yes",
+   "expires_at": "Expiry timestamp after which the record is stale.",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.agent_tasks": {
+  "description": "Description: Agent task inbox items (callbacks, follow-ups, co-worker suggestions) linked to contacts/conversations.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "assigned_user_id": "Platform user id of the assigned agent.",
+   "created_by_user_id": "yes",
+   "contact_id": "Canonical customer contact in cdp.contacts when linked.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "task_type": "Task category: follow_up, callback, escalation, suggestion.",
+   "status": "Domain-specific status enum for this entity.",
+   "priority": "Relative priority (higher = more urgent where applicable).",
+   "source": "Origin: self, admin, coworker, system.",
+   "title": "Short display title.",
+   "summary": "Longer text summary or description.",
+   "notes": "Free-text notes.",
+   "channel": "Omnichannel identifier (webchat, email, whatsapp, instagram, facebook, voice).",
+   "due_at": "Task due date/time for agent inbox sorting.",
+   "completed_at": "Timestamp when the task was completed.",
+   "dismissed_at": "Timestamp when the task was dismissed.",
+   "assigned_by_user_id": "yes",
+   "assigned_by_label": "Display label for who assigned the task.",
+   "metadata": "Flexible JSONB payload for extensibility.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.agents": {
+  "description": "Description: Operational agent profile published from setup; links a platform user to CCaaS routing and workspace identity.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "display_name": "no",
+   "email": "yes",
+   "status": "Domain-specific status enum for this entity.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC).",
+   "setup_user_id": "Platform user id from accounts.setup_users."
+  }
+ },
+ "ccass.audit_log": {
+  "description": "Description: Operational audit trail for sensitive CCaaS actions.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "actor_user_id": "yes",
+   "actor_type": "'system'::character varying",
+   "action": "no",
+   "entity_type": "no",
+   "entity_id": "yes",
+   "before_state": "yes",
+   "after_state": "yes",
+   "trace_id": "yes",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.ccass": {
+  "description": "Tables grouped by business domain. Hub table in bold.",
+  "columns": {
+   "channel": "webchat, email, whatsapp, instagram, facebook, voice",
+   "external_thread_id": "Unique session id per org+channel (new session = new id)",
+   "provider_thread_id": "Provider-native thread (same customer thread across sessions)",
+   "previous_conversation_id": "Links to prior closed conversation in same customer journey",
+   "visitor_id": "Channel identity (email address, webchat visitor id, social psid)",
+   "contact_id": "Resolved canonical customer (logical → cdp.contacts)",
+   "channel_config_id": "Logical → accounts.setup_channel_configs",
+   "status": "Legacy: bot_active, queued, assigned, active, resolved, closed",
+   "lifecycle_state": "Normalized: bot, waiting, offered, connected, wrap_up, ended"
+  }
+ },
+ "ccass.cdp": {
+  "description": "CDP has 59 tables (analytics, campaigns, partitioned events). CCaaS engineers most often touch:",
+  "columns": {}
+ },
+ "ccass.channel_automation_policies": {
+  "description": "Description: Per-channel automation policy (bot enabled, confidence threshold, handoff behavior).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "channel_config_id": "Reference to accounts.setup_channel_configs.",
+   "channel": "Omnichannel identifier (webchat, email, whatsapp, instagram, facebook, voice).",
+   "bot_enabled": "true",
+   "live_agent_enabled": "Whether live-agent handoff is allowed for the conversation.",
+   "automation_mode": "'auto_send'::character varying",
+   "confidence_threshold": "0.850",
+   "default_queue_id": "yes",
+   "allowed_queue_ids": "'{}'::uuid[]",
+   "handoff_message": "yes",
+   "no_agent_behavior": "'queue_and_notify'::character varying",
+   "inactivity_close_seconds": "86400",
+   "shadow_mode": "false",
+   "policy_version": "Version stamp of the automation policy applied.",
+   "status": "Domain-specific status enum for this entity.",
+   "channel_settings": "'{}'::jsonb",
+   "source_metadata": "'{}'::jsonb",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.conversation_assignments": {
+  "description": "Description: Agent offer/accept/reject/end lifecycle for conversation ownership.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "routing_attempt_id": "FK → ccass.routing_attempts.id.",
+   "state": "Assignment state: offered, accepted, rejected, ended.",
+   "reason": "Human-readable reason or trigger for the action.",
+   "offered_at": "Timestamp when an offer was presented to an agent.",
+   "accepted_at": "Timestamp when an offer or transfer was accepted.",
+   "rejected_at": "Timestamp when an offer was rejected.",
+   "expired_at": "yes",
+   "ended_at": "Timestamp when the session/assignment/history ended.",
+   "expires_at": "Offer expiry for ringing/accept-timeout flows."
+  }
+ },
+ "ccass.conversation_dispositions": {
+  "description": "Description: Disposition codes applied when resolving or closing conversations.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "disposition_id": "FK → ccass.dispositions.id.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "note": "yes",
+   "applied_at": "now()",
+   "applied_by_user_id": "yes",
+   "source": "Origin system or actor that created the record.",
+   "resolution_code": "Applied resolution code.",
+   "resolution_data": "'{}'::jsonb",
+   "is_final": "Whether this disposition/resolution closes the conversation.",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.conversation_memory": {
+  "description": "Description: Persisted NLP/context memory snippets associated with a conversation.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "rolling_summary": "yes",
+   "extracted_facts": "'[]'::jsonb",
+   "latest_summarized_message_id": "FK → ccass.conversation_messages.id.",
+   "model_name": "yes",
+   "token_estimate": "yes",
+   "version": "Optimistic concurrency / change counter.",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.conversation_message_attachments": {
+  "description": "Description: File attachments linked to conversation messages with storage metadata.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "message_id": "Message referenced in ccass.conversation_messages.",
+   "external_id": "Provider-external identifier for idempotent ingest.",
+   "storage_key": "no",
+   "file_name": "no",
+   "content_type": "no",
+   "byte_size": "no",
+   "checksum_sha256": "yes",
+   "download_url": "yes",
+   "status": "Domain-specific status enum for this entity.",
+   "metadata": "Flexible JSONB payload for extensibility.",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.conversation_messages": {
+  "description": "Description: All messages in a conversation across channels with direction, visibility, and delivery state.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "external_id": "Provider-external identifier for idempotent ingest.",
+   "sender_type": "Message sender role (customer, agent, bot, system).",
+   "recipient_type": "yes",
+   "direction": "Message direction: inbound or outbound.",
+   "visibility": "Audience visibility (customer, internal, system).",
+   "body": "Primary text content (message body, note text, etc.).",
+   "attachments": "'[]'::jsonb",
+   "reply_to_message_id": "FK → ccass.conversation_messages.id.",
+   "delivery_state": "Delivery pipeline state for the message.",
+   "model_metadata": "yes",
+   "created_at": "Row creation timestamp (UTC).",
+   "delivered_at": "yes",
+   "message_type": "'text'::character varying",
+   "attachment_count": "0",
+   "sent_at": "yes",
+   "rfc_message_id": "Email RFC Message-Id header value.",
+   "in_reply_to": "yes",
+   "references_header": "yes",
+   "provider_received_at": "yes",
+   "provider_headers": "'{}'::jsonb"
+  }
+ },
+ "ccass.conversation_notes": {
+  "description": "Description: Agent notes attached to a conversation (customer-visible or internal).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "author_user_id": "no",
+   "body": "Primary text content (message body, note text, etc.).",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.conversation_participants": {
+  "description": "Description: Participants in a conversation (customer, visitor, agent identities) by reference key.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "participant_type": "Participant role (customer, visitor, agent, system).",
+   "identity_ref": "Participant identity key (email, visitor id, psid, etc.).",
+   "joined_at": "now()",
+   "left_at": "yes"
+  }
+ },
+ "ccass.conversation_sla_state": {
+  "description": "Description: Active SLA timers (first response, resolution) and breach markers for a conversation.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "sla_policy_id": "FK → ccass.sla_policies.id.",
+   "first_response_due_at": "yes",
+   "resolution_due_at": "yes",
+   "first_response_warning_at": "yes",
+   "resolution_warning_at": "yes",
+   "breached_at": "yes",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.conversation_transfers": {
+  "description": "Description: Warm/blind transfer requests between queues or agents with state tracking.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "from_queue_id": "FK → ccass.queues.id.",
+   "from_agent_id": "FK → ccass.agents.id.",
+   "from_user_id": "yes",
+   "to_queue_id": "FK → ccass.queues.id.",
+   "requested_agent_id": "FK → ccass.agents.id.",
+   "offered_agent_id": "FK → ccass.agents.id.",
+   "requested_by_user_id": "yes",
+   "state": "Workflow state for this entity.",
+   "notes": "Free-text notes.",
+   "disposition_code": "Applied wrap-up disposition code.",
+   "resolution_code": "Applied resolution code.",
+   "resolution_data": "'{}'::jsonb",
+   "routing_attempt_id": "FK → ccass.routing_attempts.id.",
+   "requested_at": "now()",
+   "offered_at": "Timestamp when an offer was presented to an agent.",
+   "accepted_at": "Timestamp when an offer or transfer was accepted.",
+   "completed_at": "Timestamp when the task was completed.",
+   "cancelled_at": "yes",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.conversations": {
+  "description": "Description: Core omnichannel conversation session: channel, assignment, lifecycle status, and contact linkage.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "channel": "Omnichannel identifier (webchat, email, whatsapp, instagram, facebook, voice).",
+   "external_thread_id": "Channel-specific session/thread identifier; unique per org+channel.",
+   "webchat_id": "Webchat widget configuration id.",
+   "visitor_id": "Channel visitor identifier (webchat visitor id, email address, social psid, etc.).",
+   "contact_id": "Link to cdp.contacts canonical customer record when resolved.",
+   "profile_id": "yes",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "assigned_agent_id": "FK → ccass.agents.id.",
+   "assigned_user_id": "Platform user id of the assigned agent.",
+   "status": "Legacy authoritative lifecycle status (bot_active, queued, assigned, active, resolved, closed).",
+   "priority": "Relative priority (higher = more urgent where applicable).",
+   "subject": "Conversation or email subject line.",
+   "handoff_reason": "Reason the conversation was handed off from bot to queue/agent.",
+   "bot_active": "Whether the AI bot is currently handling the conversation.",
+   "nlp_enabled": "Whether NLP processing is enabled for the conversation.",
+   "live_agent_enabled": "Whether live-agent handoff is allowed for the conversation.",
+   "version": "Optimistic concurrency / change counter.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC).",
+   "queued_at": "Timestamp when the conversation entered queue.",
+   "assigned_at": "Timestamp when an agent was assigned.",
+   "first_response_at": "Timestamp of the first agent response (SLA metric).",
+   "resolved_at": "Timestamp when the conversation was resolved.",
+   "closed_at": "Timestamp when the conversation was closed.",
+   "lifecycle_state": "Normalized lifecycle state (bot, waiting, offered, connected, wrap_up, ended) parallel to status.",
+   "lifecycle_version": "1",
+   "ended_at": "Timestamp when the session/assignment/history ended.",
+   "end_reason": "yes",
+   "end_actor": "yes",
+   "transferred_at": "yes",
+   "disposition_code": "Applied wrap-up disposition code.",
+   "disposition_note": "yes",
+   "resolution_code": "Applied resolution code.",
+   "resolution_summary": "yes",
+   "resolution_data": "'{}'::jsonb",
+   "mailbox_connection_id": "Email mailbox connection for email-channel rows.",
+   "automation_policy_version": "Version of channel/mailbox automation policy in effect.",
+   "first_response_due_at": "yes",
+   "resolution_due_at": "yes",
+   "first_agent_response_at": "yes",
+   "sla_status": "'not_started'::character varying",
+   "provider_thread_id": "Provider-native thread id (email Message-Id chain, WhatsApp wa_id thread, etc.).",
+   "previous_conversation_id": "Prior closed conversation in the same customer thread when a new session is opened.",
+   "channel_config_id": "Reference to accounts.setup_channel_configs for channel-specific settings.",
+   "event_sequence": "0",
+   "visitor_session_token": "yes"
+  }
+ },
+ "ccass.copilot_memory": {
+  "description": "Description: Long-lived copilot memory entries scoped to agent or organization.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "user_id": "yes",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "memory_type": "no",
+   "content": "'{}'::jsonb",
+   "provenance": "yes",
+   "expires_at": "Expiry timestamp after which the record is stale.",
+   "version": "Optimistic concurrency / change counter.",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.copilot_sessions": {
+  "description": "Description: Agent copilot chat sessions in the workspace.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "user_id": "no",
+   "role": "'agent'::character varying",
+   "active_surface": "yes",
+   "status": "Domain-specific status enum for this entity.",
+   "started_at": "Timestamp when the session or interval started.",
+   "last_activity_at": "now()",
+   "ended_at": "Timestamp when the session/assignment/history ended."
+  }
+ },
+ "ccass.copilot_skill_executions": {
+  "description": "Description: Record of copilot skill/tool invocations with inputs and results.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "session_id": "FK → ccass.copilot_sessions.id.",
+   "turn_id": "FK → ccass.copilot_turns.id.",
+   "skill_key": "no",
+   "tool_key": "yes",
+   "status": "Domain-specific status enum for this entity.",
+   "token_usage": "yes",
+   "latency_ms": "yes",
+   "error_message": "Last error message from a failed operation.",
+   "trace_id": "yes",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.copilot_turns": {
+  "description": "Description: Turns within a copilot session (user prompts and assistant responses).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "session_id": "FK → ccass.copilot_sessions.id.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "surface": "yes",
+   "turn_type": "'chat'::character varying",
+   "agent_input": "yes",
+   "copilot_response": "yes",
+   "suggestion_text": "yes",
+   "final_text": "yes",
+   "accepted": "yes",
+   "sent_message_id": "FK → ccass.conversation_messages.id.",
+   "skill_key": "yes",
+   "model_name": "yes",
+   "latency_ms": "yes",
+   "status": "Domain-specific status enum for this entity.",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.dispositions": {
+  "description": "Description: Organization disposition catalog (codes, labels, categories) for wrap-up.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "code": "Stable machine-readable code key.",
+   "label": "Human-readable display label.",
+   "requires_note": "Whether selecting this reason code requires a note.",
+   "is_active": "Soft-active flag; inactive rows are hidden from pickers.",
+   "created_at": "Row creation timestamp (UTC).",
+   "description": "Longer descriptive text.",
+   "category": "'general'::character varying",
+   "outcome": "Result of the attempt or routing decision.",
+   "requires_resolution": "false",
+   "sort_order": "0",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.email_delivery_outbox": {
+  "description": "Description: Reliable outbound email send queue with retry scheduling.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "message_id": "Message referenced in ccass.conversation_messages.",
+   "source_message_id": "FK → ccass.conversation_messages.id.",
+   "connection_id": "no",
+   "recipient_email": "no",
+   "subject": "Conversation or email subject line.",
+   "provider_thread_id": "Native provider thread identifier for session continuity.",
+   "in_reply_to": "yes",
+   "references_header": "yes",
+   "status": "Outbox send state: pending, sending, sent, failed.",
+   "attempt_count": "0",
+   "next_attempt_at": "Scheduled time for the next retry attempt.",
+   "provider_message_id": "yes",
+   "provider_rfc_message_id": "yes",
+   "last_error": "yes",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC).",
+   "delivered_at": "yes"
+  }
+ },
+ "ccass.email_mailbox_policies": {
+  "description": "Description: Email mailbox automation: bot, queue defaults, allowed queues, and routing rules.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "connection_id": "no",
+   "account_email": "no",
+   "bot_enabled": "false",
+   "live_agent_enabled": "Whether live-agent handoff is allowed for the conversation.",
+   "shadow_mode": "true",
+   "auto_send_enabled": "false",
+   "confidence_threshold": "0.850",
+   "default_queue_id": "FK → ccass.queues.id.",
+   "allowed_queue_ids": "'[]'::jsonb",
+   "approved_service_message": "yes",
+   "business_hours_mode": "'queue_policy'::character varying",
+   "policy_version": "Version stamp of the automation policy applied.",
+   "status": "Domain-specific status enum for this entity.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC).",
+   "inactivity_close_hours": "72"
+  }
+ },
+ "ccass.email_provider_events": {
+  "description": "Description: Inbound email provider webhook/pubsub events for idempotent processing.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "connection_id": "yes",
+   "provider": "'gmail'::character varying",
+   "event_id": "no",
+   "mailbox_email": "no",
+   "status": "Domain-specific status enum for this entity.",
+   "attempt_count": "1",
+   "last_error": "yes",
+   "processing_started_at": "now()",
+   "processed_at": "yes",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.message_delivery_attempts": {
+  "description": "Description: Outbound delivery attempt log for channel providers (retries, errors).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "message_id": "Message referenced in ccass.conversation_messages.",
+   "destination": "no",
+   "attempt_number": "Sequential attempt counter for retries/routing.",
+   "status": "Domain-specific status enum for this entity.",
+   "provider_response": "Raw JSON response from an external provider.",
+   "error_message": "Last error message from a failed operation.",
+   "attempted_at": "now()",
+   "delivered_at": "yes"
+  }
+ },
+ "ccass.message_receipts": {
+  "description": "Description: Read/delivery receipts for messages (customer or agent recipients).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "message_id": "Message referenced in ccass.conversation_messages.",
+   "recipient_type": "no",
+   "recipient_ref": "''::character varying",
+   "status": "Domain-specific status enum for this entity.",
+   "sent_at": "yes",
+   "delivered_at": "yes",
+   "read_at": "yes",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_conversations": {
+  "description": "Description: NLP runtime session bound to a conversation (bot type, external NLP thread id).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "runtime_type": "NLP runtime profile (webchat_bot, whatsapp_bot, copilot, etc.).",
+   "skill_version_id": "FK → ccass.nlp_skill_versions.id.",
+   "status": "Domain-specific status enum for this entity.",
+   "started_at": "Timestamp when the session or interval started.",
+   "ended_at": "Timestamp when the session/assignment/history ended.",
+   "end_reason": "yes",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_skill_activation_history": {
+  "description": "Description: Audit log of skill activations during NLP runs.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "skill_id": "Skill referenced in ccass.skills.",
+   "skill_version_id": "FK → ccass.nlp_skill_versions.id.",
+   "action": "no",
+   "actor_user_id": "yes",
+   "metadata": "Flexible JSONB payload for extensibility.",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_skill_bindings": {
+  "description": "Description: Bindings between NLP skills and channels/queues/bots.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "skill_version_id": "FK → ccass.nlp_skill_versions.id.",
+   "role": "yes",
+   "surface": "yes",
+   "channel": "Omnichannel identifier (webchat, email, whatsapp, instagram, facebook, voice).",
+   "priority": "Relative priority (higher = more urgent where applicable).",
+   "effective_from": "now()",
+   "effective_to": "yes",
+   "enabled": "true",
+   "overrides": "'{}'::jsonb",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_skill_tools": {
+  "description": "Description: MCP/tool definitions exposed to an NLP skill version.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "skill_version_id": "FK → ccass.nlp_skill_versions.id.",
+   "tool_key": "no",
+   "permission_class": "'tool_call'::character varying",
+   "requires_confirmation": "false",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_skill_versions": {
+  "description": "Description: Versioned skill definitions with prompts and configuration.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "skill_id": "Skill referenced in ccass.skills.",
+   "version_number": "no",
+   "prompt_template": "no",
+   "input_schema": "'{}'::jsonb",
+   "output_schema": "'{}'::jsonb",
+   "model_policy": "'{}'::jsonb",
+   "context_policy": "'{}'::jsonb",
+   "safety_policy": "'{}'::jsonb",
+   "checksum": "no",
+   "state": "Workflow state for this entity.",
+   "published_at": "Timestamp when the queue snapshot was published to ccass.",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_skills": {
+  "description": "Description: Registered NLP skills available to bots and copilot.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "skill_key": "no",
+   "name": "Display name.",
+   "description": "Longer descriptive text.",
+   "skill_type": "no",
+   "owner_user_id": "yes",
+   "state": "Workflow state for this entity.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.nlp_turns": {
+  "description": "Description: Individual NLP turns (customer/agent/bot) with intent, sentiment, and extracted facts.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "nlp_conversation_id": "FK → ccass.nlp_conversations.id.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "turn_number": "no",
+   "customer_message_id": "FK → ccass.conversation_messages.id.",
+   "bot_message_id": "FK → ccass.conversation_messages.id.",
+   "customer_text": "no",
+   "bot_reply": "yes",
+   "confidence": "yes",
+   "intent": "Classified customer intent for the turn.",
+   "candidate_skills": "'[]'::jsonb",
+   "handoff_recommended": "false",
+   "handoff_reason": "Reason the conversation was handed off from bot to queue/agent.",
+   "skill_key": "yes",
+   "model_name": "yes",
+   "trace_id": "yes",
+   "latency_ms": "yes",
+   "status": "Domain-specific status enum for this entity.",
+   "created_at": "Row creation timestamp (UTC).",
+   "summary": "Longer text summary or description.",
+   "sentiment": "Detected sentiment for the NLP turn.",
+   "important_facts": "JSON array of extracted facts from NLP turn.",
+   "selected_queue_key": "yes",
+   "queue_profile_version": "yes",
+   "grounded": "yes",
+   "guard_passed": "yes",
+   "guard_reasons": "'[]'::jsonb",
+   "knowledge_references": "JSON array of knowledge base citations.",
+   "delivery_message_id": "yes"
+  }
+ },
+ "ccass.presence_reason_codes": {
+  "description": "Description: Organization-configurable reason codes mapped to presence states (e.g. break, training).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "code": "Stable machine-readable code key.",
+   "label": "Human-readable display label.",
+   "presence_state": "'not_ready'::character varying",
+   "requires_note": "Whether selecting this reason code requires a note.",
+   "is_active": "Soft-active flag; inactive rows are hidden from pickers.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.queue_members": {
+  "description": "Description: Agent membership in a queue with per-channel concurrency limits and channel-handling flags.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "setup_user_id": "Platform user id from accounts.setup_users.",
+   "shift_type": "'Regular'::character varying",
+   "handles_calls": "false",
+   "handles_email": "false",
+   "handles_social": "false",
+   "handles_chat": "false",
+   "chat_concurrency": "1",
+   "email_concurrency": "1",
+   "social_concurrency": "1",
+   "handles_whatsapp": "false",
+   "handles_instagram": "false",
+   "handles_facebook": "false",
+   "whatsapp_concurrency": "1",
+   "instagram_concurrency": "1",
+   "facebook_concurrency": "1",
+   "call_type": "'both'::character varying",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.queue_routing_profiles": {
+  "description": "Description: NLP/routing metadata for a queue: intents, keywords, example phrases, and skill mapping.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "description": "Longer descriptive text.",
+   "supported_intents": "JSON array of intents this queue handles.",
+   "example_phrases": "JSON array of routing classifier example phrases.",
+   "keywords": "JSON array of routing keywords.",
+   "language_codes": "JSON array of supported ISO language codes.",
+   "skill_mapping": "JSON map of skill keys to routing weights.",
+   "classifier_version": "'v1'::character varying",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.queue_skills": {
+  "description": "Description: Required or preferred skills for a queue with minimum proficiency and weight.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "skill_id": "Skill referenced in ccass.skills.",
+   "requirement_type": "'required'::character varying",
+   "min_proficiency": "1",
+   "weight": "1",
+   "created_at": "Row creation timestamp (UTC)."
+  }
+ },
+ "ccass.queues": {
+  "description": "Description: Published routing queue snapshot from accounts setup; holds team, skills, and business-hours metadata for live routing.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "setup_queue_id": "Source queue id from accounts.setup_ccaas_queues.",
+   "name": "Display name.",
+   "team_id": "Team owning the queue (accounts.setup_teams).",
+   "business_hours_id": "Business hours profile applied to the queue.",
+   "shift_types": "JSON array of shift types configured on the queue.",
+   "skills": "JSON array of skill keys published with the queue.",
+   "status": "Domain-specific status enum for this entity.",
+   "published_at": "Timestamp when the queue snapshot was published to ccass.",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.routing_attempts": {
+  "description": "Description: Log of routing attempts for a conversation including candidate scores and outcomes.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "agent_id": "Agent referenced in ccass.agents.",
+   "attempt_number": "Sequential attempt counter for retries/routing.",
+   "outcome": "Result of the attempt or routing decision.",
+   "candidate_scores": "JSON array of routing candidate scores.",
+   "skip_reasons": "JSON array explaining why candidates were skipped.",
+   "created_at": "Row creation timestamp (UTC).",
+   "completed_at": "Timestamp when the task was completed."
+  }
+ },
+ "ccass.routing_cursors": {
+  "description": "Description: Round-robin cursor state per queue for fair agent rotation.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "cursor_index": "0",
+   "last_agent_id": "FK → ccass.agents.id.",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.routing_policies": {
+  "description": "Description: Queue routing strategy configuration (strategy, offer timeout, overflow, after-contact work).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "queue_id": "Queue referenced in ccass.queues.",
+   "strategy": "Routing algorithm key (e.g. skill_round_robin, longest_idle).",
+   "priority": "Relative priority (higher = more urgent where applicable).",
+   "offer_timeout_seconds": "30",
+   "max_attempts": "3",
+   "overflow_queue_id": "FK → ccass.queues.id.",
+   "after_contact_work_seconds": "60",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC).",
+   "email_offer_timeout_seconds": "3600",
+   "email_first_response_sla_seconds": "14400",
+   "email_resolution_sla_seconds": "86400",
+   "email_after_contact_work_seconds": "0"
+  }
+ },
+ "ccass.schema_migrations": {
+  "description": "Description: Applied SQL migration ledger for the ccass schema.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "name": "Display name.",
+   "checksum": "no",
+   "applied_at": "now()"
+  }
+ },
+ "ccass.skills": {
+  "description": "Description: Skill catalog used for skill-based routing and queue requirements.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "key": "no",
+   "name": "Display name.",
+   "description": "Longer descriptive text.",
+   "is_active": "Soft-active flag; inactive rows are hidden from pickers.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.sla_policies": {
+  "description": "Description: SLA policy definitions (thresholds, warning percentages) referenced by queues.",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "name": "Display name.",
+   "first_response_seconds": "120",
+   "resolution_seconds": "3600",
+   "warning_threshold_pct": "80",
+   "business_hours_mode": "'queue'::character varying",
+   "escalation_policy": "'{}'::jsonb",
+   "is_active": "Soft-active flag; inactive rows are hidden from pickers.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.webchat_sessions": {
+  "description": "Description: Webchat visitor session bound to a conversation (token, page context, connection state).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "conversation_id": "Parent conversation this row belongs to.",
+   "webchat_id": "Webchat widget configuration id.",
+   "visitor_id": "Channel-specific visitor/customer identifier.",
+   "token_hash": "Hashed session token for webchat authentication.",
+   "page_origin": "Webchat page origin URL host.",
+   "page_url": "Full page URL where webchat was opened.",
+   "consent": "JSON object capturing visitor consent selections.",
+   "prechat_answers": "JSON object of webchat pre-chat form answers.",
+   "connection_state": "Webchat websocket connection state.",
+   "expires_at": "Expiry timestamp after which the record is stale.",
+   "connected_at": "now()",
+   "disconnected_at": "yes",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC).",
+   "ended_at": "Timestamp when the session/assignment/history ended.",
+   "end_reason": "yes",
+   "ended_by": "yes"
+  }
+ },
+ "ccass.whatsapp_channel_policies": {
+  "description": "Description: WhatsApp-specific channel policy overrides (default queue, bot settings).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "channel_config_id": "Reference to accounts.setup_channel_configs.",
+   "bot_enabled": "false",
+   "live_agent_enabled": "Whether live-agent handoff is allowed for the conversation.",
+   "confidence_threshold": "0.500",
+   "default_queue_id": "FK → ccass.queues.id.",
+   "approved_handoff_message": "yes",
+   "inactivity_close_hours": "24",
+   "status": "Domain-specific status enum for this entity.",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "ccass.workspace_common_notes": {
+  "description": "Description: Shared notes visible across the agent workspace (not tied to one conversation).",
+  "columns": {
+   "id": "Surrogate primary key (UUID).",
+   "organization_id": "Tenant scope; references accounts.organizations.",
+   "author_user_id": "no",
+   "body": "Primary text content (message body, note text, etc.).",
+   "created_at": "Row creation timestamp (UTC).",
+   "updated_at": "Last update timestamp (UTC)."
+  }
+ },
+ "cdp.agentic_model": {
+  "description": "Per-organization external Agentic MLOps training and serving lifecycle.",
+  "columns": {
+   "organization_id": "Organization that owns the model.",
+   "products": "External API product namespace.",
+   "model_name": "One of the six prediction capabilities.",
+   "job_id": "Job returned by POST /onboard.",
+   "model_id": "Trained model identifier returned by the external service.",
+   "payload": "Dynamic prediction payload schema.",
+   "status": "Current lifecycle state.",
+   "dirty": "Whether training data changed.",
+   "dirty_reason": "Reason the model was marked dirty.",
+   "dirty_at": "Last dirty time.",
+   "claimed_dirty_at": "Dirty generation claimed by a worker.",
+   "onboarded_at": "Onboard submission time.",
+   "trained_at": "Training completion time.",
+   "last_polled_at": "Last GET /jobs poll.",
+   "last_predict_at": "Last successful prediction time.",
+   "last_error": "Latest onboarding, polling, or serving error.",
+   "created_at": "Lifecycle row creation.",
+   "updated_at": "Lifecycle row update."
+  }
+ },
+ "cdp.ai_insights": {
+  "description": "Human-readable AI-generated or deterministic customer insights.",
+  "columns": {
+   "insight_id": "Insight identifier.",
+   "cdp_id": "Related customer.",
+   "insight_type": "Insight category.",
+   "score": "Optional confidence/relevance score.",
+   "summary": "Short insight.",
+   "explanation": "Detailed explanation.",
+   "generated_at": "Generation time.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Model and insight metadata."
+  }
+ },
+ "cdp.campaign_deliveries": {
+  "description": "Records campaign messages delivered to customers.",
+  "columns": {
+   "delivery_id": "Delivery identifier.",
+   "campaign_id": "Parent campaign.",
+   "cdp_id": "Recipient customer.",
+   "channel": "Delivery channel.",
+   "sent_at": "Send time.",
+   "status": "Delivery status.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Provider/delivery metadata."
+  }
+ },
+ "cdp.campaign_interactions": {
+  "description": "Customer responses to campaigns, such as opens, clicks, and conversions.",
+  "columns": {
+   "interaction_id": "Campaign interaction identifier.",
+   "campaign_id": "Related campaign.",
+   "cdp_id": "Customer who interacted.",
+   "interaction_type": "Open, click, unsubscribe, conversion, etc.",
+   "occurred_at": "Interaction time.",
+   "metadata_json": "Interaction details.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Additional attributes."
+  }
+ },
+ "cdp.campaigns": {
+  "description": "Marketing campaign definitions.",
+  "columns": {
+   "campaign_id": "Campaign identifier.",
+   "campaign_name": "Campaign name.",
+   "campaign_type": "Campaign category.",
+   "goal": "Campaign objective.",
+   "status": "Lifecycle status.",
+   "start_date": "Planned/actual start.",
+   "end_date": "Planned/actual end.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Campaign extensions."
+  }
+ },
+ "cdp.contacts": {
+  "description": "Shared org contacts (Setup Workspace contacts screen).",
+  "columns": {
+   "organization_id": "Company.",
+   "primary_email": "Main email (unique per org).",
+   "life_cycle_stage": "Lead / customer / …",
+   "source_system": "Where the contact came from.",
+   "custom_fields": "Extra JSON.",
+   "is_active": "Soft delete."
+  }
+ },
+ "cdp.crm_activities": {
+  "description": "CRM tasks, calls, meetings, notes, and other customer activities.",
+  "columns": {
+   "activity_id": "Activity identifier.",
+   "cdp_id": "Related customer.",
+   "activity_type": "Activity category.",
+   "title": "Activity title.",
+   "description": "Activity details.",
+   "owner": "CRM owner/assignee.",
+   "source": "Originating CRM/source.",
+   "occurred_at": "Activity time.",
+   "metadata_json": "Structured activity metadata.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "CRM/client extensions."
+  }
+ },
+ "cdp.customer_events": {
+  "description": "Time-series behavioral and commerce events for each customer.",
+  "columns": {
+   "event_id": "Event identifier.",
+   "cdp_id": "Customer associated with the event.",
+   "event_name": "Canonical event name.",
+   "event_category": "Event category.",
+   "source_name": "Originating source.",
+   "source_event_id": "Source-native event identifier.",
+   "channel": "Web, mobile, email, store, API, etc.",
+   "visitor_id": "Anonymous visitor identifier.",
+   "session_id": "Session identifier.",
+   "page_path": "Page or route where the event occurred.",
+   "page_title": "Page title.",
+   "referrer": "Event referrer.",
+   "utm_source": "UTM source.",
+   "utm_medium": "UTM medium.",
+   "utm_campaign": "UTM campaign.",
+   "utm_term": "UTM term.",
+   "utm_content": "UTM content.",
+   "device_type": "Device class.",
+   "browser": "Browser name/version.",
+   "country": "Event country.",
+   "occurred_at": "Business occurrence time and partition key.",
+   "ingested_at": "CDP ingestion time.",
+   "amount": "Monetary amount.",
+   "currency": "Currency code.",
+   "quantity": "Associated quantity.",
+   "status": "Event/business status.",
+   "reference_id": "Related order, product, campaign, or external ID.",
+   "properties_json": "Canonical event properties.",
+   "raw_payload_json": "Original source payload.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Client-specific event attributes."
+  }
+ },
+ "cdp.customer_interactions": {
+  "description": "Customer conversations and UI/service interactions with sentiment.",
+  "columns": {
+   "interaction_id": "Interaction identifier.",
+   "cdp_id": "Customer associated with the interaction.",
+   "interaction_source": "Originating system.",
+   "interaction_type": "Call, chat, click, support case, etc.",
+   "channel": "Interaction channel.",
+   "direction": "Inbound or outbound.",
+   "page_path": "Related page.",
+   "element_name": "Related UI element.",
+   "agent_id": "Human or automated agent identifier.",
+   "session_id": "Related session.",
+   "sentiment_score": "Sentiment from -1 to 1.",
+   "summary": "Interaction summary.",
+   "started_at": "Start time and partition key.",
+   "ended_at": "End time.",
+   "metadata_json": "Structured interaction metadata.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Client-specific attributes."
+  }
+ },
+ "cdp.customer_journey": {
+  "description": "Customer journey transitions and touchpoints.",
+  "columns": {
+   "journey_event_id": "Journey event identifier.",
+   "cdp_id": "Related customer.",
+   "journey_name": "Journey/workflow name.",
+   "journey_channel": "Channel.",
+   "touchpoint": "Customer touchpoint.",
+   "from_stage": "Previous journey stage.",
+   "to_stage": "New journey stage.",
+   "trigger_event": "Event causing the transition.",
+   "session_id": "Related session.",
+   "source": "Originating system.",
+   "occurred_at": "Transition time and partition key.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Journey extensions."
+  }
+ },
+ "cdp.customer_metrics": {
+  "description": "Daily aggregated Customer 360 behavioral metrics.",
+  "columns": {
+   "metric_date": "Metric date.",
+   "cdp_id": "Customer being measured.",
+   "session_count": "Sessions on the metric date.",
+   "total_page_views": "Page views.",
+   "avg_session_duration": "Average session seconds.",
+   "bounce_rate": "Bounce ratio.",
+   "avg_scroll_depth": "Average scroll depth.",
+   "conversion_count": "Conversions.",
+   "engagement_score": "Aggregated engagement score.",
+   "value_score": "Aggregated value score.",
+   "loyalty_score": "Aggregated loyalty score.",
+   "campaign_engagement_score": "Campaign engagement score.",
+   "last_seen_days": "Days since last activity.",
+   "organization_id": "Owning organization."
+  }
+ },
+ "cdp.customer_persona_assignments": {
+  "description": "Versioned customer-to-persona assignments with confidence and drift.",
+  "columns": {
+   "assignment_id": "Assignment identifier.",
+   "organization_id": "Owning organization.",
+   "cdp_id": "Assigned customer.",
+   "persona_id": "Assigned persona.",
+   "snapshot_id": "Supporting snapshot.",
+   "confidence": "Assignment confidence.",
+   "evidence_count": "Number of supporting facts.",
+   "evidence_json": "Supporting evidence.",
+   "is_active": "Whether assignment is current.",
+   "is_negative": "Whether this is a negative persona.",
+   "drift_score": "Assignment drift from 0 to 1.",
+   "assigned_at": "Assignment start.",
+   "closed_at": "Assignment closure.",
+   "model_version": "Assigning model version.",
+   "schema_version": "Assignment schema version.",
+   "custom_fields": "Additional assignment metadata."
+  }
+ },
+ "cdp.customer_profile": {
+  "description": "Golden Customer 360 profile; parent record for customer-linked data.",
+  "columns": {
+   "cdp_id": "Primary key; stored as contact_id in campaign.",
+   "organization_id": "Org scope — must match session org.",
+   "first_name": "Contact first name.",
+   "last_name": "Contact last name.",
+   "company": "Company name (API: company_name).",
+   "city": "City.",
+   "custom_fields": "Extra attributes JSON.",
+   "created_at": "Profile created.",
+   "updated_at": "Profile updated.",
+   "first_seen_at": "First seen timestamp.",
+   "last_seen_at": "Last activity timestamp.",
+   "acquisition_channel": "Set to campaign on insert from Campaign UI.",
+   "gender": "Customer gender when supplied.",
+   "date_of_birth": "Customer birth date.",
+   "region": "State, province, or region.",
+   "country": "Customer country.",
+   "language": "Preferred language.",
+   "timezone": "Customer timezone.",
+   "acquisition_date": "Acquisition date.",
+   "first_referrer": "First known referrer."
+  }
+ },
+ "cdp.customer_recommendations": {
+  "description": "Customer-specific recommended actions, content, products, or timings.",
+  "columns": {
+   "recommendation_id": "Recommendation identifier.",
+   "cdp_id": "Target customer.",
+   "recommendation_type": "Recommendation category.",
+   "recommendation": "Recommendation content.",
+   "confidence": "Confidence from 0 to 1.",
+   "generated_at": "Generation time.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Recommendation/model metadata."
+  }
+ },
+ "cdp.customer_scores": {
+  "description": "Latest computed and predictive scores for each customer.",
+  "columns": {
+   "cdp_id": "Customer identifier and one-to-one key.",
+   "engagement_score": "Engagement score.",
+   "value_score": "Customer value score.",
+   "loyalty_score": "Loyalty score.",
+   "churn_score": "Attrition probability/risk.",
+   "purchase_probability": "Conversion probability.",
+   "retention_score": "Retention score.",
+   "advocacy_score": "Advocacy score.",
+   "web_engagement_score": "Web engagement score.",
+   "intent_score": "Purchase/engagement intent.",
+   "digital_activity_score": "Digital activity score.",
+   "updated_at": "Last score update.",
+   "organization_id": "Owning organization.",
+   "next_purchase_days": "Predicted days until next purchase.",
+   "affinity_json": "Product/category affinity scores.",
+   "prediction_meta_json": "Model output metadata."
+  }
+ },
+ "cdp.customer_segments": {
+  "description": "Many-to-many assignments between customers and segments.",
+  "columns": {
+   "id": "Assignment identifier.",
+   "cdp_id": "Assigned customer.",
+   "segment_id": "Assigned segment.",
+   "source": "Rule, prediction, manual process, or import source.",
+   "assigned_at": "Assignment time.",
+   "organization_id": "Owning organization."
+  }
+ },
+ "cdp.customer_sessions": {
+  "description": "Aggregated browsing/application sessions for customers.",
+  "columns": {
+   "session_id": "Session identifier.",
+   "cdp_id": "Customer associated with the session.",
+   "visitor_id": "Anonymous visitor identifier.",
+   "started_at": "Session start.",
+   "ended_at": "Session end.",
+   "duration_seconds": "Session duration.",
+   "entry_page": "First page.",
+   "exit_page": "Last page.",
+   "pageview_count": "Number of page views.",
+   "is_bounce": "Whether the session bounced.",
+   "referrer": "Referrer URL.",
+   "referrer_domain": "Referrer domain.",
+   "utm_source": "UTM source.",
+   "utm_medium": "UTM medium.",
+   "utm_campaign": "UTM campaign.",
+   "utm_term": "UTM term.",
+   "utm_content": "UTM content.",
+   "device_type": "Device class.",
+   "browser": "Browser.",
+   "platform": "Operating system/platform.",
+   "language": "Session language.",
+   "country": "Country.",
+   "region": "Region.",
+   "city": "City.",
+   "created_at": "Record creation time.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Additional session data."
+  }
+ },
+ "cdp.identity_keys": {
+  "description": "Maps emails, phones, source IDs, and other identities to a canonical customer.",
+  "columns": {
+   "identity_id": "Primary key uuid.",
+   "cdp_id": "Profile this key belongs to.",
+   "organization_id": "Org scope for uniqueness.",
+   "key_type": "Identity type: email, primary_email, phone, mobile.",
+   "key_value": "Normalized email or phone digits.",
+   "source_system": "Originating system.",
+   "verified": "Whether identity is verified.",
+   "created_at": "Key created.",
+   "custom_fields": "Optional metadata.",
+   "confidence_score": "Identity match confidence from 0 to 1."
+  }
+ },
+ "cdp.order_items": {
+  "description": "Order line items connecting orders with catalog products.",
+  "columns": {
+   "order_item_id": "Line-item identifier.",
+   "order_id": "Parent order identifier.",
+   "product_id": "Purchased product.",
+   "quantity": "Purchased quantity.",
+   "unit_price": "Unit price.",
+   "created_at": "Creation time and partition key.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Line-item extensions."
+  }
+ },
+ "cdp.orders": {
+  "description": "Customer orders and order-level commerce facts.",
+  "columns": {
+   "order_id": "Order identifier.",
+   "cdp_id": "Purchasing customer.",
+   "order_number": "External/business order number.",
+   "status": "Order status.",
+   "total_amount": "Order total.",
+   "currency": "Currency code.",
+   "payment_status": "Payment state.",
+   "fulfillment_status": "Fulfillment state.",
+   "shipping_country": "Destination country.",
+   "created_at": "Order time and partition key.",
+   "updated_at": "Last update.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Source order payload/extensions."
+  }
+ },
+ "cdp.persona_definitions": {
+  "description": "Versioned organization-level buyer persona archetypes shared by customers.",
+  "columns": {
+   "persona_id": "Persona identifier.",
+   "organization_id": "Owning organization.",
+   "persona_key": "Stable persona slug.",
+   "name": "Display name.",
+   "summary": "Persona summary.",
+   "industry": "Industry context.",
+   "persona_type": "b2c, b2b, hybrid, or negative.",
+   "status": "draft, active, or archived.",
+   "schema_version": "Persona schema version.",
+   "model_version": "Producing model version.",
+   "version": "Persona definition version.",
+   "confidence": "Definition confidence.",
+   "evidence_count": "Supporting evidence count.",
+   "data_freshness_at": "Latest evidence freshness time.",
+   "demographic_profile": "Demographic traits.",
+   "firmographic_profile": "Company traits.",
+   "professional_context": "Professional context.",
+   "goals": "Persona goals.",
+   "motivations": "Motivations.",
+   "pain_points": "Pain points.",
+   "buying_behaviour": "Buying patterns.",
+   "preferred_channels": "Preferred channels.",
+   "objections": "Common objections.",
+   "category_affinities": "Category affinities.",
+   "brand_affinities": "Brand affinities.",
+   "journey_stage_tendencies": "Journey-stage behavior.",
+   "content_preferences": "Content preferences.",
+   "trust_signals": "Trust factors.",
+   "decision_role": "Buying decision role.",
+   "segment_signals": "Segment evidence.",
+   "recommended_messages": "Suggested messaging.",
+   "recommended_actions": "Suggested actions.",
+   "exclusion_signals": "Signals that disqualify assignment.",
+   "evidence_references": "Evidence references.",
+   "industry_extensions": "Industry-specific persona fields.",
+   "custom_fields": "Additional persona fields.",
+   "created_at": "Creation time.",
+   "updated_at": "Last update."
+  }
+ },
+ "cdp.persona_inference_runs": {
+  "description": "Audit, status, counters, and checkpoints for persona inference jobs.",
+  "columns": {
+   "run_id": "Run identifier.",
+   "organization_id": "Owning organization.",
+   "cdp_id": "Customer for single-customer runs; NULL for organization batches.",
+   "trigger_type": "scheduled_batch, event_threshold, manual, or lifecycle.",
+   "status": "pending, running, completed, failed, skipped.",
+   "idempotency_key": "Organization-scoped duplicate prevention key.",
+   "customers_evaluated": "Evaluated customers.",
+   "assignments_created": "New assignments.",
+   "assignments_unchanged": "Unchanged assignments.",
+   "assignments_changed": "Changed assignments.",
+   "drift_detected": "Drifted assignments.",
+   "insufficient_evidence": "Customers lacking evidence.",
+   "validation_failures": "Validation failures.",
+   "inference_path": "Inference path used.",
+   "model_version": "Model version.",
+   "schema_version": "Schema version.",
+   "checkpoint_json": "Resume/checkpoint state.",
+   "error_message": "Failure details.",
+   "started_at": "Start time.",
+   "finished_at": "Finish time.",
+   "created_at": "Run creation time.",
+   "custom_fields": "Additional run metadata."
+  }
+ },
+ "cdp.persona_snapshots": {
+  "description": "Immutable feature/evidence and inferred persona result for an inference run.",
+  "columns": {
+   "snapshot_id": "Snapshot identifier.",
+   "organization_id": "Owning organization.",
+   "cdp_id": "Evaluated customer.",
+   "persona_id": "Inferred persona definition.",
+   "inference_run_id": "Inference run that created the snapshot.",
+   "feature_vector_json": "Deterministic feature vector.",
+   "inferred_persona_json": "Structured inferred persona payload.",
+   "observed_facts_json": "Directly observed facts.",
+   "inferred_traits_json": "Inferred customer traits.",
+   "evidence_json": "Supporting evidence.",
+   "confidence": "Inference confidence.",
+   "model_version": "Model version.",
+   "schema_version": "Payload schema version.",
+   "created_at": "Snapshot creation time."
+  }
+ },
+ "cdp.products": {
+  "description": "Organization-scoped product/SKU catalog used by commerce and ML.",
+  "columns": {
+   "product_id": "Product identifier.",
+   "sku": "Organization-scoped SKU.",
+   "product_name": "Product display name.",
+   "brand": "Brand.",
+   "category": "Primary category.",
+   "subcategory": "Secondary category.",
+   "price": "Current/base price.",
+   "currency": "Currency code.",
+   "status": "Product lifecycle status.",
+   "active": "Whether the product is active.",
+   "created_at": "Creation time.",
+   "updated_at": "Last update time.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Source-specific product data."
+  }
+ },
+ "cdp.segments": {
+  "description": "Reusable organization-scoped customer segment definitions.",
+  "columns": {
+   "segment_id": "Segment identifier.",
+   "segment_name": "Segment name.",
+   "description": "Segment definition/description.",
+   "created_at": "Creation time.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Rules and segment extensions."
+  }
+ },
+ "cdp.source_systems": {
+  "description": "Registry of external systems that contribute Customer 360 data.",
+  "columns": {
+   "source_id": "Internal source identifier.",
+   "source_name": "Organization-scoped source name.",
+   "source_type": "Connector/source category.",
+   "active": "Whether ingestion from the source is enabled.",
+   "created_at": "Registration timestamp.",
+   "organization_id": "Owning organization.",
+   "custom_fields": "Source-specific extension attributes."
+  }
+ },
+ "crm.agent_memories": {
+  "description": "Durable structured slots for coworker/agent context (not Redis, not CDP).",
+  "columns": {
+   "scope_type": "deal",
+   "scope_id": "Empty for org-wide; else user id / cdp_id / deal id"
+  }
+ },
+ "crm.api_keys": {
+  "description": "Tenant integration API keys (hash only stored).",
+  "columns": {
+   "organization_id": "Tenant",
+   "created_by_user_id": "Admin creator",
+   "scopes": "contacts, deals, quotes, …"
+  }
+ },
+ "crm.audit_logs": {
+  "description": "Immutable change log.",
+  "columns": {
+   "actor_user_id": "Who acted",
+   "organization_id": "Tenant",
+   "action": "create, update, merge, quote_sent, …"
+  }
+ },
+ "crm.companies": {
+  "description": "B2B accounts / franchise entities within a tenant. Required for B2B deals; optional for B2B2C contacts.",
+  "columns": {
+   "id": "Referenced by deals, contacts, orders, invoices, contracts",
+   "organization_id": "Tenant",
+   "owner_user_id": "CRM owner (sales rep)",
+   "channel_role": "standard, franchise, owned_store, brand_hq (B2B2C hierarchy)",
+   "parent_company_id": "Optional franchise tree"
+  }
+ },
+ "crm.company_locations": {
+  "description": "Sites/branches under a company. Every B2B deal requires a location.",
+  "columns": {
+   "id": "PK",
+   "organization_id": "Tenant",
+   "company_id": "Parent company (CASCADE delete)",
+   "owner_user_id": "Location owner"
+  }
+ },
+ "crm.contact_activities": {
+  "description": "Unified contact timeline — emails, meetings, tasks, notes. Powers Inbox and activity feed.",
+  "columns": {
+   "contact_id": "Person (not contact_profiles.id)",
+   "organization_id": "Tenant",
+   "folder": "inbox / sent / draft / trash",
+   "mail_provider": "google / microsoft",
+   "email_direction": "inbound / outbound",
+   "assignee_user_id": "Task assignee",
+   "task_status": "open / in_progress / completed",
+   "needs_manual_response": "Auto-reply escalated to human"
+  }
+ },
+ "crm.contact_profiles": {
+  "description": "CRM overlay on a CDP person — lifecycle, ownership, BANT, nurture/lifecycle agent state. Not the person identity store.",
+  "columns": {
+   "id": "Internal CRM row id",
+   "account_contact_id": "Person key across CRM",
+   "organization_id": "Tenant",
+   "company_id": "Linked account (required B2B)",
+   "location_id": "Optional site",
+   "owner_user_id": "Assigned sales owner",
+   "created_by_user_id": "Who created overlay",
+   "marketing_opt_out": "Compliance — blocks nurture sends",
+   "custom_attributes": "Industry pack fields (from industry_type pack)",
+   "converted_deal_id": "Set when lead converts",
+   "crm_status": "active / archived"
+  }
+ },
+ "crm.contracts": {
+  "description": "Subscription/ARR record created on closed-won; drives renewal reminders.",
+  "columns": {
+   "company_id": "Account",
+   "deal_id": "Originating deal (optional)",
+   "organization_id": "Tenant",
+   "renew_deal_id": "Linked renewal opportunity"
+  }
+ },
+ "crm.deal_activities": {
+  "description": "Tasks/calls/meetings logged on a deal (not the contact timeline).",
+  "columns": {
+   "deal_id": "Parent deal (CASCADE)",
+   "organization_id": "Tenant",
+   "type": "call, meeting, email, note, task, …",
+   "created_by_user_id": "accounts.setup_users.id"
+  }
+ },
+ "crm.deals": {
+  "description": "B2B opportunity record. Stages: qualification → discover → propose → negotiate → closed_won / closed_lost.",
+  "columns": {
+   "id": "PK",
+   "organization_id": "Tenant",
+   "company_id": "Required account",
+   "location_id": "Required site",
+   "contact_id": "Primary contact (optional)",
+   "owner_user_id": "Deal owner"
+  }
+ },
+ "crm.invoice_lines": {
+  "description": "",
+  "columns": {
+   "invoice_id": "Parent",
+   "product_id": "Product line",
+   "addon_id": "Addon line",
+   "kind": "product / addon"
+  }
+ },
+ "crm.invoice_templates": {
+  "description": "Org-owned invoice document skeletons.",
+  "columns": {}
+ },
+ "crm.invoices": {
+  "description": "",
+  "columns": {
+   "order_id": "From commerce accept",
+   "deal_id": "Finance-created from deal",
+   "company_id": "Bill-to account",
+   "template_id": "crm.invoice_templates.id",
+   "approved_by_user_id": "Send gate"
+  }
+ },
+ "crm.notifications": {
+  "description": "In-app bell notifications.",
+  "columns": {
+   "recipient_user_id": "Who sees it",
+   "actor_user_id": "Who triggered",
+   "organization_id": "Tenant",
+   "contact_id": "Optional deep link context"
+  }
+ },
+ "crm.order_lines": {
+  "description": "Same shape as quote lines: order_id → sales_orders.id, optional product_id → inventory.products.id.",
+  "columns": {}
+ },
+ "crm.org_assignment_settings": {
+  "description": "Org-wide rules for lead routing and ICP fit scoring.",
+  "columns": {
+   "organization_id": "One row per tenant",
+   "senior_amount_threshold": "Deal size → seniority routing",
+   "lead_icp": "Target industries, geos, size tiers",
+   "updated_by_user_id": "accounts.setup_users.id"
+  }
+ },
+ "crm.organization_profiles": {
+  "description": "Optional CRM-side vertical pack config. Industry source of truth is accounts.organizations.industry_type, not this table.",
+  "columns": {
+   "organization_id": "One row per tenant",
+   "vertical": "general, ecommerce, healthcare, finance, telecom",
+   "vertical_config": "Pack overrides"
+  }
+ },
+ "crm.privacy_requests": {
+  "description": "GDPR-style deletion/access requests — human must execute.",
+  "columns": {
+   "activity_id": "Triggering inbound email",
+   "contact_id": "Subject",
+   "reviewed_by_user_id": "Admin reviewer"
+  }
+ },
+ "crm.process_confirmations": {
+  "description": "Owner approval before post-meeting agent sends email/proposal/close actions.",
+  "columns": {
+   "owner_user_id": "Approver",
+   "decided_by_user_id": "Who approved/rejected",
+   "contact_id": "cdp_id",
+   "activity_id": "Optional",
+   "deal_id": "Optional",
+   "action_kind": "email_proposal, close_won, quote_send, …"
+  }
+ },
+ "crm.proposal_templates": {
+  "description": "Tenant-owned HTML/section skeletons. organization_id → accounts.organizations.id.",
+  "columns": {}
+ },
+ "crm.proposals": {
+  "description": "Customer-facing proposal on a deal.",
+  "columns": {
+   "deal_id": "Parent deal",
+   "template_id": "Source template",
+   "organization_id": "Tenant",
+   "approved_by_user_id": "Human approval before send",
+   "created_by_user_id": "accounts.setup_users.id",
+   "status": "draft / shared / accepted / declined"
+  }
+ },
+ "crm.quote_lines": {
+  "description": "",
+  "columns": {
+   "quote_id": "Parent quote",
+   "product_id": "Optional catalog link"
+  }
+ },
+ "crm.quote_templates": {
+  "description": "Same pattern as proposal templates — org-owned document skeletons.",
+  "columns": {}
+ },
+ "crm.quotes": {
+  "description": "Formal quotation on a deal; may originate from a proposal.",
+  "columns": {
+   "deal_id": "Required",
+   "proposal_id": "Optional lineage",
+   "template_id": "Document template",
+   "approved_by_user_id": "Finance approval gate",
+   "status": "draft → sent → accepted / rejected"
+  }
+ },
+ "crm.report_snapshots": {
+  "description": "Cached JSON rollups for dashboard (avoids heavy live OLTP scans). Keyed by organization_id + kind.",
+  "columns": {}
+ },
+ "crm.sales_orders": {
+  "description": "Confirmed order — from accepted quote (B2B) or direct commerce (B2C: deal_id null, contact_id set).",
+  "columns": {
+   "deal_id": "Optional (B2B path)",
+   "quote_id": "Optional source",
+   "company_id": "B2B account",
+   "contact_id": "B2C / B2B2C buyer",
+   "created_by_user_id": "accounts.setup_users.id"
+  }
+ },
+ "crm.sales_user_assignment_profiles": {
+  "description": "Per-rep capacity overlay for assignment agent.",
+  "columns": {
+   "organization_id": "Tenant",
+   "user_id": "Sales rep",
+   "seniority_tier": "junior / mid / senior"
+  }
+ },
+ "crm.user_integration_connections": {
+  "description": "Per-user OAuth tokens for Gmail/Calendar (and other providers). Powers inbox sync and outbound mail.",
+  "columns": {
+   "user_id": "Mailbox owner",
+   "organization_id": "Tenant",
+   "provider": "google, microsoft, zoom, yahoo",
+   "account_email": "Connected mailbox address"
+  }
+ },
+ "inventory.products": {
+  "description": "Shared product catalog (all business types). CRM does DML only — no DDL on inventory.",
+  "columns": {
+   "id": "Referenced by lines, offers, addons",
+   "organization_id": "Tenant",
+   "product_offers": "product_id → inventory.products.id",
+   "product_addons": "product_id → inventory.products.id",
+   "product_addon_tiers": "addon_id → product_addons.id",
+   "price_books": "organization_id",
+   "price_book_entries": "price_book_id, optional product_id / offer_id / addon_id"
+  }
+ },
+ "platform.auth_sessions": {
+  "description": "Staff login sessions (token, user_id, expires_at).",
+  "columns": {}
+ },
+ "platform.export_audit_logs": {
+  "description": "Who exported a CSV/Excel and how many rows.",
+  "columns": {}
+ },
+ "platform.password_reset_otps": {
+  "description": "OTP for forgot-password (staff / customer / partner / reseller).",
+  "columns": {}
+ },
+ "platform.pricing_catalogs": {
+  "description": "Price book JSON (regions, products, region_pricing).",
+  "columns": {}
+ },
+ "platform.products": {
+  "description": "Registry of sellable Worktual products.",
+  "columns": {}
+ },
+ "platform.users": {
+  "description": "Worktual staff (sales, finance, admin).",
+  "columns": {
+   "role": "admin, sales, finance, …",
+   "is_active": "Can they log in."
+  }
+ },
+ "public.invoice_company_settings": {
+  "description": "Worktual bank details and invoice number series (one default row).",
+  "columns": {}
+ },
+ "ticketing.activity_logs": {
+  "description": "Short human-readable activity feed for home/activity UI.",
+  "columns": {
+   "id": "Row PK",
+   "organization_id": "Tenant",
+   "ticket_id": "Related ticket",
+   "text": "One-line activity text",
+   "created_at": "When logged"
+  }
+ },
+ "ticketing.agent_queue_members": {
+  "description": "Which agents belong to which queue.",
+  "columns": {
+   "id": "Membership PK",
+   "organization_id": "Tenant",
+   "queue_id": "FK → agent_queues.id",
+   "user_id": "FK → agents.id",
+   "created_at": "Added at"
+  }
+ },
+ "ticketing.agent_queues": {
+  "description": "Support teams / queues used for routing and workload.",
+  "columns": {
+   "id": "Queue PK",
+   "organization_id": "Tenant",
+   "external_id": "Optional external id",
+   "queue_name": "Team/queue display name",
+   "description": "Scope / purpose text",
+   "type": "Queue visibility model",
+   "open_tickets": "Cached open count",
+   "assigned": "Cached assigned count",
+   "sla_status": "Queue SLA health",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.agents": {
+  "description": "Thin staff bridge. Local id is used by tickets/sessions/notes. Identity (name, email, password, skills) lives in accounts.setup_users via setup_user_id. Never INSERT into MyAccount from Ticketing.",
+  "columns": {
+   "id": "Local PK (assignee / session FK target)",
+   "organization_id": "FK → accounts.organizations.id",
+   "setup_user_id": "FK → accounts.setup_users.id (required, unique)",
+   "support_email": "Optional spoke email copy for mail",
+   "support_phone": "Optional spoke phone",
+   "status": "Bridge active for assignment/login",
+   "role": "Spoke RBAC role mirror",
+   "last_login_at": "Last staff console login",
+   "two_factor_enabled": "Account-settings 2FA flag",
+   "language": "UI language preference",
+   "timezone": "Personal timezone preference",
+   "date_format": "Date display preference",
+   "notify_ticket_assignments": "Pref: assignment notifications",
+   "notify_ticket_updates": "Pref: update notifications",
+   "notify_security_alerts": "Pref: security notifications",
+   "notify_sla_alerts": "Pref: SLA notifications",
+   "notify_product_updates": "Pref: product notifications",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.audit_events": {
+  "description": "Append-only compliance audit trail of important mutations.",
+  "columns": {
+   "id": "Event PK",
+   "organization_id": "Tenant",
+   "actor_id": "Agent who acted",
+   "actor_name": "Actor display name",
+   "action": "Action code",
+   "ticket_id": "Related ticket",
+   "ticket_number": "Ticket number snapshot",
+   "meta": "Change details JSON",
+   "created_at": "When audited"
+  }
+ },
+ "ticketing.automation_rules": {
+  "description": "If/then rules on ticket create/update.",
+  "columns": {
+   "id": "Rule PK",
+   "organization_id": "Tenant",
+   "name": "Rule name",
+   "event": "Trigger",
+   "enabled": "Active",
+   "priority": "Evaluation order (lower first) — not ticket priority",
+   "conditions": "Match conditions",
+   "actions": "Actions to apply",
+   "created_by_id": "Creator agent",
+   "created_by_name": "Creator name",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.contact_profile": {
+  "description": "Support contact ops + customer portal credentials. No name / email / phone columns — resolve person fields from CDP using cdp_id.",
+  "columns": {
+   "id": "Local contact PK (tickets.customer_id)",
+   "organization_id": "Tenant",
+   "external_id": "Optional external/CRM id",
+   "cdp_id": "CDP person id (unique per org)",
+   "status": "Contact usable for tickets/portal",
+   "total_tickets": "Cached ticket count",
+   "account_id": "Optional FK → ticketing_accounts.id",
+   "password_hash": "Portal password hash (bcrypt); null if OTP-only",
+   "password_set_at": "When portal password was set",
+   "last_portal_login_at": "Last portal login",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.conversation_contexts": {
+  "description": "Co-worker / LangGraph chat conversation state (active + parked workflows, recent history).",
+  "columns": {
+   "id": "Context PK",
+   "organization_id": "Tenant",
+   "user_id": "Optional FK → agents.id",
+   "user_key": "Stable chat user key",
+   "session_key": "Chat session key",
+   "context": "State JSON (workflows, history)",
+   "version": "Optimistic concurrency version",
+   "created_at": "Created at",
+   "updated_at": "Updated at",
+   "expires_at": "Expiry"
+  }
+ },
+ "ticketing.customer_otp_challenges": {
+  "description": "One-time password challenges for portal login.",
+  "columns": {
+   "id": "Challenge PK",
+   "organization_id": "Tenant",
+   "customer_id": "FK → contact_profile.id",
+   "identifier": "Email or phone OTP was sent to",
+   "channel": "Delivery channel",
+   "code_hash": "Hash of OTP code",
+   "attempts": "Failed verify attempts",
+   "expires_at": "Expiry",
+   "consumed_at": "When successfully used",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.customer_password_tokens": {
+  "description": "One-time tokens for portal password set/reset links.",
+  "columns": {
+   "id": "Token PK",
+   "organization_id": "Tenant",
+   "customer_id": "FK → contact_profile.id",
+   "token_hash": "Hash of raw token",
+   "expires_at": "Expiry",
+   "consumed_at": "When used",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.customer_portal_sessions": {
+  "description": "Signed-in customer portal sessions.",
+  "columns": {
+   "id": "Session PK",
+   "organization_id": "Tenant",
+   "customer_id": "FK → contact_profile.id",
+   "device_label": "Device label",
+   "ip_address": "Client IP",
+   "user_agent": "User-Agent",
+   "last_active_at": "Last activity",
+   "created_at": "Session start",
+   "revoked_at": "Null = active"
+  }
+ },
+ "ticketing.dashboard_metrics": {
+  "description": "Cached KPI snapshot for the home dashboard (one row per org typically).",
+  "columns": {
+   "id": "Row PK",
+   "organization_id": "Tenant",
+   "open_tickets": "Open count",
+   "on_hold": "Legacy hold count (usually 0)",
+   "overdue": "Overdue count",
+   "due_today": "Due today count",
+   "unassigned": "Unassigned count",
+   "open_change": "Trend label vs prior period",
+   "on_hold_change": "Trend label",
+   "overdue_change": "Trend label",
+   "due_today_change": "Trend label",
+   "unassigned_change": "Trend label",
+   "captured_at": "Snapshot time"
+  }
+ },
+ "ticketing.email_message_refs": {
+  "description": "Maps inbound email Message-ID → ticket for threading.",
+  "columns": {
+   "id": "Row PK",
+   "organization_id": "Tenant",
+   "message_id": "Email Message-ID header",
+   "ticket_id": "FK → tickets.id",
+   "ticket_number": "Ticket number snapshot",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.kb_articles": {
+  "description": "Knowledge-base articles for help center / agent assist.",
+  "columns": {
+   "id": "Article PK",
+   "organization_id": "Tenant",
+   "external_id": "Optional external id",
+   "title": "Title",
+   "content": "Body",
+   "category": "Category",
+   "author_name": "Author display name",
+   "author_id": "FK → agents.id",
+   "status": "Publish state",
+   "views": "View counter",
+   "attachments": "Attachment refs",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.macros": {
+  "description": "Saved reply templates for agents.",
+  "columns": {
+   "id": "Macro PK",
+   "organization_id": "Tenant",
+   "title": "Picker name",
+   "body": "Template body",
+   "created_by_id": "Creator agent",
+   "created_by_name": "Creator name",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.notifications": {
+  "description": "In-app inbox notifications for staff (user_id → agents.id).",
+  "columns": {
+   "id": "Notification PK",
+   "organization_id": "Tenant",
+   "user_id": "Recipient → agents.id",
+   "title": "Title",
+   "message": "Body",
+   "ticket_id": "Related ticket",
+   "customer_name": "Related customer label",
+   "is_read": "Read state",
+   "kind": "Preference bucket",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.org_api_keys": {
+  "description": "Integration API keys (wt_live_…) for website/email intake.",
+  "columns": {
+   "id": "Key PK",
+   "organization_id": "Tenant",
+   "name": "Label",
+   "key_prefix": "Public prefix shown in UI",
+   "key_hash": "Hash of secret (never store raw)",
+   "created_by_id": "Creator agent",
+   "created_by_name": "Creator name",
+   "last_used_at": "Last successful use",
+   "revoked_at": "Null = active",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.org_settings": {
+  "description": "Spoke-only org preferences. Company display name comes from MyAccount accounts.organizations.company_name, not here.",
+  "columns": {
+   "organization_id": "PK; FK → accounts.organizations.id",
+   "ticket_prefix": "Prefix for ticket numbers (e.g. #)",
+   "portal_label": "Optional support-portal branding label",
+   "display_timezone": "Timezone for “due today” / display dates",
+   "portal_auth_mode": "How customers log into the portal",
+   "portal_slug": "URL slug for /support/{slug} and /hc/{slug}",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.org_widgets": {
+  "description": "Embeddable help-widget configuration.",
+  "columns": {
+   "id": "Widget PK",
+   "organization_id": "Tenant",
+   "name": "Widget name",
+   "config": "Widget JSON config",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.outbound_email_log": {
+  "description": "Log of outbound emails (customer, staff, SLA).",
+  "columns": {
+   "id": "Log PK",
+   "organization_id": "Tenant",
+   "ticket_id": "Related ticket",
+   "ticket_number": "Ticket number",
+   "kind": "Which mail flow",
+   "to_email": "Recipient",
+   "subject": "Subject",
+   "body_preview": "Short body preview",
+   "status": "Delivery outcome",
+   "error": "Failure reason",
+   "created_at": "When logged",
+   "ticket_created": "Customer “ticket created”",
+   "ticket_reply": "Customer reply",
+   "ticket_resolved": "Customer resolved",
+   "staff_ticket_created": "Staff notify on create",
+   "sla_reminder_1h": "~1h before due",
+   "sla_breach_admin": "Breach mail to admins",
+   "dssa_deflection": "Self-service deflection",
+   "portal_otp": "Portal OTP",
+   "portal_set_password": "Portal password setup",
+   "not_registered_customer": "Not-registered notice"
+  }
+ },
+ "ticketing.proactive_approvals": {
+  "description": "Human-in-the-loop approvals for proactive tool actions.",
+  "columns": {
+   "id": "Approval PK",
+   "organization_id": "Tenant",
+   "agent_id": "Which proactive agent",
+   "ticket_id": "Related ticket",
+   "status": "Human decision",
+   "tool_name": "Tool awaiting approval",
+   "payload": "Tool args / context",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.proactive_audit": {
+  "description": "Proactive agent decision audit log (learning / explainability).",
+  "columns": {
+   "id": "Audit PK",
+   "organization_id": "Tenant",
+   "agent_id": "Which agent decided",
+   "ticket_id": "Related ticket",
+   "event_id": "Related outbox event",
+   "decision": "Decision outcome",
+   "reason": "Why",
+   "tool_name": "Tool involved",
+   "payload": "Decision details / weights",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.proactive_embeddings": {
+  "description": "Embedding tokens for proactive search / similarity.",
+  "columns": {
+   "id": "Row PK",
+   "organization_id": "Tenant",
+   "token": "Embedding key/token",
+   "embedding": "Vector / serialized embedding",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.proactive_outbox": {
+  "description": "Events consumed by proactive agents (SEMA / WLOA / TIAA / RCAA).",
+  "columns": {
+   "id": "Event PK",
+   "organization_id": "Tenant",
+   "event_type": "Event type",
+   "ticket_id": "Related ticket id (text)",
+   "ticket_number": "Ticket number",
+   "actor": "Who triggered",
+   "payload": "Event payload",
+   "created_at": "Created at",
+   "processed_at": "When consumed"
+  }
+ },
+ "ticketing.proactive_recommendations": {
+  "description": "Proactive suggestions shown to agents.",
+  "columns": {
+   "id": "Recommendation PK",
+   "organization_id": "Tenant",
+   "agent_id": "Proactive agent code (not agents.id)",
+   "ticket_id": "Related ticket",
+   "status": "Agent decision",
+   "reason": "Why recommended",
+   "dedupe_key": "Dedup key",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.proactive_routing_weights": {
+  "description": "Per-org learned routing weights and recurring-issue hints (RCAA).",
+  "columns": {
+   "organization_id": "PK / tenant",
+   "weights": "Skill weights + recurring issues",
+   "updated_at": "Last learning update"
+  }
+ },
+ "ticketing.sla_policies": {
+  "description": "Per-org SLA windows by priority (what actually drives tickets.due_at).",
+  "columns": {
+   "id": "Row PK",
+   "organization_id": "Tenant",
+   "priority": "Priority key",
+   "display_name": "UI label",
+   "resolution_hours": "Hours create → due",
+   "first_response_hours": "Hours to first response",
+   "active": "In use"
+  }
+ },
+ "ticketing.sla_policy_defaults": {
+  "description": "Global default SLA hours by priority (seed for new orgs).",
+  "columns": {
+   "priority": "Priority key",
+   "resolution_hours": "Hours create → due",
+   "first_response_hours": "Hours to first response",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.ticket_event_outbox": {
+  "description": "Outbound webhook / event delivery queue for ticket changes.",
+  "columns": {
+   "id": "Outbox PK",
+   "organization_id": "Tenant",
+   "event_type": "Event type",
+   "payload": "Event JSON",
+   "webhook_url": "Delivery URL",
+   "status": "Delivery state",
+   "attempts": "Attempt count",
+   "last_error": "Last error",
+   "created_at": "Created at",
+   "delivered_at": "Delivered at"
+  }
+ },
+ "ticketing.ticket_notes": {
+  "description": "Conversation thread on a ticket (public replies + internal notes).",
+  "columns": {
+   "id": "Note PK",
+   "organization_id": "Tenant",
+   "ticket_id": "FK → tickets.id",
+   "author_id": "FK → agents.id",
+   "author_name": "Author display name",
+   "body": "Note / reply text",
+   "visibility": "Staff-only vs customer-visible",
+   "created_at": "Created at"
+  }
+ },
+ "ticketing.ticket_presence": {
+  "description": "Who is currently viewing a ticket (collision UI).",
+  "columns": {
+   "organization_id": "Tenant",
+   "ticket_id": "FK → tickets.id",
+   "user_id": "FK → agents.id",
+   "user_name": "Viewer display name",
+   "last_seen_at": "Last heartbeat"
+  }
+ },
+ "ticketing.ticket_statuses": {
+  "description": "Per-org catalog of allowed ticket statuses (system + custom).",
+  "columns": {
+   "id": "Row PK",
+   "organization_id": "Tenant",
+   "status": "Stored status key",
+   "display_name": "UI label",
+   "is_system": "Built-in; not deletable",
+   "is_terminal": "Closes the ticket",
+   "sort_order": "Picker order",
+   "active": "Available for use"
+  }
+ },
+ "ticketing.ticketing_accounts": {
+  "description": "B2B client accounts inside Ticketing (companies your end-customers belong to). Not MyAccount accounts.*.",
+  "columns": {
+   "id": "B2B account PK",
+   "organization_id": "Tenant (support org)",
+   "name": "Client company name",
+   "status": "Active for linking contacts",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.tickets": {
+  "description": "Core support cases (the main work item).",
+  "columns": {
+   "id": "Ticket PK",
+   "organization_id": "Tenant",
+   "ticket_number": "Human number, e.g. #20",
+   "subject": "Short title",
+   "description": "Full issue / intake body",
+   "status": "Lifecycle status",
+   "priority": "SLA priority key",
+   "channel": "Intake channel",
+   "category": "Triage category",
+   "skill": "Skill tag for auto-assign",
+   "customer_id": "FK → contact_profile.id",
+   "customer_name": "Display snapshot (CDP is SoR)",
+   "customer_email": "Display snapshot",
+   "customer_phone": "Display snapshot",
+   "assignee_id": "L1 FK → agents.id",
+   "assignee_name": "Display assignee",
+   "resolver_id": "L2 FK → agents.id",
+   "resolver_name": "Display resolver",
+   "queue_id": "FK → agent_queues.id",
+   "queue_name": "Display queue name",
+   "attachments": "Attachment refs",
+   "due_at": "SLA resolution deadline",
+   "first_response_at": "First staff public response",
+   "resolved_at": "Entered terminal status",
+   "csat_score": "CSAT rating",
+   "csat_rated_at": "When CSAT submitted",
+   "created_by_id": "Creator agent or null",
+   "created_by_name": "Creator label (API:… / name)",
+   "ai_summary": "LLM short summary",
+   "created_at": "Created at",
+   "updated_at": "Updated at"
+  }
+ },
+ "ticketing.user_login_events": {
+  "description": "Append-only staff login history for the account security UI.",
+  "columns": {
+   "id": "Event PK",
+   "organization_id": "Tenant",
+   "user_id": "FK → agents.id",
+   "device_label": "Device label at login",
+   "location": "Location label",
+   "ip_address": "IP at login",
+   "created_at": "Login time"
+  }
+ },
+ "ticketing.user_sessions": {
+  "description": "Staff console signed-in devices / JWT sessions. user_id → agents.id.",
+  "columns": {
+   "id": "Session PK",
+   "organization_id": "Tenant",
+   "user_id": "FK → agents.id",
+   "device_label": "Friendly device label",
+   "browser": "Browser name",
+   "os": "OS name",
+   "location": "Coarse location label",
+   "user_agent": "Raw User-Agent",
+   "ip_address": "Client IP",
+   "is_current": "Marked as current session",
+   "last_active_at": "Last activity",
+   "created_at": "Session start",
+   "revoked_at": "Null = still valid"
+  }
+ },
+ "ticketing.workflow_events": {
+  "description": "Workflow / agent event history (e.g. create-ticket chat flow).",
+  "columns": {
+   "id": "Event PK",
+   "organization_id": "Tenant",
+   "user_id": "Optional agent",
+   "user_key": "Chat user key",
+   "session_key": "Session key",
+   "request_id": "Per-turn request id",
+   "conversation_context_id": "FK → conversation_contexts",
+   "workflow_id": "Workflow instance id",
+   "workflow_type": "Workflow type",
+   "event_type": "Event type",
+   "event_data": "Payload",
+   "version": "State version",
+   "created_at": "Created at",
+   "expires_at": "Expiry"
+  }
+ }
+}

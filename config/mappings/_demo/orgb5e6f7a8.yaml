@@ -1,0 +1,16 @@
+# Sample overlay -- retail tenant.
+version: 1
+layer: tenant
+database: orgb5e6f7a8
+organization_id: "b5e6f7a8"
+industry: retail
+
+products: [crm, ticketing, ccaas]
+
+extends:
+
+  crm.contacts:
+    extra_labels: [Shopper]
+    custom_properties:
+      - {name: loyalty_tier,   type: string}
+      - {name: loyalty_points, type: integer}

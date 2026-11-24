@@ -1,0 +1,152 @@
+
+industry: real_estate
+pack_version: "2026.09.02"
+requires_core: ">=3"
+layer: domain
+
+applies_when:
+  accounts.organizations.industry_type:
+    [real estate, realty, property, proptech, brokerage, housing, developer,
+     construction and real estate, facility management, co-working, coworking,
+     property management, land, estate agency, lettings]
+
+variant_key: accounts.organizations.business_type
+variants:
+  b2c:
+    # residential brokerage / developer selling or letting to individuals
+    anchor_entities: [Contact, Product, Deal, Meeting, Contract, Ticket]
+    de_emphasise: [Account, Quote, LoyaltyTier]
+  b2b:
+    # commercial leasing, institutional investors, corporate real estate
+    anchor_entities: [Account, Contact, Deal, Quote, Contract, Invoice]
+    de_emphasise: [LoyaltyTier]
+  b2b2c:
+    # brokerage network / franchise agencies / channel partners
+    anchor_entities: [Account, Contact, Product, Deal, Contract]
+    de_emphasise: []
+
+extends:
+  ticketing.tickets:
+    extra_labels:
+    - label: MaintenanceRequest
+      when: {category: [maintenance, repairs, housekeeping, amenities]}
+    - label: TenancyQuery
+      when: {category: [tenancy, lease, renewal, notice]}
+    - label: BillingQuery
+      when: {category: [payment, rent, dues, billing]}
+    - label: DocumentRequest
+      when: {category: [documentation, registration, handover, noc]}
+  cdp.customer_profile:
+    custom_fields:
+      whitelist: [client_ref, preferred_locality, property_type_interest, possession_timeline, purpose, configuration_interest,
+        source_channel_partner, site_visit_done]
+      identity: [client_ref]
+      promote_to_node:
+        preferred_locality: {label: Locality, key: slug, edge: INTERESTED_IN_LOCALITY}
+        property_type_interest: {label: PropertyType, key: slug, edge: INTERESTED_IN_TYPE}
+      blocklist: [income, salary, annual_income, credit_score, cibil, bank_balance, loan_eligibility, net_worth,
+        pan, aadhaar, passport_number, religion, caste, nationality, marital_status, family_composition]
+      blocklist_action: drop_silently_and_log
+
+vocabularies:
+  ticket.category:  # [core: ticketing.tickets.category]
+    canonical: [maintenance, repairs, housekeeping, amenities, tenancy, lease,
+                renewal, notice, payment, rent, dues, documentation,
+                registration, handover, noc, parking, complaint, general]
+  conversation.intent:  # [core: supported_intents]
+    canonical: [availability_check, price_enquiry, book_site_visit, floor_plan_request,
+                payment_plan, loan_assistance, possession_status, rent_negotiation,
+                maintenance_issue, agreement_renewal, document_request]
+  campaign.goal:  # [core: campaign.campaigns.goal]
+    canonical: [new_launch, inventory_clearance, site_visit_drive, festive_offer,
+                renewal_reminder, referral_drive, price_revision_alert,
+                channel_partner_activation, possession_announcement]
+  journey_state.current_stage:  # [core: journey_states.current_stage]
+    canonical: [enquiry, qualified, site_visit_scheduled, site_visited,
+                negotiation, booked, agreement_signed, possession, tenanted,
+                renewal_due, lost]
+  contact.lead_source:  # [core: crm.contact_profiles.lead_source]
+    canonical: [portal_listing, website, walk_in, channel_partner, referral,
+                paid_ads, social, hoarding_event, call_centre, repeat_client]
+  deal.stage:  # [core: crm.deals.stage]
+    labels: {qualification: "Enquiry qualified", discover: "Site visit / shortlisting",
+             propose: "Cost sheet / offer issued", negotiate: "Price negotiation",
+             closed_won: "Booked / agreement signed", closed_lost: "Dropped"}
+  contract.billing_frequency:  # [core: crm.contracts.billing_frequency]
+    labels: {monthly: "Monthly rent", quarterly: "Quarterly rent", annual: "Annual / sale milestone"}
+
+# DERIVED LABELS — batch lane
+derived_labels:
+  lane: batch
+  Customer:
+    source: cdp.gold_customer_metrics  # [core: DailyEngagementMetric]
+    rules:
+      - {label: FirstTimeBuyer, when: "total_orders == 1"}
+      - {label: RepeatInvestor, when: "total_orders >= 2"}
+      - {label: DormantEnquiry, when: "last_event_at < now() - 120d and total_orders == 0"}
+      - {label: HighValueClient,when: "total_spend >= p90(total_spend)"}
+      - {label: AtRiskClient,   when: "churn_score >= 0.7"}
+    exclusive_groups: [[FirstTimeBuyer, RepeatInvestor]]
+
+metrics:
+  add:
+    - metric_id: site_visit_conversion_rate
+      canonical_name: Site Visit Conversion Rate
+      unit: ratio
+      route: graph
+      computed_from: [Meeting, Opportunity]
+      direction: higher_is_better
+      caveat: proxy
+    - metric_id: listing_availability_rate
+      canonical_name: Available Inventory Share
+      unit: ratio
+      route: graph
+      computed_from: [Offering]
+      direction: neutral
+    - metric_id: tenancy_renewal_due_count
+      canonical_name: Tenancies Due for Renewal
+      unit: count
+      route: graph
+      computed_from: [Contract]
+      direction: neutral
+    - metric_id: maintenance_request_share
+      canonical_name: Maintenance Request Share
+      unit: ratio
+      route: graph
+      computed_from: [Ticket]
+      direction: lower_is_better
+
+# ACCESS — tighten only
+access:
+  PropertyType:    {domain: common, module: core, sensitivity: L1}
+  PropertySubtype: {domain: common, module: core, sensitivity: L1}
+  Development:     {domain: common, module: core, sensitivity: L1}
+  Locality:        {domain: common, module: core, sensitivity: L1}
+  tighten:
+    EngagementActivity: {sensitivity: L3, deny_properties: [transcript_text]}
+  never_grant: [Listing, PropertyClient, ServiceRequest]
+
+compliance:
+  regimes: [GDPR, DPDP, RERA, fair_housing]
+  notes:
+    - "Fair-housing / anti-discrimination: the blocklist exists to stop protected attributes reaching a tenant-screening or targeting decision."
+    - RERA-style disclosure obligations attach to the listing, which lives in
+      inventory.products; no registration-number field exists (see not_modelled).
+
+# NOT MODELLED
+not_modelled:
+  blocked_on_core:
+    - {concept: Office / Site, blocker: "accounts.organization_locations mapping commented out in core; branch/sales-gallery node unavailable."}
+    - {concept: Consent, blocker: "cdp.customer_profile.consent_json not in core properties."}
+    - {concept: "Ticket -> Agreement / Listing", blocker: "ticketing.tickets carries no reference to a contract or unit; a maintenance request cannot be traced to the tenancy it concerns."}
+  no_source:
+    - {concept: Property / Building (physical asset), severity: critical, note: "the listing is modelled; the asset behind it — building, tower, floor, plot — is not. Two listings of the same flat across time cannot be linked."}
+    - {concept: Ownership / Title, severity: high, note: "who owns the unit, landlord vs seller, has no table."}
+    - {concept: Unit configuration / Floor plan, severity: high, note: "beds, baths, carpet area live as free text in specifications; not parsed, not queryable."}
+    - {concept: Maintenance work order, severity: medium, note: "the ticket exists; the work order, vendor, parts and cost do not."}
+    - {concept: Broker commission / Payout, severity: medium}
+    - {concept: Rent roll / Arrears ledger, severity: medium, note: "BillingSchedule gives the plan; realised collection against it does not exist."}
+    - {concept: Site visit outcome, severity: medium, note: "appointment status gives attended / no-show; feedback, shortlist and objection do not exist."}
+    - {concept: Channel partner hierarchy, severity: low, note: "crm.companies.channel_role + parent_company_id partially cover this in b2b2c."}
+
+# ASSUMES — same C1-C4 / E1-E7 / R1-R6 as domains/healthcare.yaml §8

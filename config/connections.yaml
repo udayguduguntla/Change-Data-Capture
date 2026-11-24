@@ -1,0 +1,83 @@
+postgres:
+  host: ${PG_HOST}
+  port: ${PG_PORT}
+  database: ${PG_DATABASE}
+  user: ${PG_USER}
+  password: ${PG_PASSWORD}
+  schemas: [accounts, ccass, cdp, crm, ticketing, campaign, inventory, digital]
+
+kafka:
+  bootstrap_servers: ${KAFKA_BOOTSTRAP}
+  group_id: cdc-neo4j-sink-v7.1
+  auto_offset_reset: earliest
+  enable_auto_commit: false
+  max_poll_records: 500  # messages per consume(); small batches keep polls frequent
+  topic_prefix: cdc  # matches Debezium topic.prefix
+  fetch_partition_max_bytes: 262144  # per partition per fetch
+  fetch_max_bytes: 5242880  # per fetch reply
+
+neo4j:
+  # Instance map.
+  default_instance: instance-1
+  # call_syntax: scoped
+  instances:
+    instance-1:
+      uri: ${NEO4J_URI}
+      user: ${NEO4J_USER}
+      password: ${NEO4J_PASSWORD}
+      # call_syntax: scoped
+      max_connection_pool_size: 50
+      connection_acquisition_timeout: 60
+  # Metadata database holding the immutable prefix assertion and schema version.
+  metadata_database: cdcmeta
+
+database_naming:
+  prefix: org  # IMMUTABLE after first provision.
+                                   # Asserted at every boot against cdcmeta.
+
+cypher:
+  # legacy -> CALL { WITH n, e ...
+  subquery_syntax: scoped
+money:
+  store_as: decimal
+  # Decimals are stored as integer minor units at the scale declared per property.
+  # The scale is the same for every row of a column, so it is NOT written on nodes
+  # (v4.3). Read it from the property's `scale:` in core.yaml.
+
+control_plane:
+  organisations_table: accounts.organizations
+  organization_id_column: id
+  tenant_id_column: id
+  tenant_column: organization_id
+  status_column: lifecycle_status
+  industry_column: industry_type  # selects the industry pack (core + industry + org)
+  active_status_values: [active, prospect]
+
+batching:
+  node_batch_size: 2000
+  relationship_batch_size: 2000
+  flush_interval_seconds: 1.0
+
+retry:
+  deadlock_max_attempts: 5
+  deadlock_backoff_base_ms: 50
+
+embedding:
+  model: BAAI/bge-large-en-v1.5  # later on the GPU server: Qwen/Qwen3-Embedding-0.6B
+  backend: sentence_transformers
+  device: cpu  # cuda on a GPU server
+  dimensions: 1024  # bge-large = 1024 = Qwen3-0.6B, so the Neo4j index
+                                   # size stays the same when you switch (re-embed still needed)
+  max_seq_length: 512  # bge-large hard limit
+  batch_size: 16  # texts per forward pass on a 4-core CPU
+  threads: 4  # = physical cores. Hyper-threads do not help
+  cache_size: 50000  # identical texts are embedded once
+  worker_page_size: 256  # nodes fetched from Neo4j per label per pass
+  worker_idle_seconds: 5
+
+quarantine:
+  path: ./quarantine
+
+metrics:
+  port: 9109
+  log_interval_seconds: 60
